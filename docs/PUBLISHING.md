@@ -2,6 +2,9 @@
 
 本仓库的发布是**手动决定**的：流水线只负责构建与打包，是否发布、何时发布由人工执行命令确定。
 
+**一条命令跑完整条发布准备流水线：`npm run release`**（构建 → lint → 结构校验 → zip 产物 →
+索引 → registry 生成与一致性检查）。之后人工检视，再 `npm run publish:execute` 发布。
+
 ## 前置条件
 
 ```bash
@@ -14,60 +17,58 @@ npm whoami        # 未登录则 npm adduser
 
 ## 发布流程
 
-### 第一步：构建与打包
+### 第一步：一键流水线（构建 + 打包 + 清单）
 
 ```bash
-npm run build:plugin        # 重新构建 PPT 插件包
-npm run validate-all        # 结构校验全绿
-npm run release-all         # 生成 dist/plugins/*.zip
-npm run check-registry      # registry 与实际可发布集一致
+npm run release
+# 等价于依次执行：
+#   npm run build            # ppt-bridge + canvas-bridge 全部插件包重建
+#   npm run lint             # 两个 bridge 的 skill lint
+#   npm run validate-all     # 结构校验全绿
+#   release-all              # 生成 dist/plugins/*.zip（含 vendored 依赖）
+#   release-index            # 生成 dist/index.json
+#   gen-registry + check     # capyclaw-registry.json 重新生成并校验一致
 ```
 
 ### 第二步：发布预演（dry-run，不真发）
 
 ```bash
-npm run publish:npm                     # 全部包
-node scripts/publish-to-npm.mjs --dry-run --only @capyclaw/launchpad   # 单个包
+npm run publish:npm                                  # 全部包（支撑库 + 插件）
+node scripts/publish-to-npm.mjs --only @capyclaw/launchpad   # 单个包
 ```
 
-预演会逐包执行：结构校验 → 发布闸（private/publishConfig.access/engines.dsh/link 依赖检查）
-→ npm pack → 显示将要发布的版本。任何一关不过都会列出原因。
+统一发布脚本覆盖**全部对外包**：
+
+- **支撑库**（显式清单，先发）：`@capyclaw/plugin-kit`、`@capyclaw/document-workbench`、
+  `@capyclaw/skills-service` —— 它们无 `dsh.bundle`、进不了插件闸，走库发布闸
+  （private / publishConfig.access / license / link 依赖检查）。
+- **插件**（`discoverPlugins()` 自动发现，后发）：结构校验 + 插件发布闸。
+
+顺序固定「先库后插件」：`@capyclaw/plugin-kit` 必须先上 registry，插件发布时依赖才可解析。
+任何一关不过都会列出原因；已发布过且版本未变的包自动跳过（`skipped-exists`）。
 
 ### 第三步：人工确认后执行
 
 ```bash
-npm run publish:execute
+npm run publish:execute                          # 全部 → latest
+npm run publish:execute -- --tag next            # 预发布通道（dist-tag=next）
 ```
 
-已发布过且版本未变的包会自动跳过（`skipped-exists`）。
-
-## registry 外的手动发布包
-
-以下三个包被发布产品依赖，但不带 `dsh.bundle` 字段、不在 `discoverPlugins()`
-集合与 `capyclaw-registry.json` 内，需要单独发布：
-
-| 包 | 目录 | 被谁依赖 |
-|---|---|---|
-| `@capyclaw/plugin-kit` | `packages/capyclaw-plugin-kit` | 所有插件的 SDK |
-| `@capyclaw/document-workbench` | `packages/capyclaw-document-workbench` | `@capyclaw/ppt-workbench` |
-| `@capyclaw/skills-service` | `extensions/bridges/ppt-bridge/capyclaw-skills-service` | `@capyclaw/ppt-suite` |
-
-```bash
-npm --prefix packages/capyclaw-plugin-kit publish --access public
-npm --prefix packages/capyclaw-document-workbench publish --access public
-npm --prefix extensions/bridges/ppt-bridge/capyclaw-skills-service publish --access public
-```
+`--tag` 与 zip 源索引的 `--channel` 语义对应：`stable ↔ latest`、`next ↔ next`。
+走了 `next` 的版本正式发布时重新 `publish:execute` 即可落到 `latest`（npm dist-tag 语义）。
 
 ## 版本管理
 
-- 各包 `version` 手工维护；改版本后跑 `npm run gen-registry` 刷新 registry。
+- 各包 `version` 手工维护；改版本后跑 `npm run gen-registry` 刷新 registry
+  （`npm run release` 已包含）。
 - PPT skill 包的 version/files/publishConfig 由 `build-plugin.mjs` 生成，不要手改。
-- `capyclaw-ppt-workbench` 的版本必须与 `src/mcp/contract.mjs` 的 `PACKAGE_VERSION` 一致
+- `@capyclaw/ppt-workbench` 的版本必须与 `src/mcp/contract.mjs` 的 `PACKAGE_VERSION` 一致
   （构建脚本强校验）。
 
 ## 常见问题
 
 - **发布被闸挡下**：看 dry-run 输出的具体原因（缺 `publishConfig.access`、
   有 `link:`/`file:` 依赖、缺 `engines.dsh` 等）。
+- **可安装性自检**（打 tarball → 干净目录安装验证）：`npm run verify-publishable`。
 - **zip 分发**：`npm run release-all` 的产物在 `dist/`（gitignored），
   整源包用 `npm run release-source`，标准校验用 `npm run verify-source`。

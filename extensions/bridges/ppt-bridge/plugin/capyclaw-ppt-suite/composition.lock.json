@@ -12,7 +12,7 @@
       "version": "0.1.0",
       "apiVersion": null,
       "path": "../../../../../packages/capyclaw-document-workbench",
-      "sha256": "a98c1db695d5eca9156099be73da4098caaf24d9c95db5cf0b999bfcf68ce5fb"
+      "sha256": "1d3f7fc802fe8e7f8853d38460067fcaa7dfaa4c21617ac9a32d3ace54532e0d"
     },
     "@capyclaw/editor-host": {
       "version": "0.1.1",

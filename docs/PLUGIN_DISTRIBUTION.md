@@ -21,8 +21,8 @@
 - 由 `npm run gen-registry` 从实际可发布集合生成（数据源是 plugin-release 的
   `discoverPlugins()`，即过得了发布闸的包），**不要手改**。
 - `npm run check-registry` 校验 registry 与当前仓库状态一致。
-- 字段：`name` / `version` / `path`（仓内相对路径）/ `tarball`（npm 下载地址）/
-  `category` / `platform` / `dsh` 引擎范围。
+- 字段：`name` / `version` / `path` 与 `directory`（仓内相对路径）/
+  `category` / `platform` / `dsh` 引擎范围 / `bundle` / `client` / `suite` 标记。
 
 ```json
 {
@@ -32,7 +32,7 @@
       "name": "@capyclaw/launchpad",
       "version": "1.1.0",
       "path": "./extensions/official/capyclaw-launchpad",
-      "tarball": "https://registry.npmjs.org/@capyclaw/launchpad/-/launchpad-1.1.0.tgz",
+      "directory": "extensions/official/capyclaw-launchpad",
       "category": "tool",
       "platform": "both"
     }
