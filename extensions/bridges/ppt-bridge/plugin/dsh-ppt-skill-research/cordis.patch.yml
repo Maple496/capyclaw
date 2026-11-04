@@ -1,4 +1,4 @@
-# dsh-ppt-skill-research bundle patch：只注册 pptist-research 一个 skill provider。
+# @capyclaw/ppt-skill-research（目录 dsh-ppt-skill-research） bundle patch：只注册 pptist-research 一个 skill provider。
 - insert:
     - id: ppt-skill-research
-      name: dsh-ppt-skill-research
+      name: @capyclaw/ppt-skill-research

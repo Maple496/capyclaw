@@ -1,0 +1,30 @@
+{
+  "name": "@capyclaw/launch-engine-suite",
+  "version": "0.1.0",
+  "description": "按需激活引擎套件：launch-engine（组合根）+ plugin-sync（开关转发通道）。装上后 dsh 进程内可按 capability 注册表按需注入/停用关联插件；注册表由 suite-kit 从 dsh-suite.json 组合结果自动生成（registryKind: profile）。",
+  "type": "module",
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0",
+    "@capyclaw/plugin-sync": "^0.1.0",
+    "@capyclaw/launch-engine": "^0.1.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "suite": "./dsh-suite.json",
+    "category": "service",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "按需激活引擎套件",
+    "description": "launch-engine + plugin-sync；注册表从 suite 组合结果自动生成，不手写"
+  },
+  "files": [
+    "dsh-suite.json",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "license": "MIT",
+  "private": true
+}

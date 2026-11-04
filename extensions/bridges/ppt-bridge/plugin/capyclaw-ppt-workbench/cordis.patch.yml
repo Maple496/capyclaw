@@ -1,4 +1,4 @@
-# dsh-ppt-workbench patch：服务解耦标准下只保留 dsh 侧的 MCP 接入行。
+# @capyclaw/ppt-workbench patch：服务解耦标准下只保留 dsh 侧的 MCP 接入行。
 #
 # 本包主体（relay：桥端点 + /mcp + 编辑器静态页）是**独立端口服务**，
 # 不再 insert 进 dsh 进程——由 dsh-service-broker 按清单以独立进程拉起

@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ppt-suite",
-  "version": "2.4.1",
+  "version": "2.4.3",
   "description": "PPT 工作台套件：workbench + 8 个独立 skill 包 + 4 个公共基建插件，一键安装、锁定已验证版本。",
   "type": "module",
   "main": "./lib/index.mjs",
@@ -8,13 +8,20 @@
     ".": "./lib/index.mjs",
     "./package.json": "./package.json"
   },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@capyclaw/plugin-kit": "^0.2.0",
     "@capyclaw/service-host": "^0.1.0",
     "@capyclaw/tool-host": "^0.1.0",
     "@capyclaw/asset-service": "^0.1.0",
     "@capyclaw/editor-host": "^0.1.0",
-    "@capyclaw/service-broker": "^0.1.0",
+    "@capyclaw/service-broker": "^0.2.0",
     "@capyclaw/skills-service": "^0.1.0",
     "@capyclaw/ppt-workbench": "^2.4.0",
     "@capyclaw/ppt-skill-api": "^2.2.0",
@@ -30,7 +37,9 @@
     "bundle": {
       "patch": "./cordis.patch.yml"
     },
-    "suite": "./dsh-suite.json"
+    "suite": "./dsh-suite.json",
+    "category": "service",
+    "platform": "both"
   },
   "meta": {
     "title": "PPT 工作台套件",
@@ -46,6 +55,9 @@
     "services.json"
   ],
   "license": "MIT",
+  "scripts": {
+    "test": "node --test test/smoke.test.mjs"
+  },
   "author": {
     "name": "CapyClaw",
     "url": "https://github.com/capyclaw",

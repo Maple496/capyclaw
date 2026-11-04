@@ -13,8 +13,10 @@
  *   - 不碰进程生命周期（起停 dsh/broker 是 dshd 的事，见 tools/dsh-launcher）
  *
  * 配置（resolveConfig：ctx config → 环境变量 → 默认值）：
- *   registryKind      注册表源类型        DSH_LE_REGISTRY       inline（默认）
- *   registryPath      local 源文件路径    DSH_LE_PATH           （空）
+ *   registryKind      注册表源类型        DSH_LE_REGISTRY       inline
+ *                     （inline | local | profile | http；domain 型 profile 推荐
+ *                      profile——注册表由 suite-kit 从 dsh-suite.json 自动生成）
+ *   registryPath      local/profile 源文件路径  DSH_LE_PATH     （空＝按源类型推导）
  *   registryUrl       HTTP 源地址（预留）  DSH_LE_URL            （空）
  *   enableHttp        是否挂 HTTP 路由    DSH_LE_HTTP           true
  *   engineToken       写操作 token        DSH_LE_TOKEN          （空＝只校验回环）
@@ -23,9 +25,10 @@
  *   capabilities      inline 注册表对象（结构化，不走 env；建议由
  *                     stack.plugins.configs 注入，不写死在 patch 里）
  */
+import { existsSync } from 'node:fs'
 import { resolveConfig } from '@capyclaw/plugin-kit/config'
 
-import { createRegistry, RegistryError } from './registry.mjs'
+import { createProfileRegistry, createRegistry, RegistryError } from './registry.mjs'
 import { planActivation, planDeactivation } from './planner.mjs'
 import { executePlan } from './executor.mjs'
 
@@ -84,12 +87,25 @@ export function apply(ctx, config = {}) {
   })
   for (const issue of issues) ctx.logger?.warn?.(`[launch-engine] 配置: ${issue}`)
 
-  const registry = createRegistry({
-    kind: cfg.registryKind,
-    file: cfg.registryPath,
-    url: cfg.registryUrl,
-    capabilities: config.capabilities,
-  })
+  let registry
+  if (cfg.registryKind === 'profile') {
+    /* suite 域注册表：suite-kit 安装期生成的 <profile>/launch-engine.registry.json。
+     * 缺席时诚实告警并回退 inline（stack 型 profile 没有这份文件），不让宿主起不来。 */
+    const profileRegistry = createProfileRegistry({ file: cfg.registryPath || undefined })
+    if (existsSync(profileRegistry.file)) {
+      registry = profileRegistry
+    } else {
+      ctx.logger?.warn?.(`[launch-engine] profile 注册表不存在: ${profileRegistry.file}（回退 inline；stack 型 profile 请显式用 inline/local 源）`)
+      registry = createRegistry({ kind: 'inline', capabilities: config.capabilities })
+    }
+  } else {
+    registry = createRegistry({
+      kind: cfg.registryKind,
+      file: cfg.registryPath,
+      url: cfg.registryUrl,
+      capabilities: config.capabilities,
+    })
+  }
 
   // 热路径局部变量（仓库性能约定：不反复读 ctx.x）
   const pluginSync = ctx.pluginSync

@@ -13,7 +13,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(HERE, '..')
 const WORKSPACE = path.resolve(ROOT, '..', '..', '..')
-const PKG = path.join(ROOT, 'plugin', 'dsh-ppt-workbench')
+const PKG = path.join(ROOT, 'plugin', 'capyclaw-ppt-workbench')
 const pkgUrl = (rel) => pathToFileURL(path.join(PKG, rel)).href
 const pkgFile = (rel) => pathToFileURL(path.join(WORKSPACE, 'packages', rel)).href
 

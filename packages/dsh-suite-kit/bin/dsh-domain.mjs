@@ -11,7 +11,7 @@
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import {
-  doctor, formatReport, installDomain, domainPatch, loadDomainManifest,
+  buildActivationRegistry, doctor, formatReport, installDomain, domainPatch, loadDomainManifest,
   resolveDomain, stageDomain, validateDomainManifest,
   createRuntime, defaultRuntimeStoreRoot, readRuntime, startRuntime,
 } from '../src/index.mjs'
@@ -57,6 +57,22 @@ function cmdResolve(input, flags) {
     checks: resolved.composed.checks,
     warnings: resolved.composed.warnings,
   }, null, 2))
+}
+
+function cmdRegistry(input) {
+  if (!input) fail('用法: dsh-domain registry <domain>')
+  try {
+    const resolved = resolveDomain(input)
+    const { registry, warnings } = buildActivationRegistry({
+      suites: resolved.suites,
+      composed: resolved.composed,
+      requiredCapabilities: resolved.manifest.runtime?.requires?.capabilities || [],
+    })
+    for (const warning of warnings) console.error(`! ${warning}`)
+    console.log(JSON.stringify(registry, null, 2))
+  } catch (error) {
+    fail(error.message)
+  }
 }
 
 function cmdInstall(input, flags) {
@@ -171,6 +187,7 @@ if (!command || command === 'help' || command === '--help') {
 
   validate <domain>                 校验 domain manifest
   resolve <domain> [--patch]        解析组件/能力/row，或打印 patch
+  registry <domain>                生成 launch-engine 激活注册表（预览）
   install <domain>                 生成专用 profile
   stage <domain> --out <dir>       只打包选中组件
   launch <domain> --dsh-bin <path> 安装并启动专用 profile
@@ -181,6 +198,7 @@ if (!command || command === 'help' || command === '--help') {
 }
 if (command === 'validate') cmdValidate(args[1])
 else if (command === 'resolve') cmdResolve(args[1], flags)
+else if (command === 'registry') cmdRegistry(args[1])
 else if (command === 'install') cmdInstall(args[1], flags)
 else if (command === 'stage') cmdStage(args[1], flags)
 else if (command === 'launch') await cmdLaunch(args[1], flags)

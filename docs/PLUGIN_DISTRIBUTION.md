@@ -188,19 +188,20 @@ node install-plugins.mjs \
 dsh --profile web
 ```
 
-## 清单驱动启动器 vs 插件安装器
+## 插件安装器与启动入口
 
 | 工具 | 用途 | 何时用 |
 |---|---|---|
 | `tools/install-plugins.mjs` | **修改 profile**，注册插件到 `~/.dsh` | 第一次安装、更新插件 |
-| `tools/launch.mjs` | **临时启动**，不修改 `~/.dsh` | 开发调试、一次性测试 |
+| `launchpads/*.stack` DSL → `dshd --stack` | **统一启动面**（临时/正式同一入口） | 开发调试、日常运行 |
+
+> 旧的临时启动器（`tools/launch.mjs`、`tools/launch-by-manifest.mjs`、
+> `tools/dsh-launcher/dshd.config.json` + `local-services.json` 配置路径、
+> `simple/unified/web-launcher.mjs` 备用前端）已删除，统一走 stack DSL。
 
 **典型工作流**：
 
 ```bash
-# 开发时：用 launch.mjs 快速测试（不污染 ~/.dsh）
-node tools/launch.mjs examples/manifest-with-ppt.json
-
 # 确认无误后：用 install-plugins.mjs 正式安装到 ~/.dsh
 node tools/install-plugins.mjs \
   --registry capyclaw-registry.json \
@@ -208,8 +209,8 @@ node tools/install-plugins.mjs \
   --mode development \
   --install
 
-# 日常使用：直接启动 dsh
-dsh --profile web
+# 日常使用：stack DSL（launchpad 管理界面点击启动，或命令行）
+node tools/dsh-launcher/bin/dshd.mjs start --stack launchpads/dev.dsh-stack.json
 ```
 
 ## 常见问题
@@ -254,6 +255,8 @@ dsh plugin --profile web remove @capyclaw/launchpad
 ## 下一步
 
 - [ ] 支持从 tarball URL 直接安装（不依赖 npm）
-- [ ] 插件依赖自动解析（ppt-suite 依赖 8 个 skill）
+- [x] 插件依赖自动解析（ppt-suite 的 dependencies 声明全部 16 个依赖包；2026-11-05 起
+      全部发布到 npm，`@capyclaw/ppt-suite` 安装即自动带齐 workbench + 8 skill + 基建；
+      registry 也已收录全部可安装插件：22 个）
 - [ ] 版本冲突检测
 - [ ] 回滚到上一个版本

@@ -1,7 +1,7 @@
 {
   "$schema": "../../../../../packages/dsh-suite-kit/suite.schema.json",
   "name": "capyclaw-ppt-suite",
-  "version": "2.4.1",
+  "version": "2.4.3",
   "title": "PPT 工作台套件",
   "description": "PPTist 运行时（独立端口服务）+ 8 个独立 skill 包 + 4 个公共基建插件 + 文档工作台框架 + 底层 kit + 服务中间件（broker）与技能服务；2026-11-01 起按服务解耦标准：relay 不再 insert 进 dsh 进程，由中间件按清单以独立进程拉起。",
   "components": [
@@ -11,20 +11,20 @@
     "../../../../../packages/dsh-editor-host"
   ],
   "packages": {
-    "dsh-plugin-kit": {
+    "@capyclaw/plugin-kit": {
       "role": "support",
       "version": "^0.2.0",
       "path": "../../../../../packages/dsh-plugin-kit"
     },
-    "dsh-document-workbench": {
+    "@capyclaw/document-workbench": {
       "role": "support",
       "version": "^0.1.0",
       "path": "../../../../../packages/dsh-document-workbench"
     },
-    "dsh-ppt-workbench": {
+    "@capyclaw/ppt-workbench": {
       "role": "runtime",
       "version": "^2.4.0",
-      "path": "../dsh-ppt-workbench",
+      "path": "../capyclaw-ppt-workbench",
       "requires": {
         "capabilities": {
           "host.http": "^1.0.0",
@@ -49,12 +49,12 @@
         }
       }
     },
-    "dsh-ppt-skill-ppt": {
+    "@capyclaw/ppt-skill-ppt": {
       "role": "skills",
       "version": "^2.2.0",
       "path": "../dsh-ppt-skill-ppt",
       "requires": {
-        "dsh-ppt-workbench": "^2.2.0",
+        "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
           "ppt.runtime": "^2.2.0"
         }
@@ -68,12 +68,12 @@
         }
       }
     },
-    "dsh-ppt-skill-narrative": {
+    "@capyclaw/ppt-skill-narrative": {
       "role": "skills",
       "version": "^2.2.0",
       "path": "../dsh-ppt-skill-narrative",
       "requires": {
-        "dsh-ppt-workbench": "^2.2.0",
+        "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
           "ppt.runtime": "^2.2.0"
         }
@@ -87,12 +87,12 @@
         }
       }
     },
-    "dsh-ppt-skill-design": {
+    "@capyclaw/ppt-skill-design": {
       "role": "skills",
       "version": "^2.2.0",
       "path": "../dsh-ppt-skill-design",
       "requires": {
-        "dsh-ppt-workbench": "^2.2.0",
+        "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
           "ppt.runtime": "^2.2.0"
         }
@@ -106,12 +106,12 @@
         }
       }
     },
-    "dsh-ppt-skill-api": {
+    "@capyclaw/ppt-skill-api": {
       "role": "skills",
       "version": "^2.2.0",
       "path": "../dsh-ppt-skill-api",
       "requires": {
-        "dsh-ppt-workbench": "^2.2.0",
+        "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
           "ppt.runtime": "^2.2.0"
         }
@@ -125,12 +125,12 @@
         }
       }
     },
-    "dsh-ppt-skill-authoring": {
+    "@capyclaw/ppt-skill-authoring": {
       "role": "skills",
       "version": "^2.2.0",
       "path": "../dsh-ppt-skill-authoring",
       "requires": {
-        "dsh-ppt-workbench": "^2.2.0",
+        "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
           "ppt.runtime": "^2.2.0"
         }
@@ -144,12 +144,12 @@
         }
       }
     },
-    "dsh-ppt-skill-editing": {
+    "@capyclaw/ppt-skill-editing": {
       "role": "skills",
       "version": "^2.2.0",
       "path": "../dsh-ppt-skill-editing",
       "requires": {
-        "dsh-ppt-workbench": "^2.2.0",
+        "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
           "ppt.runtime": "^2.2.0"
         }
@@ -163,12 +163,12 @@
         }
       }
     },
-    "dsh-ppt-skill-visual-check": {
+    "@capyclaw/ppt-skill-visual-check": {
       "role": "skills",
       "version": "^2.2.0",
       "path": "../dsh-ppt-skill-visual-check",
       "requires": {
-        "dsh-ppt-workbench": "^2.2.0",
+        "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
           "ppt.runtime": "^2.2.0"
         }
@@ -182,12 +182,12 @@
         }
       }
     },
-    "dsh-ppt-skill-research": {
+    "@capyclaw/ppt-skill-research": {
       "role": "skills",
       "version": "^2.2.0",
       "path": "../dsh-ppt-skill-research",
       "requires": {
-        "dsh-ppt-workbench": "^2.2.0",
+        "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
           "ppt.runtime": "^2.2.0"
         }
@@ -201,9 +201,9 @@
         }
       }
     },
-    "dsh-service-broker": {
+    "@capyclaw/service-broker": {
       "role": "runtime",
-      "version": "^0.1.0",
+      "version": "^0.2.0",
       "path": "../../../../../packages/dsh-service-broker",
       "provides": {
         "services": [
@@ -215,7 +215,7 @@
         }
       }
     },
-    "dsh-skills-service": {
+    "@capyclaw/skills-service": {
       "role": "runtime",
       "version": "^0.1.0",
       "path": "../../dsh-skills-service",
@@ -246,35 +246,35 @@
     },
     {
       "id": "ppt-skill-ppt",
-      "name": "dsh-ppt-skill-ppt"
+      "name": "@capyclaw/ppt-skill-ppt"
     },
     {
       "id": "ppt-skill-narrative",
-      "name": "dsh-ppt-skill-narrative"
+      "name": "@capyclaw/ppt-skill-narrative"
     },
     {
       "id": "ppt-skill-design",
-      "name": "dsh-ppt-skill-design"
+      "name": "@capyclaw/ppt-skill-design"
     },
     {
       "id": "ppt-skill-api",
-      "name": "dsh-ppt-skill-api"
+      "name": "@capyclaw/ppt-skill-api"
     },
     {
       "id": "ppt-skill-authoring",
-      "name": "dsh-ppt-skill-authoring"
+      "name": "@capyclaw/ppt-skill-authoring"
     },
     {
       "id": "ppt-skill-editing",
-      "name": "dsh-ppt-skill-editing"
+      "name": "@capyclaw/ppt-skill-editing"
     },
     {
       "id": "ppt-skill-visual-check",
-      "name": "dsh-ppt-skill-visual-check"
+      "name": "@capyclaw/ppt-skill-visual-check"
     },
     {
       "id": "ppt-skill-research",
-      "name": "dsh-ppt-skill-research"
+      "name": "@capyclaw/ppt-skill-research"
     }
   ],
   "checks": [

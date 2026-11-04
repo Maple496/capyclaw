@@ -15,7 +15,7 @@ const ROOT = resolve(HERE, '..')
 const PLUGIN = join(ROOT, 'plugin')
 const SKILLS = join(ROOT, 'src', 'skills')
 const WORKBENCH_CONTRACT = JSON.parse(readFileSync(
-  join(PLUGIN, 'dsh-ppt-workbench', 'contract', 'ppt-contract.json'), 'utf8'))
+  join(PLUGIN, 'capyclaw-ppt-workbench', 'contract', 'ppt-contract.json'), 'utf8'))
 
 const PACKAGES = [
   { pkg: 'dsh-ppt-skill-ppt', skill: 'ppt', slug: 'ppt' },

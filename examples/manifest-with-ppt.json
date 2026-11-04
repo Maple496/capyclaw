@@ -16,7 +16,7 @@
   "services": [
     {
       "name": "ppt-workbench",
-      "cmd": ["node", "./extensions/bridges/ppt-bridge/plugin/dsh-ppt-workbench/server/relay.mjs"],
+      "cmd": ["node", "./extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-workbench/server/relay.mjs"],
       "port": 39311
     }
   ]

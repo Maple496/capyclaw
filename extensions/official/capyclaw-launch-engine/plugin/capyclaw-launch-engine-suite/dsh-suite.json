@@ -45,8 +45,7 @@
       "id": "launch-engine-host",
       "name": "@capyclaw/launch-engine",
       "config": {
-        "registryKind": "inline",
-        "capabilities": {},
+        "registryKind": "profile",
         "enableHttp": true
       }
     }

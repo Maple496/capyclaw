@@ -32,7 +32,7 @@
     "suite.schema.json"
   ],
   "scripts": {
-    "test": "node --test test/manifest.test.mjs test/compose.test.mjs test/profile.test.mjs test/domain.test.mjs test/runtime.test.mjs test/artifacts.test.mjs test/deploy.test.mjs test/works-source.test.mjs test/works-parser.test.mjs test/seam.test.mjs test/extensibility.test.mjs test/e2e-distribution.test.mjs"
+    "test": "node --test test/manifest.test.mjs test/compose.test.mjs test/profile.test.mjs test/domain.test.mjs test/runtime.test.mjs test/artifacts.test.mjs test/deploy.test.mjs test/works-source.test.mjs test/works-parser.test.mjs test/seam.test.mjs test/extensibility.test.mjs test/e2e-distribution.test.mjs test/activation-registry.test.mjs"
   },
   "engines": {
     "node": ">=18"

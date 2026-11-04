@@ -196,6 +196,7 @@ package.json（name/version/engines.dsh/bundle.patch/publishConfig）
 ## 十、文档导航
 
 - [README](README.md) — 定位与命令
+- [docs/reference/component-standard.md](docs/reference/component-standard.md) — **功能组件注册标准**（suite=注册点 / domain=组合 / stack=启动；哪些格式是产物或已删除）
 - [docs/architecture/contracts.md](docs/architecture/contracts.md) — 全链契约总册
 - [docs/guides/](docs/guides/) — 插件开发/打包/服务集成
 - [docs/reference/](docs/reference/) — 插件结构、源码标准、服务标准

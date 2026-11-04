@@ -348,3 +348,49 @@ test('domain 型 stack：缺 domain.source 报错，且不要求 home/profile', 
     await rm(dir, { recursive: true, force: true })
   }
 })
+
+/** 端口别名（harness/dsh → proxy/upstream）与统一服务 spec 一致性。 */
+import { fileURLToPath, pathToFileURL } from 'node:url'
+
+test('loadStack：harness/dsh 端口别名装载期归一为 proxy/upstream（规范名优先）', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dsh-stack-alias-'))
+  try {
+    const stackFile = path.join(dir, 'stack.json')
+    await writeJson(stackFile, { kind: 'domain', name: 'alias', domain: { source: './d' }, ports: { harness: 4501, dsh: 4502, content: 4503 } })
+    const stack = loadStack(stackFile)
+    assert.deepEqual(stack.ports, { proxy: 4501, upstream: 4502, content: 4503 })
+    assert.equal(stack.ports.harness, undefined)
+    assert.equal(stack.ports.dsh, undefined)
+
+    /* 规范名优先：同时给 proxy 与 harness 时 proxy 生效 */
+    await writeJson(stackFile, { kind: 'domain', name: 'alias', domain: { source: './d' }, ports: { proxy: 1, harness: 2 } })
+    assert.equal(loadStack(stackFile).ports.proxy, 1)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('compileServices 产物符合 broker 统一服务 spec（跨包一致性）', async () => {
+  const { validateServiceManifest } = await import(
+    pathToFileURL(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'dsh-service-broker', 'lib', 'spec.mjs')).href
+  )
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dsh-stack-spec-'))
+  try {
+    await mkdir(path.join(dir, 'srv'), { recursive: true })
+    await writeFile(path.join(dir, 'srv', 'a.mjs'), 'export {}\n')
+    const stackFile = path.join(dir, 'stack.json')
+    await writeJson(stackFile, {
+      kind: 'profile', name: 'spec', home: './home', profile: 'web',
+      plugins: { bundles: [] },
+      services: [
+        { id: 'a', path: './srv/a.mjs', port: 4701, health: '/healthz' },
+        { id: 'b', cmd: ['node', 'b.mjs'], ports: { main: 4702 }, keepAlive: false },
+      ],
+    })
+    const compiled = compileStack(loadStack(stackFile))
+    assert.equal(compiled.valid, true, compiled.errors?.join('\n'))
+    assert.deepEqual(validateServiceManifest(compiled.manifest.content.services, 'stack-services.json'), [])
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})

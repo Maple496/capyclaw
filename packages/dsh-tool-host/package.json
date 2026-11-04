@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/tool-host",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "DSH 公共工具面插件：能力 DSL、工具注册表、参数校验、契约报告、MCP 协议壳与 instructions 模板，向插件提供 ctx.toolHost。",
   "type": "module",
   "main": "./lib/host.mjs",
@@ -9,12 +9,25 @@
     "./src": "./src/index.mjs",
     "./package.json": "./package.json"
   },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
     },
     "suite": "./dsh-suite.json",
-    "apiVersion": "1.0.0"
+    "apiVersion": "1.0.0",
+    "category": "service",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "公共服务工具面",
+    "description": "能力 DSL、工具注册表、参数校验、契约报告与 MCP 协议壳，向插件提供 ctx.toolHost"
   },
   "files": [
     "lib/",

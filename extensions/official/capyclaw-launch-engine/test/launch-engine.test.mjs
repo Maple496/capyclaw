@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtemp, writeFile } from 'node:fs/promises'
+import { mkdtemp, mkdir, writeFile } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -65,6 +65,53 @@ test('registry：inline 源允许空表；local 源可读文件且 describe 重�
 
   await writeFile(file, JSON.stringify({ capabilities: { demo2: {} } }))
   assert.ok((await local.describe()).capabilities.demo2, 'local 源每次 describe 重读文件')
+})
+
+test('registry：profile 源读 <DSH_HOME>/profiles/<DSH_PROFILE>/launch-engine.registry.json', async () => {
+  const home = await mkdtemp(path.join(os.tmpdir(), 'le-home-'))
+  const profileDir = path.join(home, 'profiles', 'domain-demo')
+  await mkdir(profileDir, { recursive: true })
+  const file = path.join(profileDir, 'launch-engine.registry.json')
+  await writeFile(file, JSON.stringify({ version: 1, capabilities: { demo: { bundles: [{ name: 'x' }] } } }))
+
+  process.env.DSH_HOME = home
+  process.env.DSH_PROFILE = 'domain-demo'
+  try {
+    const profile = createRegistry({ kind: 'profile' })
+    assert.equal(profile.id, 'profile')
+    assert.equal(profile.file, file)
+    assert.equal((await profile.describe()).capabilities.demo.bundles[0].name, 'x')
+
+    await writeFile(file, JSON.stringify({ capabilities: { demo2: {} } }))
+    assert.ok((await profile.describe()).capabilities.demo2, 'profile 源每次 describe 重读文件')
+
+    /* 显式 file 覆盖推导路径 */
+    const override = createRegistry({ kind: 'profile', file })
+    assert.equal(override.file, file)
+  } finally {
+    delete process.env.DSH_HOME
+    delete process.env.DSH_PROFILE
+  }
+})
+
+test('registry：profile 源缺文件 / 缺环境都诚实报错', async () => {
+  const home = await mkdtemp(path.join(os.tmpdir(), 'le-home-missing-'))
+  process.env.DSH_HOME = home
+  process.env.DSH_PROFILE = 'ghost'
+  try {
+    const missing = createRegistry({ kind: 'profile' })
+    await assert.rejects(() => missing.describe(), (error) => {
+      assert.equal(error.code, 'REGISTRY_NOT_FOUND')
+      assert.match(error.message, /suite-kit/)
+      return true
+    })
+  } finally {
+    delete process.env.DSH_HOME
+    delete process.env.DSH_PROFILE
+  }
+
+  const noEnv = createRegistry({ kind: 'profile' })
+  await assert.rejects(() => noEnv.describe(), (error) => error.code === 'INVALID_REGISTRY')
 })
 
 test('registry：local 文件缺失 / http 源 / 未知类型都诚实报错', async () => {

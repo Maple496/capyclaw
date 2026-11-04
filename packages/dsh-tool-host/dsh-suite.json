@@ -5,12 +5,14 @@
   "title": "Tool Host",
   "description": "通用工具面：能力 DSL、注册表、校验、契约、MCP 壳。",
   "packages": {
-    "dsh-tool-host": {
+    "@capyclaw/tool-host": {
       "role": "provider",
-      "version": "^0.1.0",
+      "version": "^0.1.1",
       "path": ".",
       "provides": {
-        "services": ["toolHost"],
+        "services": [
+          "toolHost"
+        ],
         "capabilities": {
           "tools.registry": "1.0.0"
         }
@@ -20,7 +22,7 @@
   "rows": [
     {
       "id": "tool-host",
-      "name": "dsh-tool-host"
+      "name": "@capyclaw/tool-host"
     }
   ],
   "checks": []

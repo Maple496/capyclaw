@@ -1,0 +1,26 @@
+# ppt — PPTist 编辑工作台（domain 型启动单位）
+#
+# 组件清单的唯一事实来源是 extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-suite/dsh-suite.json
+# （4 个公共基建 + workbench 运行时 + 8 个 skill 包 + broker/skills 服务）；
+# domains/ppt/dsh-domain.json 负责选择组件并声明 runtime.requires 启动门禁。
+# 本 DSL 只是启动面：编译成 dsh-stack.json 后交给 dshd → dsh-suite-kit runtime。
+#
+#   node scripts/compile-stack.mjs launchpads/ppt.stack   # DSL → ppt.dsh-stack.json
+#   npm run dshd -- start --stack launchpads/ppt.dsh-stack.json
+#
+# 健康判据（suite checks）：http://127.0.0.1:39311/healthz → {ok:true, contractsOk:true}
+stack "ppt" {
+  kind "domain"
+  stateDir "../tools/dsh-launcher/.dshd/ppt-state"
+
+  ports {
+    broker "auto"
+    proxy "auto"
+    upstream "auto"
+    content "auto"
+  }
+
+  domain {
+    source "../extensions/bridges/ppt-bridge/domains/ppt"
+  }
+}

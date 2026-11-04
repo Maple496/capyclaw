@@ -165,13 +165,30 @@ export function resolveStackPaths(stack) {
   }
 }
 
+/**
+ * 端口别名归一化：domain 语义的 `harness` / `dsh` 是 `proxy` / `upstream`
+ * 的同义词（dsh-suite-kit domain.schema 的叫法）。装载期归一到规范名
+ * （规范名优先），编译/校验/schema 只见 proxy / upstream，两套命名不再漂移。
+ */
+function normalizeStackPorts(raw) {
+  const ports = raw.ports
+  if (!isObject(ports)) return raw
+  if (ports.harness === undefined && ports.dsh === undefined) return raw
+  const next = { ...ports }
+  if (next.proxy === undefined && next.harness !== undefined) next.proxy = next.harness
+  if (next.upstream === undefined && next.dsh !== undefined) next.upstream = next.dsh
+  delete next.harness
+  delete next.dsh
+  return { ...raw, ports: next }
+}
+
 export function loadStack(file) {
   const absPath = path.resolve(file)
   if (!existsSync(absPath)) throw new Error(`stack 不存在: ${absPath}`)
   const raw = readJson(absPath)
   if (!isObject(raw)) throw new Error(`stack 必须是 JSON 对象: ${absPath}`)
   const dir = path.dirname(absPath)
-  const stack = { ...raw, path: absPath, dir }
+  const stack = { ...normalizeStackPorts(raw), path: absPath, dir }
   stack.kind = stackKind(stack)
   stack.paths = resolveStackPaths(stack)
   return stack

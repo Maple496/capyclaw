@@ -22,7 +22,7 @@ import JSZip from 'jszip'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(HERE, '..')
-const WORKBENCH = path.join(ROOT, 'plugin', 'dsh-ppt-workbench')
+const WORKBENCH = path.join(ROOT, 'plugin', 'capyclaw-ppt-workbench')
 const args = process.argv.slice(2)
 const arg = (name, fallback) => {
   const index = args.indexOf(name)

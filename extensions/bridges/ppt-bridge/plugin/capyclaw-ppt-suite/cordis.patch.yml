@@ -2,29 +2,29 @@
 
 - insert:
     - id: service-host
-      name: "dsh-service-host"
+      name: "@capyclaw/service-host"
     - id: tool-host
-      name: "dsh-tool-host"
+      name: "@capyclaw/tool-host"
     - id: asset-service
-      name: "dsh-asset-service"
+      name: "@capyclaw/asset-service"
     - id: editor-host
-      name: "dsh-editor-host"
+      name: "@capyclaw/editor-host"
     - id: mcp-ppt
       name: "@deepseek-ai/dsh-mcp-client"
       config: {"serverName":"ppt","transport":"streamable-http","url":"http://127.0.0.1:39311/mcp","failOnStartupError":false,"toolCallTimeoutMs":120000}
     - id: ppt-skill-ppt
-      name: "dsh-ppt-skill-ppt"
+      name: "@capyclaw/ppt-skill-ppt"
     - id: ppt-skill-narrative
-      name: "dsh-ppt-skill-narrative"
+      name: "@capyclaw/ppt-skill-narrative"
     - id: ppt-skill-design
-      name: "dsh-ppt-skill-design"
+      name: "@capyclaw/ppt-skill-design"
     - id: ppt-skill-api
-      name: "dsh-ppt-skill-api"
+      name: "@capyclaw/ppt-skill-api"
     - id: ppt-skill-authoring
-      name: "dsh-ppt-skill-authoring"
+      name: "@capyclaw/ppt-skill-authoring"
     - id: ppt-skill-editing
-      name: "dsh-ppt-skill-editing"
+      name: "@capyclaw/ppt-skill-editing"
     - id: ppt-skill-visual-check
-      name: "dsh-ppt-skill-visual-check"
+      name: "@capyclaw/ppt-skill-visual-check"
     - id: ppt-skill-research
-      name: "dsh-ppt-skill-research"
+      name: "@capyclaw/ppt-skill-research"

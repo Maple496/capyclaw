@@ -1,16 +1,17 @@
 /**
- * 配置装载：`--config <file>` > 工具目录 `dshd.config.json` > 内置样例缺省。
+ * dshd 配置基础件。启动入口只有 `--stack <dsh-stack.json>`（作者层是
+ * launchpads/*.stack DSL，编译产物是 dsh-stack.json）；旧的
+ * dshd.config.json + local-services.json 配置路径已删除。
  *
- * 全部路径解析为绝对路径；相对路径相对「配置文件所在目录」。
+ * 这里只提供 stack 编译用的内置缺省（builtinDefaults）、端口校验（portOf）
+ * 与启动前置校验（assertConfig）；装载由 lib/stack.mjs 的 toLauncherConfig 完成。
  */
 import { existsSync } from 'node:fs'
-import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { resolveHarnessDir } from 'dsh-harness-paths'
 
 export const PKG_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-export const DEFAULT_CONFIG_FILE = path.join(PKG_DIR, 'dshd.config.json')
 
 const REPO_ROOT = path.resolve(PKG_DIR, '..', '..')
 
@@ -18,10 +19,10 @@ const REPO_ROOT = path.resolve(PKG_DIR, '..', '..')
 export { resolveHarnessDir }
 
 /**
- * 内置缺省（仓库内布局；dshHome 必须由配置给出——那是插件/profile 的家）。
+ * 内置缺省（仓库内布局；dshHome 必须由 stack 给出——那是插件/profile 的家）。
  *
  * dsh 宿主不在本仓库内。harnessDir 解析顺序：
- *   1. stack / 配置文件里的 harnessDir
+ *   1. stack 里的 harnessDir
  *   2. 环境变量 DSH_HARNESS_DIR
  *   3. 兄弟目录 ../dsh-runtime/apps/harness/deepseek-harness（文档化布局）
  * 都缺失时会在启动前明确报错，而不是悄悄指向一个不存在的目录。
@@ -43,12 +44,6 @@ export function builtinDefaults() {
   }
 }
 
-function absOf(base, value) {
-  const str = String(value || '').trim()
-  if (!str) return ''
-  return path.isAbsolute(str) ? path.normalize(str) : path.resolve(base, str)
-}
-
 export function portOf(value) {
   if (value === undefined || value === null || value === '' || value === 'auto') return 'auto'
   const num = Number(value)
@@ -56,36 +51,6 @@ export function portOf(value) {
     throw new Error(`端口非法: ${JSON.stringify(value)}（正整数或 "auto"）`)
   }
   return num
-}
-
-export async function loadConfig(configPath) {
-  const file = configPath ? path.resolve(configPath) : DEFAULT_CONFIG_FILE
-  const base = path.dirname(file)
-  const merged = builtinDefaults()
-  if (existsSync(file)) {
-    const raw = JSON.parse(await readFile(file, 'utf8'))
-    for (const key of ['name', 'profile', 'harnessDir', 'brokerDir', 'stateDir',
-      'workspace', 'manifest', 'dshHome']) {
-      if (raw[key] !== undefined) merged[key] = String(raw[key])
-    }
-    for (const key of ['dshProxyPort', 'dshUpPort', 'brokerPort']) {
-      if (raw[key] !== undefined) merged[key] = raw[key]
-    }
-    if (raw.open !== undefined) merged.open = !!raw.open
-  } else if (configPath) {
-    throw new Error(`配置文件不存在: ${file}`)
-  }
-  merged._configFile = file
-  merged.harnessDir = absOf(base, merged.harnessDir)
-  merged.brokerDir = absOf(base, merged.brokerDir)
-  merged.stateDir = absOf(base, merged.stateDir)
-  merged.workspace = absOf(base, merged.workspace)
-  merged.manifest = absOf(base, merged.manifest)
-  merged.dshHome = absOf(base, merged.dshHome)
-  merged.dshProxyPort = portOf(merged.dshProxyPort)
-  merged.dshUpPort = portOf(merged.dshUpPort)
-  merged.brokerPort = portOf(merged.brokerPort)
-  return merged
 }
 
 /** 启动前置校验：缺什么当场报，不等到 spawn 才炸。 */
@@ -96,7 +61,7 @@ export function assertConfig(cfg) {
   if (!cfg.harnessDir) {
     missing.push(
       'harnessDir（dsh 宿主目录；本仓库不再内置。'
-      + '请设置环境变量 DSH_HARNESS_DIR，或在 stack/配置里写 harnessDir）',
+      + '请设置环境变量 DSH_HARNESS_DIR，或在 stack 里写 harnessDir）',
     )
   } else if (!existsSync(cfg.harnessDir)) {
     missing.push(`harnessDir 不存在: ${cfg.harnessDir}`)

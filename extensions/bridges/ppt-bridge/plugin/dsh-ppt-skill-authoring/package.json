@@ -1,6 +1,6 @@
 {
-  "name": "dsh-ppt-skill-authoring",
-  "version": "2.2.0",
+  "name": "@capyclaw/ppt-skill-authoring",
+  "version": "2.2.1",
   "description": "PPT skill：deck_brief → clean 简洁版式成稿。",
   "type": "module",
   "main": "./lib/index.mjs",
@@ -8,10 +8,19 @@
     ".": "./lib/index.mjs",
     "./package.json": "./package.json"
   },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
-    }
+    },
+    "category": "skills",
+    "platform": "both"
   },
   "meta": {
     "title": "PPT Skill · PPT 成稿",
@@ -25,5 +34,10 @@
     "README.md"
   ],
   "license": "MIT",
-  "private": true
+  "scripts": {
+    "test": "node --test test/smoke.test.mjs"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  }
 }

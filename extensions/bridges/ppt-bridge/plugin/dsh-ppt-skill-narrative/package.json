@@ -1,6 +1,6 @@
 {
-  "name": "dsh-ppt-skill-narrative",
-  "version": "2.2.0",
+  "name": "@capyclaw/ppt-skill-narrative",
+  "version": "2.2.2",
   "description": "PPT skill：SCQA、金字塔、一页一观点、deck_brief。",
   "type": "module",
   "main": "./lib/index.mjs",
@@ -8,10 +8,19 @@
     ".": "./lib/index.mjs",
     "./package.json": "./package.json"
   },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
-    }
+    },
+    "category": "skills",
+    "platform": "both"
   },
   "meta": {
     "title": "PPT Skill · PPT 叙事",
@@ -25,5 +34,10 @@
     "README.md"
   ],
   "license": "MIT",
-  "private": true
+  "scripts": {
+    "test": "node --test test/smoke.test.mjs"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  }
 }

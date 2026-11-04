@@ -52,7 +52,7 @@ test('子包路径存在且 row 覆盖公共插件 / workbench / skills / mcp', 
 })
 
 test('能力声明覆盖工具、端口、技能', () => {
-  const workbench = loaded.manifest.packages['dsh-ppt-workbench']
+  const workbench = loaded.manifest.packages['@capyclaw/ppt-workbench']
   assert.deepEqual(workbench.provides.ports, [39311])
   assert.ok(workbench.provides.tools.includes('ppt_*'))
   const skillNames = ['ppt', 'pptmaster-narrative', 'pptmaster-design', 'pptist-api', 'pptist-authoring', 'pptist-editing', 'pptist-visual-check', 'pptist-research']

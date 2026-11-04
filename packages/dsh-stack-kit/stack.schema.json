@@ -30,6 +30,8 @@
         "proxy": { "$ref": "#/$defs/port", "description": "浏览器入口（domain 型映射 runtime harness 端口）" },
         "upstream": { "$ref": "#/$defs/port", "description": "dsh 上游端口（domain 型映射 runtime dsh 端口）" },
         "content": { "$ref": "#/$defs/port", "description": "domain 型：runtime content 端口（PPT relay / 内容服务）" },
+        "harness": { "$ref": "#/$defs/port", "description": "proxy 的别名（domain 语义）；装载期归一为 proxy，规范名优先" },
+        "dsh": { "$ref": "#/$defs/port", "description": "upstream 的别名（domain 语义）；装载期归一为 upstream，规范名优先" },
         "services": {
           "type": "object",
           "additionalProperties": { "$ref": "#/$defs/port" },

@@ -3,33 +3,36 @@
 **dsh + 插件全栈独立启动器**：把原本由桌面前端后端（`works_services.py`）执行的
 启动清单，抽成一个零桌面依赖的独立程序。
 
+启动入口只有 `--stack <dsh-stack.json>`（作者层是 `launchpads/*.stack` DSL，
+由 capyclaw-launchpad 编译）；旧的 `dshd.config.json` + `local-services.json`
+配置路径已删除。
+
 ```bash
-npm run dshd -- start          # 拉起 broker（开机清单）→ dsh，就绪返回
-npm run dshd -- start --open   # 就绪后开浏览器
-npm run dshd -- start --foreground   # 前台守护（dsh 崩溃自动重启，Ctrl+C 全停）
-npm run dshd -- status         # 运行态一览
-npm run dshd -- doctor         # 体检（pid + 端点响应）
-npm run dshd -- stop           # 停服务 → 停 broker → 停 dsh
-npm run dshd -- logs           # 日志文件列表
+npm run dshd -- start --stack launchpads/dev.dsh-stack.json   # 拉起 broker → dsh，就绪返回
+npm run dshd -- start --stack launchpads/dev.dsh-stack.json --open        # 就绪后开浏览器
+npm run dshd -- start --stack launchpads/dev.dsh-stack.json --foreground  # 前台守护（Ctrl+C 全停）
+npm run dshd -- status --stack launchpads/dev.dsh-stack.json   # 运行态一览
+npm run dshd -- doctor --stack launchpads/dev.dsh-stack.json   # 体检（pid + 端点响应）
+npm run dshd -- stop   --stack launchpads/dev.dsh-stack.json   # 停服务 → 停 broker → 停 dsh
+npm run dshd -- logs   --stack launchpads/dev.dsh-stack.json   # 日志文件列表
 ```
 
-或直接：`node tools/dsh-launcher/bin/dshd.mjs <命令>`。
+或直接：`node tools/dsh-launcher/bin/dshd.mjs <命令> --stack <file>`。
 
-## 统一启动清单（`dsh-stack.json`，推荐）
+## 统一启动清单（`dsh-stack.json`）
 
 一份 stack 同时决定 **profile bundles（插件） / broker 服务 / 端口 / DSH_HOME /
-workspace / stateDir**，不再分别手改 `dshd.config.json`、profile `package.json` 和
-`services.json`：
+workspace / stateDir**，不再分别手改 profile `package.json` 和 `services.json`：
 
 ```bash
 # 只读：看会生成什么 / 与现有 profile、服务清单是否漂移
-node tools/dsh-launcher/bin/dshd.mjs stack plan --stack tools/dsh-launcher/dev-stack.json
+node tools/dsh-launcher/bin/dshd.mjs stack plan --stack launchpads/dev.dsh-stack.json
 
 # 物化：写 profile package.json + 生成 <stateDir>/stack-services.json
-node tools/dsh-launcher/bin/dshd.mjs stack apply --stack tools/dsh-launcher/dev-stack.json
+node tools/dsh-launcher/bin/dshd.mjs stack apply --stack launchpads/dev.dsh-stack.json
 
 # apply + start
-node tools/dsh-launcher/bin/dshd.mjs start --stack tools/dsh-launcher/dev-stack.json
+node tools/dsh-launcher/bin/dshd.mjs start --stack launchpads/dev.dsh-stack.json
 ```
 
 生成物：
@@ -43,9 +46,8 @@ stack 的 schema、占位符和编译规则见
 [`packages/dsh-stack-kit/README.md`](../../packages/dsh-stack-kit/README.md)。
 
 **为什么只多这一层**：dsh 必须读 profile 的 `package.json`，broker 必须读
-`{services:[...]}` 清单，所以这两个生成物省不掉；除此之外 `--stack` 已经绕过
-`dshd.config.json`，没有第三份运行时配置。再减少就得改 dsh/broker 的读取契约，
-超出「不要大改」的范围。v2 起支持 domain 型 stack（见下），model/runtime-control
+`{services:[...]}` 清单，所以这两个生成物省不掉；stack 是唯一的运行时配置入口，
+没有第二份。v2 起支持 domain 型 stack（见下），model/runtime-control
 仍由 domain/works 自己决定。
 
 **domain 型（v2）**：`kind: "domain"` + `domain.source` 指向 `dsh-domain.json`，
@@ -66,12 +68,12 @@ dshd status|doctor|stop --stack my-domain.stack.json
 
 **边界**：profile 型 stack 改动后需要 `stop` → `start`（运行中的 dsh 不会热重载
 bundles）；domain 型的 `--foreground` 守护 proxy，proxy 死 → 整组 stop+start（限次）。
-`dshd --config` 仍然可用，`--stack` 是新的推荐入口。
 
-本仓库的 dev 实例就是
-[`tools/dsh-launcher/dev-stack.json`](./dev-stack.json)：固定 13593 broker /
-13594 web / 13595 upstream，launchpad 管理 API 13596，独立 DSH_HOME，不碰桌面
-3016/39311。
+本仓库的 dev 实例是 [`launchpads/dev.stack`](../../launchpads/dev.stack)
+（DSL，作者层）编译出的
+[`launchpads/dev.dsh-stack.json`](../../launchpads/dev.dsh-stack.json)：
+固定 13593 broker / 13594 web / 13595 upstream，launchpad 管理 API 13596，
+独立 DSH_HOME，不碰桌面 3016/39311。
 
 ## 链路测试矩阵（独立 + 环环相扣）
 
@@ -113,24 +115,13 @@ E2E 用临时 `home/stateDir` 和动态空闲端口，不读也不改桌面/当�
 **发现**走 discovery 注册表（`DSH_DISCOVERY_FILE`），dshd 把 broker 与 dsh
 指到同一张表（`<stateDir>/services.json`），侧边栏/MCP 等消费者照常工作。
 
-## 配置（`dshd.config.json`，可用 `--config` 换；统一 stack 用 `--stack`）
+## 配置
 
-> `--stack` 见上一节；下面的 `--config` 是兼容旧清单的入口。
-
-| 字段 | 含义 | 缺省 |
-|---|---|---|
-| `dshHome` | **DSH_HOME**：profile/插件所在家（要复用现有插件就指到它） | 必填 |
-| `profile` | dsh profile 名 | `web` |
-| `manifest` | broker 开机清单（`{services:[…]}`，支持 `${PACKAGE_DIR}`） | 必填 |
-| `harnessDir` | auth-proxy 所在目录 | `<repo>/core-harness/deepseek-harness` |
-| `brokerDir` | broker 包目录 | `<repo>/packages/dsh-service-broker` |
-| `workspace` | dsh 工作区 | `<harnessDir>/workspace` |
-| `stateDir` | 运行态/日志/discovery 落点 | `<本包>/.dshd` |
-| `dshProxyPort` / `dshUpPort` / `brokerPort` | 端口（正整数或 `"auto"`） | `auto` |
-| `open` | 就绪后自动开浏览器 | `false` |
-
-样例见 `dshd.config.example.json`；当前 `dshd.config.json` 指向本机实际布局
-（复用桌面 scope 里已装好的 profile 与 pptsuite 投递包清单）。
+没有独立配置文件。`--stack` 的 DSL/JSON 字段（home/profile/stateDir/ports/
+plugins/services，domain 型的 domain.source 等）就是全部配置，schema 见
+[`packages/dsh-stack-kit/stack.schema.json`](../../packages/dsh-stack-kit/stack.schema.json)。
+`harnessDir` 缺省按 `DSH_HARNESS_DIR` 环境变量或文档化兄弟目录解析
+（`dsh-harness-paths` 唯一实现）。
 
 ## 语义与边界（诚实失败）
 
@@ -149,8 +140,10 @@ E2E 用临时 `home/stateDir` 和动态空闲端口，不读也不改桌面/当�
 
 ## 稳定性验证（2026-11-02 真机）
 
-用 `test/stability.config.json` + `test/stability.manifest.json`（隔离端口/隔离数据目录）
-跑完整循环，生产实例（3016/3017、39311/39312）全程未受影响：
+> 该轮验证基于已删除的 `--config` 路径（stability.config/manifest 输入文件已随配置路径一并清理）；
+> 结论对 `--stack` 路径同样适用——broker/dsh/守护行为不在配置装载层。现行回归见上方「链路测试矩阵」。
+
+当时用隔离端口/隔离数据目录跑完整循环，生产实例（3016/3017、39311/39312）全程未受影响：
 
 | 场景 | 结果 |
 |---|---|

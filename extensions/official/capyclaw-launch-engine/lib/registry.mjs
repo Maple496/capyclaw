@@ -7,6 +7,8 @@
  *   inline  config.capabilities 直接给对象（默认；允许空表——插件能起，
  *           注册表随后由 stack.plugins.configs 或 local 文件注入）
  *   local   读本地 JSON 文件（registryPath）
+ *   profile 读 <DSH_HOME>/profiles/<DSH_PROFILE>/launch-engine.registry.json
+ *           （suite-kit installSuites/installDomain 从 dsh-suite.json 组合结果生成）
  *   http    预留接口，显式 NOT_IMPLEMENTED（契约见 createHttpRegistry）
  *
  * 归一化后的能力结构：
@@ -128,6 +130,50 @@ export function createLocalRegistry({ file, cwd = process.cwd() } = {}) {
 }
 
 /**
+ * profile 源：读 suite-kit 安装期生成的
+ *   <DSH_HOME>/profiles/<DSH_PROFILE>/launch-engine.registry.json
+ *
+ * 注册表的唯一事实来源是 dsh-suite.json——installSuites / installDomain
+ * 把组合结果编译成该文件，本源只是它的运行期视图，不再手写注册表。
+ * 文件缺席时在 describe 诚实报错（stack 型 profile 没有这份文件，
+ * 应显式换 inline/local 源）。
+ */
+export function createProfileRegistry({ home, profile, file } = {}) {
+  const resolveFile = () => {
+    if (file) return path.isAbsolute(file) ? file : path.resolve(file)
+    const homeDir = home || process.env.DSH_HOME
+    const profileName = profile || process.env.DSH_PROFILE
+    if (!homeDir || !profileName) {
+      throw new RegistryError(
+        'profile 注册表源需要 DSH_HOME 与 DSH_PROFILE（dsh 进程内自动提供）',
+        'INVALID_REGISTRY',
+      )
+    }
+    return path.join(path.resolve(homeDir), 'profiles', profileName, 'launch-engine.registry.json')
+  }
+  return {
+    id: 'profile',
+    get file() { return resolveFile() },
+    async describe() {
+      const abs = resolveFile()
+      if (!existsSync(abs)) {
+        throw new RegistryError(
+          `profile 注册表不存在: ${abs}（由 dsh-suite-kit installSuites/installDomain 生成；stack 型 profile 请改用 inline/local 源）`,
+          'REGISTRY_NOT_FOUND',
+        )
+      }
+      let raw
+      try {
+        raw = JSON.parse(await readFile(abs, 'utf8'))
+      } catch (error) {
+        throw new RegistryError(`注册表解析失败 (${abs}): ${error.message}`, 'INVALID_REGISTRY')
+      }
+      return normalizeRegistry(raw)
+    },
+  }
+}
+
+/**
  * HTTP 注册表源（预留）。
  *
  * 契约（实现时按此对接）：
@@ -154,8 +200,9 @@ export function createHttpRegistry({ url, tokenEnv = 'DSH_LE_TOKEN' } = {}) {
 export function createRegistry({ kind = 'inline', file, url, capabilities, cwd } = {}) {
   if (kind === 'inline') return createInlineRegistry({ capabilities })
   if (kind === 'local') return createLocalRegistry({ file, cwd })
+  if (kind === 'profile') return createProfileRegistry({ file })
   if (kind === 'http') return createHttpRegistry({ url })
-  throw new RegistryError(`未知的注册表源类型: ${kind}（可用 inline | local | http）`, 'INVALID_REGISTRY')
+  throw new RegistryError(`未知的注册表源类型: ${kind}（可用 inline | local | profile | http）`, 'INVALID_REGISTRY')
 }
 
 /** 查单个 capability；未知时列出可用项（不静默）。 */

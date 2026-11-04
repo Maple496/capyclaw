@@ -3,11 +3,11 @@ import assert from 'node:assert/strict'
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { inspectContractSnapshots } from '../plugin/dsh-ppt-workbench/server/contract-snapshots.mjs'
+import { inspectContractSnapshots } from '../plugin/capyclaw-ppt-workbench/server/contract-snapshots.mjs'
 
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), 'ppt-contract-'))
-  const workbench = join(root, 'dsh-ppt-workbench')
+  const workbench = join(root, 'capyclaw-ppt-workbench')
   mkdirSync(workbench, { recursive: true })
   const addSkill = (name, version) => {
     mkdirSync(join(root, name), { recursive: true })

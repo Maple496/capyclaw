@@ -6,7 +6,7 @@
       "dirFrom": "contentState",
       "cmd": [
         "node",
-        "${PACKAGE_DIR}/node_modules/dsh-ppt-workbench/server/relay.mjs",
+        "${PACKAGE_DIR}/node_modules/@capyclaw/ppt-workbench/server/relay.mjs",
         "--port",
         "${PORT}",
         "--dir",
@@ -22,7 +22,7 @@
       "id": "dsh-skills",
       "cmd": [
         "node",
-        "${PACKAGE_DIR}/node_modules/dsh-skills-service/server.mjs",
+        "${PACKAGE_DIR}/node_modules/@capyclaw/skills-service/server.mjs",
         "--port",
         "${PORT}"
       ],

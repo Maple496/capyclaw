@@ -6,7 +6,7 @@
   ],
   "packages": [
     {
-      "name": "dsh-asset-service",
+      "name": "@capyclaw/asset-service",
       "entry": {
         "role": "provider",
         "version": "^0.1.0",
@@ -21,22 +21,22 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-document-workbench",
+      "name": "@capyclaw/document-workbench",
       "entry": {
         "role": "support",
         "version": "^0.1.0",
         "path": "../../../../../packages/dsh-document-workbench"
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-editor-host",
+      "name": "@capyclaw/editor-host",
       "entry": {
         "role": "provider",
         "version": "^0.1.0",
@@ -51,28 +51,28 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-plugin-kit",
+      "name": "@capyclaw/plugin-kit",
       "entry": {
         "role": "support",
         "version": "^0.2.0",
         "path": "../../../../../packages/dsh-plugin-kit"
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-ppt-skill-api",
+      "name": "@capyclaw/ppt-skill-api",
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
         "path": "../dsh-ppt-skill-api",
         "requires": {
-          "dsh-ppt-workbench": "^2.2.0",
+          "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
             "ppt.runtime": "^2.2.0"
           }
@@ -87,17 +87,17 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-ppt-skill-authoring",
+      "name": "@capyclaw/ppt-skill-authoring",
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
         "path": "../dsh-ppt-skill-authoring",
         "requires": {
-          "dsh-ppt-workbench": "^2.2.0",
+          "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
             "ppt.runtime": "^2.2.0"
           }
@@ -112,17 +112,17 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-ppt-skill-design",
+      "name": "@capyclaw/ppt-skill-design",
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
         "path": "../dsh-ppt-skill-design",
         "requires": {
-          "dsh-ppt-workbench": "^2.2.0",
+          "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
             "ppt.runtime": "^2.2.0"
           }
@@ -137,17 +137,17 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-ppt-skill-editing",
+      "name": "@capyclaw/ppt-skill-editing",
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
         "path": "../dsh-ppt-skill-editing",
         "requires": {
-          "dsh-ppt-workbench": "^2.2.0",
+          "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
             "ppt.runtime": "^2.2.0"
           }
@@ -162,17 +162,17 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-ppt-skill-narrative",
+      "name": "@capyclaw/ppt-skill-narrative",
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
         "path": "../dsh-ppt-skill-narrative",
         "requires": {
-          "dsh-ppt-workbench": "^2.2.0",
+          "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
             "ppt.runtime": "^2.2.0"
           }
@@ -187,17 +187,17 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-ppt-skill-ppt",
+      "name": "@capyclaw/ppt-skill-ppt",
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
         "path": "../dsh-ppt-skill-ppt",
         "requires": {
-          "dsh-ppt-workbench": "^2.2.0",
+          "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
             "ppt.runtime": "^2.2.0"
           }
@@ -212,17 +212,17 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-ppt-skill-research",
+      "name": "@capyclaw/ppt-skill-research",
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
         "path": "../dsh-ppt-skill-research",
         "requires": {
-          "dsh-ppt-workbench": "^2.2.0",
+          "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
             "ppt.runtime": "^2.2.0"
           }
@@ -237,17 +237,17 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-ppt-skill-visual-check",
+      "name": "@capyclaw/ppt-skill-visual-check",
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
         "path": "../dsh-ppt-skill-visual-check",
         "requires": {
-          "dsh-ppt-workbench": "^2.2.0",
+          "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
             "ppt.runtime": "^2.2.0"
           }
@@ -262,15 +262,15 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-ppt-workbench",
+      "name": "@capyclaw/ppt-workbench",
       "entry": {
         "role": "runtime",
         "version": "^2.4.0",
-        "path": "../dsh-ppt-workbench",
+        "path": "../capyclaw-ppt-workbench",
         "requires": {
           "capabilities": {
             "host.http": "^1.0.0",
@@ -296,11 +296,11 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-service-broker",
+      "name": "@capyclaw/service-broker",
       "entry": {
         "role": "runtime",
         "version": "^0.1.0",
@@ -316,11 +316,11 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-service-host",
+      "name": "@capyclaw/service-host",
       "entry": {
         "role": "provider",
         "version": "^0.1.0",
@@ -335,11 +335,11 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-skills-service",
+      "name": "@capyclaw/skills-service",
       "entry": {
         "role": "runtime",
         "version": "^0.1.0",
@@ -357,11 +357,11 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     },
     {
-      "name": "dsh-tool-host",
+      "name": "@capyclaw/tool-host",
       "entry": {
         "role": "provider",
         "version": "^0.1.0",
@@ -376,29 +376,29 @@
         }
       },
       "suite": "capyclaw-ppt-suite",
-      "dir": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
-      "file": "<repo>\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
+      "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
+      "file": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite\\dsh-suite.json"
     }
   ],
   "rows": [
     {
       "id": "service-host",
-      "name": "dsh-service-host",
+      "name": "@capyclaw/service-host",
       "_suite": "capyclaw-ppt-suite"
     },
     {
       "id": "tool-host",
-      "name": "dsh-tool-host",
+      "name": "@capyclaw/tool-host",
       "_suite": "capyclaw-ppt-suite"
     },
     {
       "id": "asset-service",
-      "name": "dsh-asset-service",
+      "name": "@capyclaw/asset-service",
       "_suite": "capyclaw-ppt-suite"
     },
     {
       "id": "editor-host",
-      "name": "dsh-editor-host",
+      "name": "@capyclaw/editor-host",
       "_suite": "capyclaw-ppt-suite"
     },
     {
@@ -415,42 +415,42 @@
     },
     {
       "id": "ppt-skill-ppt",
-      "name": "dsh-ppt-skill-ppt",
+      "name": "@capyclaw/ppt-skill-ppt",
       "_suite": "capyclaw-ppt-suite"
     },
     {
       "id": "ppt-skill-narrative",
-      "name": "dsh-ppt-skill-narrative",
+      "name": "@capyclaw/ppt-skill-narrative",
       "_suite": "capyclaw-ppt-suite"
     },
     {
       "id": "ppt-skill-design",
-      "name": "dsh-ppt-skill-design",
+      "name": "@capyclaw/ppt-skill-design",
       "_suite": "capyclaw-ppt-suite"
     },
     {
       "id": "ppt-skill-api",
-      "name": "dsh-ppt-skill-api",
+      "name": "@capyclaw/ppt-skill-api",
       "_suite": "capyclaw-ppt-suite"
     },
     {
       "id": "ppt-skill-authoring",
-      "name": "dsh-ppt-skill-authoring",
+      "name": "@capyclaw/ppt-skill-authoring",
       "_suite": "capyclaw-ppt-suite"
     },
     {
       "id": "ppt-skill-editing",
-      "name": "dsh-ppt-skill-editing",
+      "name": "@capyclaw/ppt-skill-editing",
       "_suite": "capyclaw-ppt-suite"
     },
     {
       "id": "ppt-skill-visual-check",
-      "name": "dsh-ppt-skill-visual-check",
+      "name": "@capyclaw/ppt-skill-visual-check",
       "_suite": "capyclaw-ppt-suite"
     },
     {
       "id": "ppt-skill-research",
-      "name": "dsh-ppt-skill-research",
+      "name": "@capyclaw/ppt-skill-research",
       "_suite": "capyclaw-ppt-suite"
     }
   ],
@@ -480,47 +480,47 @@
   "capabilities": [
     {
       "capability": "ppt.runtime",
-      "package": "dsh-ppt-workbench",
+      "package": "@capyclaw/ppt-workbench",
       "version": "2.3.0"
     },
     {
       "capability": "ppt.tools",
-      "package": "dsh-ppt-workbench",
+      "package": "@capyclaw/ppt-workbench",
       "version": "2.3.0"
     },
     {
       "capability": "ppt.workflows",
-      "package": "dsh-ppt-skill-ppt",
+      "package": "@capyclaw/ppt-skill-ppt",
       "version": "2.2.0"
     },
     {
       "capability": "service.broker",
-      "package": "dsh-service-broker",
+      "package": "@capyclaw/service-broker",
       "version": "1.0.0"
     },
     {
       "capability": "skills.http",
-      "package": "dsh-skills-service",
+      "package": "@capyclaw/skills-service",
       "version": "1.0.0"
     },
     {
       "capability": "host.http",
-      "package": "dsh-service-host",
+      "package": "@capyclaw/service-host",
       "version": "1.0.0"
     },
     {
       "capability": "tools.registry",
-      "package": "dsh-tool-host",
+      "package": "@capyclaw/tool-host",
       "version": "1.0.0"
     },
     {
       "capability": "assets.store",
-      "package": "dsh-asset-service",
+      "package": "@capyclaw/asset-service",
       "version": "1.0.0"
     },
     {
       "capability": "editor.host",
-      "package": "dsh-editor-host",
+      "package": "@capyclaw/editor-host",
       "version": "1.0.0"
     }
   ]

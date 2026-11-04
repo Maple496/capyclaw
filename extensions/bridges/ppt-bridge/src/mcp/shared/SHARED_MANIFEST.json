@@ -3,13 +3,13 @@
   "packages": {
     "service-host": {
       "package": "dsh-service-host",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "apiVersion": "1.0.0",
       "sha256": "b5339ad02e6736ccbd2aebcb5db210df2d7a10495ad302eef79538aa6272e5e6"
     },
     "tool-host": {
       "package": "dsh-tool-host",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "apiVersion": "1.0.0",
       "sha256": "35b16fdcd707d3335162b8c8eb234753d84d38afb122868392af8a4d9660dc36"
     },
@@ -21,13 +21,13 @@
     },
     "asset-service": {
       "package": "dsh-asset-service",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "apiVersion": "1.0.0",
       "sha256": "eb80ee9bb01eaeaa2efbf9763fb4ed005aa4e94d6f3d994998c2a00bbcb834d4"
     },
     "editor-host": {
       "package": "dsh-editor-host",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "apiVersion": "1.0.0",
       "sha256": "57d8818a4dbddb31164b7e99ebee6be1c06ed47f7a5bd96e2aad472d65e1e3a6"
     }

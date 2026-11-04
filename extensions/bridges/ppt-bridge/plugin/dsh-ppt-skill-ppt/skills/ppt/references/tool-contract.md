@@ -1,7 +1,7 @@
 # PPTist Workbench 工具契约
 
 - contractVersion: `2.4.0`
-- packageVersion: `2.4.1`
+- packageVersion: `2.4.3`
 - toolCount: 27
 - features: `deck.contract`, `deck.read`, `deck.audit`, `deck.task`, `deck.write`, `deck.compose`, `deck.recolor`, `deck.image`, `media.search`, `deck.screenshot`, `deck.present`, `deck.undo`, `deck.chart`, `deck.table`, `deck.notes`, `deck.shape`, `deck.line`, `deck.formula`, `deck.import`, `deck.export`
 

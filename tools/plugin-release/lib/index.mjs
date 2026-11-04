@@ -65,8 +65,10 @@ export function publishGateErrors(pkg, srcDir) {
   return errors
 }
 
-/** 插件扫码根目录（仓库内真实存在的插件位置）。 */
-const PLUGIN_BASES = ['extensions/official', 'extensions/suites', 'extensions/bridges', 'extensions/flow', 'extensions/llm-config']
+/** 插件扫码根目录（仓库内真实存在的插件位置）。
+ *  packages/ 里只有基建级插件能过发布闸（纯库无 dsh.bundle/suite/client，private 的被闸拦下），
+ *  所以整个目录加进来不会误收 dsh-plugin-kit / dsh-suite-kit 这类库。 */
+const PLUGIN_BASES = ['packages', 'extensions/official', 'extensions/suites', 'extensions/bridges', 'extensions/flow', 'extensions/llm-config']
 
 /** 可发布的包名形态：dsh-<name> / @org/dsh-<name> / 已发布作用域 @capyclaw/<name>。 */
 const PUBLISHABLE_NAME = /^((@[\w.-]+\/)?dsh-[\w.-]+|@capyclaw\/[\w.-]+)$/

@@ -16,8 +16,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(HERE, '..')
 const WORKSPACE = path.resolve(ROOT, '..', '..')
-const PKG = path.join(ROOT, 'plugin', 'dsh-ppt-workbench')
-const SUITE = path.join(ROOT, 'plugin', 'dsh-ppt-suite')
+const PKG = path.join(ROOT, 'plugin', 'capyclaw-ppt-workbench')
+const SUITE = path.join(ROOT, 'plugin', 'capyclaw-ppt-suite')
 const pkgUrl = (rel) => pathToFileURL(path.join(PKG, rel)).href
 
 function arg(name, fallback) {
@@ -218,9 +218,9 @@ const suite = [
   ['dsh-state-service', benchStateService],
   ['@capyclaw/asset-service', benchAssetService],
   ['@capyclaw/editor-host', benchEditorHost],
-  ['dsh-ppt-workbench', benchWorkbench],
+  ['capyclaw-ppt-workbench', benchWorkbench],
   ['dsh-ppt-skills', benchSkills],
-  ['dsh-ppt-suite', benchSuite],
+  ['capyclaw-ppt-suite', benchSuite],
 ]
 
 for (const [name, fn] of suite) {

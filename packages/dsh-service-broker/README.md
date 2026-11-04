@@ -12,6 +12,15 @@ DSH 服务中间件。服务解耦标准的执行者：**启动清单/后端/用
 | 跨端口调动交给中间件 | `requires` 拓扑、端口分配、复用/冲突仲裁、discovery 都在这里 |
 | 不硬耦合 | 引擎零 dsh 依赖；embedded（cordis 插件壳）与 standalone（独立端口）同一份逻辑 |
 
+## 变更记录
+
+- **0.2.0**（2026-11-04）：新增**统一服务 spec**——`service.schema.json`（JSON Schema）
+  与 `lib/spec.mjs`（代码面校验 `validateServiceSpec`/`validateServiceManifest`），
+  `loadManifest` 在装载期拒绝结构非法的清单（同清单重复 id 也在此报错）；
+  新增 exports `./spec`、`./schema`。`stack-services.json`（dsh-stack-kit 编译）与
+  `service-manifest.json`（dsh-suite-kit 物化）自此共用同一份 spec 契约。
+- 0.1.0：初始发布。
+
 ## 两种形态
 
 ### standalone（桌面/外部场景的主形态）

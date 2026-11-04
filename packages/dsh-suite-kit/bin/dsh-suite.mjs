@@ -10,7 +10,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import {
-  composeToDir, doctor, formatReport, installSuites,
+  buildActivationRegistry, composeSuites, composeToDir, doctor, formatReport, installSuites,
   loadSuiteManifest, renderCordisPatch, validateSuiteManifest,
 } from '../src/index.mjs'
 
@@ -88,6 +88,16 @@ function cmdInstall(suitePaths, flags) {
   }
 }
 
+function cmdRegistry(suitePaths) {
+  if (!suitePaths.length) fail('用法: dsh-suite registry <suite...>')
+  const suites = suitePaths.map((input) => loadSuiteManifest(input))
+  const composed = composeSuites(suites)
+  if (!composed.ok) fail('suite 组合冲突:\n- ' + composed.errors.join('\n- '))
+  const { registry, warnings } = buildActivationRegistry({ suites, composed })
+  for (const warning of warnings) console.error(`! ${warning}`)
+  console.log(JSON.stringify(registry, null, 2))
+}
+
 async function cmdDoctor(flags) {
   const report = await doctor({
     profile: flags.profile,
@@ -147,6 +157,7 @@ if (!command || command === '--help' || command === 'help') {
 
   validate <suite...>                         校验 manifest
   compose <suite...> --out <dir>              组合并生成 cordis.patch.yml
+  registry <suite...>                         生成 launch-engine 激活注册表（预览）
   install <suite...> --profile web            安装到 profile
   doctor --profile web                        运行健康检查
   init <dir> --name <name>                    生成新 suite 模板
@@ -156,6 +167,7 @@ if (!command || command === '--help' || command === 'help') {
 
 if (command === 'validate') cmdValidate(args.slice(1))
 else if (command === 'compose') cmdCompose(args.slice(1), flags)
+else if (command === 'registry') cmdRegistry(args.slice(1))
 else if (command === 'install') cmdInstall(args.slice(1), flags)
 else if (command === 'doctor') await cmdDoctor(flags)
 else if (command === 'init') cmdInit(args[1], flags)

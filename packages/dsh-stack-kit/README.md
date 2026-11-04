@@ -16,13 +16,13 @@ dsh-stack.json
 
 ```bash
 # 看会生成什么 / 是否有漂移（只读）
-node tools/dsh-launcher/bin/dshd.mjs stack plan --stack tools/dsh-launcher/dev-stack.json
+node tools/dsh-launcher/bin/dshd.mjs stack plan --stack launchpads/dev.dsh-stack.json
 
 # 物化 profile + 生成 broker 清单（默认会跑 pnpm install）
-node tools/dsh-launcher/bin/dshd.mjs stack apply --stack tools/dsh-launcher/dev-stack.json
+node tools/dsh-launcher/bin/dshd.mjs stack apply --stack launchpads/dev.dsh-stack.json
 
 # 一条命令：apply + start
-node tools/dsh-launcher/bin/dshd.mjs start --stack tools/dsh-launcher/dev-stack.json
+node tools/dsh-launcher/bin/dshd.mjs start --stack launchpads/dev.dsh-stack.json
 ```
 
 `--no-install` 跳过 `pnpm install`；`stack plan/apply` 默认不启动进程。
@@ -145,7 +145,7 @@ doctor/logs 入口。
 
 - profile 型：`pnpm install` 只负责 profile 的 `dependencies`；`@deepseek-ai/*` base bundles 仍由 dsh 安装提供。
 - `path` 服务会自动补 `--port ${PORT}`；如果脚本不接受该参数，请改用完整 `cmd`。
-- 现有 `dshd.config.json` / `services.json` 不受影响；`dshd --config` 继续可用。`--stack` 是新的推荐入口。
+- `--stack` 是唯一启动入口；旧的 `dshd.config.json` + `local-services.json` 配置路径已删除。
 - domain 型的 `--foreground` 由 dshd 守护 proxy；proxy 死 → 整组 stop+start（限次），不是进程内热重启。
 
 ## 测试

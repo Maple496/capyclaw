@@ -1,4 +1,4 @@
-# dsh-ppt-skill-design bundle patch：只注册 pptmaster-design 一个 skill provider。
+# @capyclaw/ppt-skill-design（目录 dsh-ppt-skill-design） bundle patch：只注册 pptmaster-design 一个 skill provider。
 - insert:
     - id: ppt-skill-design
-      name: dsh-ppt-skill-design
+      name: @capyclaw/ppt-skill-design

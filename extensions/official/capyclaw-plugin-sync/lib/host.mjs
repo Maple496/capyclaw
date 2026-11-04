@@ -12,13 +12,17 @@
  *   sourceUrl    HTTP 清单地址       DSH_SYNC_URL         （空，预留）
  *   enableHttp   是否挂 HTTP 路由     DSH_SYNC_HTTP        true
  *   syncToken    写操作的 token      DSH_SYNC_TOKEN       （空＝只校验回环）
+ *
+ * sourcePath 留空 = **纯服务面启动**：`apply`（开关转发，launch-engine 的
+ * 执行通道）照常可用；`report` / `summary` 诚实报「未配置清单源」。
+ * 作为别的插件（launch-engine）的执行通道时就是这样用的。
  */
 import { resolveConfig } from '@capyclaw/plugin-kit/config'
 
 import { createSource } from './sources/index.mjs'
 import { readActual, buildReport } from './report.mjs'
 import { applyChanges } from './apply.mjs'
-import { summarizeManifest } from './manifest.mjs'
+import { ManifestError, summarizeManifest } from './manifest.mjs'
 
 export const name = '@capyclaw/plugin-sync'
 export const inject = ['pluginManager', 'pluginInventory', 'webServer']
@@ -67,9 +71,20 @@ export function apply(ctx, config = {}) {
   })
   for (const issue of issues) ctx.logger?.warn?.(`[plugin-sync] 配置: ${issue}`)
 
-  const source = createSource({ kind: cfg.sourceKind, file: cfg.sourcePath, url: cfg.sourceUrl })
+  /* 纯服务面：local 源不给 file 时不创建清单源——apply 通道照常工作。 */
+  const serviceOnly = cfg.sourceKind === 'local' && !cfg.sourcePath
+  const source = serviceOnly
+    ? null
+    : createSource({ kind: cfg.sourceKind, file: cfg.sourcePath, url: cfg.sourceUrl })
+  if (serviceOnly) {
+    ctx.logger?.info?.('[plugin-sync] 未配置 sourcePath：纯服务面启动（apply 可用；report/summary 需要清单源）')
+  }
+  const noSource = () => {
+    throw new ManifestError('未配置清单源（sourcePath 空）；apply 服务不受影响')
+  }
 
   async function report({ versionProbe } = {}) {
+    if (!source) return noSource()
     const desired = await source.describe()
     const actual = await readActual({ manager: ctx.pluginManager })
     return buildReport({ source, desired, actual, versionProbe })
@@ -81,8 +96,8 @@ export function apply(ctx, config = {}) {
 
   /** 服务：别的插件（含将来的 launchpad UI）可以直接 inject: ['pluginSync'] 使用。 */
   ctx.provide('pluginSync', {
-    sourceId: source.id,
-    summary: async () => summarizeManifest(await source.describe()),
+    sourceId: source?.id ?? 'none',
+    summary: async () => (source ? summarizeManifest(await source.describe()) : noSource()),
     report,
     apply: applyChangesFromManifest,
   })
@@ -138,7 +153,7 @@ export function apply(ctx, config = {}) {
   ]
 
   ctx.logger?.info?.(
-    `[plugin-sync] 就绪：source=${source.id} report=${ROUTE_REPORT} apply=${ROUTE_APPLY}`,
+    `[plugin-sync] 就绪：source=${source?.id ?? 'none'} report=${ROUTE_REPORT} apply=${ROUTE_APPLY}`,
   )
 
   return () => {

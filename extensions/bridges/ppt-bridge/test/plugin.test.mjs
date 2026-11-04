@@ -15,7 +15,7 @@ import { TOOLS } from '../src/mcp/tools.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(HERE, '..')
-const PKG = join(ROOT, 'plugin', 'dsh-ppt-workbench')
+const PKG = join(ROOT, 'plugin', 'capyclaw-ppt-workbench')
 const pkgUrl = (rel) => pathToFileURL(join(PKG, rel)).href
 
 /* ---- 纯函数：store 白名单 + 语义 ---- */
@@ -478,7 +478,7 @@ test('构建产物对账：server 拷贝与 src/ 单一真源一致', () => {
   assert.equal(manifest.version, PACKAGE_VERSION)
   assert.equal(manifest.dsh.bundle.patch, './cordis.patch.yml')
   const patch = readFileSync(join(PKG, 'cordis.patch.yml'), 'utf8')
-  assert.ok(patch.includes('dsh-ppt-workbench'))
+  assert.ok(patch.includes('@capyclaw/ppt-workbench'))
   assert.ok(patch.includes('streamable-http'))
 })
 

@@ -1,108 +1,108 @@
 {
   "suite": "capyclaw-ppt-suite",
-  "suiteVersion": "2.4.1",
+  "suiteVersion": "2.4.3",
   "packages": {
-    "dsh-asset-service": {
-      "version": "0.1.0",
+    "@capyclaw/asset-service": {
+      "version": "0.1.1",
       "apiVersion": "1.0.0",
       "path": "..\\..\\..\\..\\..\\packages\\dsh-asset-service",
-      "sha256": "bfba1fba34a3ebfb81f966e324557614490d7641cb596a05164fd7c84415c042"
+      "sha256": "c50085955930e742f4c144d4a24b3759652c42a019983c6523c1a4b956447b72"
     },
-    "dsh-document-workbench": {
+    "@capyclaw/document-workbench": {
       "version": "0.1.0",
       "apiVersion": null,
       "path": "../../../../../packages/dsh-document-workbench",
       "sha256": "3757e5626595f550de007674664527c70d01199416bf826873cc2a3982d9824f"
     },
-    "dsh-editor-host": {
-      "version": "0.1.0",
+    "@capyclaw/editor-host": {
+      "version": "0.1.1",
       "apiVersion": "1.0.0",
       "path": "..\\..\\..\\..\\..\\packages\\dsh-editor-host",
-      "sha256": "510fc02d56c970a38a97b40b05fc148eded00c7701d0f8a427ad8d57219a1f89"
+      "sha256": "33449394fff932339e1cb3a56e0e35ca37bd113f10e47d6d362ecc7c39f68aa0"
     },
-    "dsh-plugin-kit": {
+    "@capyclaw/plugin-kit": {
       "version": "0.2.0",
       "apiVersion": null,
       "path": "../../../../../packages/dsh-plugin-kit",
       "sha256": "65e224ecef9ff01e521a51921315904468788b8af0364286fedd8f34a2b7066d"
     },
-    "dsh-ppt-skill-api": {
-      "version": "2.2.0",
+    "@capyclaw/ppt-skill-api": {
+      "version": "2.2.1",
       "apiVersion": null,
       "path": "../dsh-ppt-skill-api",
-      "sha256": "cc71305324660e7d2ac65c6617336cb579bd02318c71c02e7e71251cb59e4b8f"
+      "sha256": "3a362d9f9f0c35a27dd5fccb9ffcaf6f27980a8907b472a86f6591befb9c407f"
     },
-    "dsh-ppt-skill-authoring": {
-      "version": "2.2.0",
+    "@capyclaw/ppt-skill-authoring": {
+      "version": "2.2.1",
       "apiVersion": null,
       "path": "../dsh-ppt-skill-authoring",
-      "sha256": "90adb2540d0606b27578af7fdbc04cee35a089cd5db1d6363113f689e6d1e74d"
+      "sha256": "ae9adcf5af630a05cb74f41daa72c741ac4f50fc550b84e124144377c64720d9"
     },
-    "dsh-ppt-skill-design": {
-      "version": "2.2.0",
+    "@capyclaw/ppt-skill-design": {
+      "version": "2.2.1",
       "apiVersion": null,
       "path": "../dsh-ppt-skill-design",
-      "sha256": "922d081b35ac7053a479bf327f4309d208e09bd5c7f8982a92deecd7b97767a1"
+      "sha256": "52147e1ac52346c02466b0aa7d9dc8d0daf57f71418f26b4f1601ae2ff4914d9"
     },
-    "dsh-ppt-skill-editing": {
-      "version": "2.2.0",
+    "@capyclaw/ppt-skill-editing": {
+      "version": "2.2.1",
       "apiVersion": null,
       "path": "../dsh-ppt-skill-editing",
-      "sha256": "15e3f7ea5247553b763992d80fce3b7b3f544400ee3284fc2b65f11b1862e36f"
+      "sha256": "c705917faf12773b56cd7ac9ce410400d53f40aae2580a9d55f985492ffe43ee"
     },
-    "dsh-ppt-skill-narrative": {
-      "version": "2.2.0",
+    "@capyclaw/ppt-skill-narrative": {
+      "version": "2.2.2",
       "apiVersion": null,
       "path": "../dsh-ppt-skill-narrative",
-      "sha256": "e52c7988f9862876e1009030443307bef29656399ff2a4e215ec15892e984e76"
+      "sha256": "cf375dfb7fd5decd6b137d0131c6ec6527048e64b2243192039e59694046d350"
     },
-    "dsh-ppt-skill-ppt": {
-      "version": "2.2.0",
+    "@capyclaw/ppt-skill-ppt": {
+      "version": "2.2.1",
       "apiVersion": null,
       "path": "../dsh-ppt-skill-ppt",
-      "sha256": "981e93c969e620ca6b3f0012cd4500d20acb8242d3bf5596ef1fe75145877f60"
+      "sha256": "c41482aca9f078e2d00bf1de69d9f953e49337fb0461ab15bc8b9031091f2c67"
     },
-    "dsh-ppt-skill-research": {
-      "version": "2.2.0",
+    "@capyclaw/ppt-skill-research": {
+      "version": "2.2.1",
       "apiVersion": null,
       "path": "../dsh-ppt-skill-research",
-      "sha256": "636281492b1c9368b9d546c1043a2bc2d5e925ed49e704a3d35e42cd14e61f11"
+      "sha256": "52d2e99800db2ad5b06dd0b591aacb10e4d3961ca91efec878d853041dfea813"
     },
-    "dsh-ppt-skill-visual-check": {
-      "version": "2.2.0",
+    "@capyclaw/ppt-skill-visual-check": {
+      "version": "2.2.1",
       "apiVersion": null,
       "path": "../dsh-ppt-skill-visual-check",
-      "sha256": "2f2a264fb1356b3441a5ef5ac750d85ee998e13b73601063b8e6b8b3e7d57742"
+      "sha256": "0616a4d4498ba0c62a21dd5fa4b2aa1d42d636f73b1fb8b693868c1fbee1e393"
     },
-    "dsh-ppt-workbench": {
-      "version": "2.4.1",
+    "@capyclaw/ppt-workbench": {
+      "version": "2.4.3",
       "apiVersion": null,
-      "path": "../dsh-ppt-workbench",
-      "sha256": "74557ced68388938429b3057fc849ec59bb23f4c99309d7949b28209187a8d42"
+      "path": "../capyclaw-ppt-workbench",
+      "sha256": "0dd9878c238890fb1924cf8e102a6a6aea070db782b6525e69d169041c3476bc"
     },
-    "dsh-service-broker": {
-      "version": "0.1.0",
+    "@capyclaw/service-broker": {
+      "version": "0.2.0",
       "apiVersion": "1.0.0",
       "path": "../../../../../packages/dsh-service-broker",
-      "sha256": "74f50a39a270a713ecca4f5959f1bdd570d9cf6ae2160bb5c4778da6afdca6cc"
+      "sha256": "15bc79d2694457c2c312e2ce75c3eed7147827000eac40254c94f82c1bf306fc"
     },
-    "dsh-service-host": {
-      "version": "0.1.0",
+    "@capyclaw/service-host": {
+      "version": "0.1.1",
       "apiVersion": "1.0.0",
       "path": "..\\..\\..\\..\\..\\packages\\dsh-service-host",
-      "sha256": "c6be20c45305db69e91cd41a9de920442858e1d496e588d5a86af77a70489378"
+      "sha256": "77ba16a3a3ee3c4f60edc4e205ed01b857478f7c5614639af1d41c67b31bc4af"
     },
-    "dsh-skills-service": {
-      "version": "0.1.0",
+    "@capyclaw/skills-service": {
+      "version": "0.1.2",
       "apiVersion": null,
       "path": "../../dsh-skills-service",
-      "sha256": "f0a922cf10243f5de975b6549dbfe925514f87e2158e72a817e3ce81e673618c"
+      "sha256": "7c4881377147593e21f2f08a62ab03c83ec4e7a8f4422c2edcf0606088676be9"
     },
-    "dsh-tool-host": {
-      "version": "0.1.0",
+    "@capyclaw/tool-host": {
+      "version": "0.1.1",
       "apiVersion": "1.0.0",
       "path": "..\\..\\..\\..\\..\\packages\\dsh-tool-host",
-      "sha256": "33a8bc057f915e8c032609d703daa0a03546b36b103a9a6afb32b6dcb9a3720a"
+      "sha256": "a7ada98c30c37166c51de3361f079031e704f44a9269f2430fd9369fda9f41e7"
     }
   }
 }

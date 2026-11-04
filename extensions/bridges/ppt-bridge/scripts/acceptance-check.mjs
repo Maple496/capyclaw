@@ -36,7 +36,7 @@ const MODULES = [
   ['dsh-state-service', path.join(WORKSPACE, 'packages/dsh-state-service')],
   ['dsh-asset-service', path.join(WORKSPACE, 'packages/dsh-asset-service')],
   ['dsh-editor-host', path.join(WORKSPACE, 'packages/dsh-editor-host')],
-  ['dsh-ppt-workbench', path.join(ROOT, 'plugin/dsh-ppt-workbench')],
+  ['capyclaw-ppt-workbench', path.join(ROOT, 'plugin/capyclaw-ppt-workbench')],
   ...['ppt','narrative','design','api','authoring','editing','visual-check','research'].map((slug) => ['dsh-ppt-skill-' + slug, path.join(ROOT, 'plugin', 'dsh-ppt-skill-' + slug)]),
   ['capyclaw-ppt-suite', path.join(ROOT, 'plugin/capyclaw-ppt-suite')],
 ]
@@ -47,7 +47,7 @@ const EVALUATED_MODULES = [
   'dsh-state-service',
   'dsh-asset-service',
   'dsh-editor-host',
-  'dsh-ppt-workbench',
+  'capyclaw-ppt-workbench',
   'dsh-ppt-skills',
   'capyclaw-ppt-suite',
 ]
@@ -77,7 +77,7 @@ check('模块评估文档覆盖 8 个模块且都有必要性结论', () => {
 
 check('调优源与构建快照一致，watchPollMs=75', () => {
   const source = read('src/mcp/tuning.mjs')
-  const snapshot = read('plugin/dsh-ppt-workbench/server/tuning.mjs')
+  const snapshot = read('plugin/capyclaw-ppt-workbench/server/tuning.mjs')
   for (const [label, text] of [['src', source], ['snapshot', snapshot]]) {
     if (!/watchPollMs:\s*75/.test(text)) throw new Error(`${label} 未固化 75ms`)
     if (!/pushPerOpMs:\s*50/.test(text)) throw new Error(`${label} 未固化 pushPerOpMs=50`)

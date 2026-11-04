@@ -8,6 +8,7 @@ import { spawnSync } from 'node:child_process'
 import { composeSuites, renderCordisPatch } from './compose.mjs'
 import { loadSuiteManifest, validateSuiteManifest } from './manifest.mjs'
 import { resolvePackageSpec } from './artifacts.mjs'
+import { writeActivationRegistry } from './activation-registry.mjs'
 
 export function defaultDshHome() {
   return process.env.DSH_HOME || path.join(os.homedir(), '.dsh')
@@ -338,6 +339,11 @@ export function installSuites(options) {
   if (!writtenLock || JSON.stringify(writtenLock) !== JSON.stringify(compositionLock)) {
     throw new Error(`组合锁写入校验失败: ${compositionLockPath}`)
   }
+
+  /* 运行期激活面：suite 组合结果编译成 launch-engine 注册表，随 profile 落盘。 */
+  const activationRegistry = writeActivationRegistry(dir, { suites, composed })
+  plan.activationRegistry = { file: activationRegistry.file, capabilities: activationRegistry.capabilities }
+  for (const warning of activationRegistry.warnings) plan.warnings.push(`activation-registry: ${warning}`)
   if (options.removeRows?.length && fs.existsSync(patchPath)) {
     const before = fs.readFileSync(patchPath, 'utf8')
     const after = stripPatchRows(before, options.removeRows)

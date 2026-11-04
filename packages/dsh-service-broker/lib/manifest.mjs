@@ -9,6 +9,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { validateServiceManifest } from './spec.mjs'
 
 export const PKG_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -23,6 +24,8 @@ export function loadManifest(manifestPath) {
   const raw = JSON.parse(readFileSync(file, 'utf8'))
   const services = Array.isArray(raw) ? raw : raw.services
   if (!Array.isArray(services)) throw new Error(`manifest 格式非法（缺 services 数组）: ${file}`)
+  const specErrors = validateServiceManifest(services, file)
+  if (specErrors.length) throw new Error(`manifest 服务 spec 非法:\n- ${specErrors.join('\n- ')}`)
   const base = path.dirname(file)
   return services.map((service) => expandPackageDir(service, base))
 }

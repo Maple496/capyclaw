@@ -24,7 +24,7 @@ const RULES = {
   REQUIRED_DSH_FIELDS: ['category', 'platform'],
   
   // 有效的插件分类
-  VALID_CATEGORIES: ['ui', 'service', 'bridge', 'tool', 'suite'],
+  VALID_CATEGORIES: ['ui', 'service', 'bridge', 'tool', 'suite', 'skills'],
   
   // 有效的平台
   VALID_PLATFORMS: ['web', 'desktop', 'both'],

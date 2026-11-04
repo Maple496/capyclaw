@@ -10,7 +10,8 @@
   ],
   "components": [
     "../../../../../packages/dsh-workspace-service",
-    "../../plugin/capyclaw-ppt-suite"
+    "../../plugin/capyclaw-ppt-suite",
+    "../../../../../extensions/official/capyclaw-launch-engine/plugin/capyclaw-launch-engine-suite"
   ],
   "profile": {
     "name": "domain-ppt",

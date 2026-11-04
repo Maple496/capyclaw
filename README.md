@@ -299,6 +299,7 @@ node scripts/publish-to-npm.mjs --execute    # 真正发布
 2. **插件间不直接拉起**：服务由 `dsh-service-broker` 统一编排，跨端口组织只经过中间件
 3. **包级依赖单向**：`extensions → packages`，反向只允许通过契约
 4. **性能写法统一**：热路径用局部变量，不反复读 `ctx`
+5. **组件注册只有一个答案**：「实现功能要注册哪些组件」写在 `dsh-suite.json`；组合看 domain、启动看 stack DSL、运行期激活看 suite 自动生成的注册表（[功能组件注册标准](docs/reference/component-standard.md)）
 
 详见 [ARCHITECTURE.md](ARCHITECTURE.md) 与 [docs/architecture/contracts.md](docs/architecture/contracts.md)。
 

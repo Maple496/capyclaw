@@ -5,12 +5,14 @@
   "title": "Editor Host",
   "description": "通用编辑器宿主：静态托管、租约、心跳、连接状态。",
   "packages": {
-    "dsh-editor-host": {
+    "@capyclaw/editor-host": {
       "role": "provider",
-      "version": "^0.1.0",
+      "version": "^0.1.1",
       "path": ".",
       "provides": {
-        "services": ["editorHost"],
+        "services": [
+          "editorHost"
+        ],
         "capabilities": {
           "editor.host": "1.0.0"
         }
@@ -20,7 +22,7 @@
   "rows": [
     {
       "id": "editor-host",
-      "name": "dsh-editor-host"
+      "name": "@capyclaw/editor-host"
     }
   ],
   "checks": []

@@ -1,25 +1,42 @@
 {
   "name": "@capyclaw/service-broker",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "DSH 服务中间件（唯一进程内插件）：按清单/结构化命令把各服务作为独立进程拉起，负责守护、发现（discovery）、控制端点；服务与服务之间不互相带动，跨端口组织一律经过这里。",
   "type": "module",
   "main": "./lib/host.mjs",
   "exports": {
     ".": "./lib/host.mjs",
     "./engine": "./lib/engine.mjs",
+    "./manifest": "./lib/manifest.mjs",
+    "./spec": "./lib/spec.mjs",
+    "./schema": "./service.schema.json",
     "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
     },
     "suite": "./dsh-suite.json",
-    "apiVersion": "1.0.0"
+    "apiVersion": "1.0.0",
+    "category": "service",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "服务中间件",
+    "description": "按清单把各服务作为独立进程拉起，守护、发现与控制端点；服务之间不互相带动"
   },
   "files": [
     "lib/",
     "server.mjs",
     "services.json",
+    "service.schema.json",
     "cordis.patch.yml",
     "dsh-suite.json",
     "README.md"
@@ -27,5 +44,8 @@
   "license": "MIT",
   "scripts": {
     "test": "node --test test/unit.test.mjs test/e2e.test.mjs test/stability.test.mjs test/adopt-detached.test.mjs"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
   }
 }

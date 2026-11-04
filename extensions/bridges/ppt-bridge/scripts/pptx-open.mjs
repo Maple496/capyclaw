@@ -49,7 +49,7 @@ const argValue = (name, fallback) => {
 
 const RELAY = String(process.env.PPT_RELAY_URL || config.relayUrl || 'http://127.0.0.1:39311').replace(/\/+$/, '')
 const BASE = `${RELAY}/api/desktop/works/ppt-bridge`
-const WORKBENCH = path.resolve(process.env.PPT_WORKBENCH_DIR || config.workbenchDir || path.join(REPO_ROOT, 'plugin', 'dsh-ppt-workbench'))
+const WORKBENCH = path.resolve(process.env.PPT_WORKBENCH_DIR || config.workbenchDir || path.join(REPO_ROOT, 'plugin', 'capyclaw-ppt-workbench'))
 const DATA_DIR = path.resolve(process.env.PPT_BRIDGE_HOME || config.dataDir || path.join(WORKBENCH, 'data'))
 const PORT = Number(new URL(RELAY).port || 39311)
 const LOG = path.join(DATA_DIR, 'open-pptx.log')

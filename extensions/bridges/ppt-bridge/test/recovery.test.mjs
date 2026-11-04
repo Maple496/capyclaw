@@ -9,7 +9,7 @@ import { dirname, resolve } from 'node:path'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(HERE, '..')
-const PKG = join(ROOT, 'plugin', 'dsh-ppt-workbench')
+const PKG = join(ROOT, 'plugin', 'capyclaw-ppt-workbench')
 const { startRelay } = await import(pathToFileURL(join(PKG, 'server', 'relay.mjs')).href)
 
 test('启动恢复：未完成批次会重放并落盘', async () => {

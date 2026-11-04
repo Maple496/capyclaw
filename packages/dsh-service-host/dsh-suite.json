@@ -5,12 +5,14 @@
   "title": "Service Host",
   "description": "通用服务宿主：HTTP 路由、健康、指标、锁、复用、静态资源。",
   "packages": {
-    "dsh-service-host": {
+    "@capyclaw/service-host": {
       "role": "provider",
-      "version": "^0.1.0",
+      "version": "^0.1.1",
       "path": ".",
       "provides": {
-        "services": ["serviceHost"],
+        "services": [
+          "serviceHost"
+        ],
         "capabilities": {
           "host.http": "1.0.0"
         }
@@ -20,7 +22,7 @@
   "rows": [
     {
       "id": "service-host",
-      "name": "dsh-service-host"
+      "name": "@capyclaw/service-host"
     }
   ],
   "checks": []

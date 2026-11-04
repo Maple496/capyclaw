@@ -22,6 +22,7 @@ const CATEGORY_MAP = {
   service: 'services',
   bridge: 'bridges',
   suite: 'suites',
+  skills: 'skills',
 }
 
 function entryOf(dir) {
@@ -36,6 +37,7 @@ function entryOf(dir) {
     platform: pkg.dsh?.platform || '',
     dsh: pkg.engines?.dsh || '',
     license: pkg.license || '',
+    path: path.relative(ROOT, dir).split(path.sep).join('/'),
     directory: path.relative(ROOT, dir).split(path.sep).join('/'),
     bundle: Boolean(pkg.dsh?.bundle),
     client: Boolean(pkg.dsh?.client),

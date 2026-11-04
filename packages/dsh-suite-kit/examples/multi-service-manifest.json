@@ -5,7 +5,7 @@
       "id": "ppt-workbench",
       "cmd": [
         "node",
-        "../../../extensions/bridges/ppt-bridge/plugin/dsh-ppt-workbench/server/relay.mjs",
+        "../../../extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-workbench/server/relay.mjs",
         "--port",
         "${PORT}"
       ],

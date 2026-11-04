@@ -1,5 +1,5 @@
 {
-  "name": "@zcode/canvas-plugin",
+  "name": "@capyclaw/canvas-plugin",
   "version": "0.1.0",
   "description": "Canvas 文档生成插件：独立 MCP 服务器 + Headless 编辑器",
   "type": "module",

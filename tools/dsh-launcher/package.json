@@ -6,7 +6,7 @@
   "bin": {
     "dshd": "./bin/dshd.mjs"
   },
-  "files": ["bin/", "lib/", "README.md", "dshd.config.example.json"],
+  "files": ["bin/", "lib/", "README.md"],
   "scripts": {
     "test": "node --test test/single-instance.test.mjs test/stack-chain.test.mjs test/domain-stack.test.mjs",
     "test:stack-chain": "node --test test/single-instance.test.mjs test/stack-chain.test.mjs test/domain-stack.test.mjs"

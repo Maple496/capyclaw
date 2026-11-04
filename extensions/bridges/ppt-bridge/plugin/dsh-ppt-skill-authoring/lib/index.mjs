@@ -1,4 +1,4 @@
-/** dsh-ppt-skill-authoring：单 skill provider。 */
+/** @capyclaw/ppt-skill-authoring（目录 dsh-ppt-skill-authoring）：单 skill provider。 */
 import { fileURLToPath } from 'node:url'
 import { createSkillProvider } from './provider.mjs'
 
@@ -15,7 +15,7 @@ function defaultProvider(config = {}) {
     skillDirs: [SKILL],
     contractNote: (version, skillName) => (String(skillName || '').startsWith('pptmaster-')
       ? ''
-      : '契约：PPTist Workbench ' + version + '。动作前先调用 ppt_capabilities；工具缺失或 major 不一致时停止，并提示用户安装/升级 dsh-ppt-suite。'),
+      : '契约：PPTist Workbench ' + version + '。动作前先调用 ppt_capabilities；工具缺失或 major 不一致时停止，并提示用户安装/升级 @capyclaw/ppt-suite。'),
   })
 }
 

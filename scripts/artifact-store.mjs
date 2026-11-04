@@ -32,7 +32,7 @@ const PUBLIC_DIRS = [
   'packages/dsh-asset-service',
   'packages/dsh-editor-host',
   'packages/dsh-mcp-gateway',
-  'bridges/ppt-bridge/plugin/dsh-ppt-workbench',
+  'bridges/ppt-bridge/plugin/capyclaw-ppt-workbench',
   'bridges/ppt-bridge/plugin/dsh-ppt-skills',
 ]
 

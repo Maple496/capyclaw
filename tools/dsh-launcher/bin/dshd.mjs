@@ -2,7 +2,6 @@
 /**
  * dshd — dsh + 插件 全栈独立启动器（不依赖桌面前端）。
  *
- *   dshd start                 启动 broker（开机清单）→ dsh，就绪后返回
  *   dshd start --stack <file>  从统一启动清单编译 profile + 服务，再启动
  *   dshd start --foreground    同上 + 前台守护（dsh 崩溃自动重启；Ctrl+C 全停）
  *   dshd start --open          就绪后打开浏览器
@@ -12,11 +11,11 @@
  *   dshd logs                  列出日志文件
  *   dshd stack plan|apply      编译统一启动清单（不启动）
  *
- * 配置：--config <file> 或 --stack <dsh-stack.json>；
- * 缺省读本目录 dshd.config.json。
+ * 启动入口只有 --stack <dsh-stack.json>（作者层是 launchpads/*.stack DSL）；
+ * 旧的 dshd.config.json + local-services.json 配置路径已删除。
  */
 import { parseArgs, isMain, fail } from '@capyclaw/plugin-kit/cli'
-import { assertConfig, loadConfig, PKG_DIR } from '../lib/config.mjs'
+import { assertConfig, PKG_DIR } from '../lib/config.mjs'
 import {
   listLogs, printDoctor, printStatus, start, stop, supervise,
 } from '../lib/launcher.mjs'
@@ -31,16 +30,17 @@ import {
 const USAGE = `dshd — dsh 全栈独立启动器
 
 用法:
-  dshd start [--foreground] [--open] [--config <file>] [--stack <file>] [--no-install]
-  dshd stop    [--config <file>] [--stack <file>]
-  dshd status  [--config <file>] [--stack <file>]
-  dshd doctor  [--config <file>] [--stack <file>]
-  dshd logs    [--config <file>] [--stack <file>]
+  dshd start [--stack <file>] [--foreground] [--open] [--no-install]
+  dshd stop    --stack <file>
+  dshd status  --stack <file>
+  dshd doctor  --stack <file>
+  dshd logs    --stack <file>
   dshd stack plan|apply --stack <file> [--no-install] [--recreate] [--json]
   dshd stack config --stack <file> [--json]   （只读：看插件配置合并结果）
 
-配置缺省: ${PKG_DIR}/dshd.config.json（可用 --config 覆盖）
-统一清单: dsh-stack.json（--stack 指定；kind=profile 编译 profile+services，kind=domain 交给 domain runtime）`
+统一清单: dsh-stack.json（--stack 指定；kind=profile 编译 profile+services，kind=domain 交给 domain runtime）
+作者层:   launchpads/*.stack DSL（capyclaw-launchpad 编译成 dsh-stack.json）
+位置参考: ${PKG_DIR}`
 
 function printPlan(plan) {
   if (!plan.valid) {
@@ -105,7 +105,7 @@ async function main() {
     console.log(USAGE)
     return
   }
-  if (flags.stack && flags.config) throw new Error('--stack 和 --config 只能二选一')
+  if (flags.config) throw new Error('--config 已删除：统一用 --stack <dsh-stack.json>（作者层 launchpads/*.stack DSL）')
 
   if (command === 'stack') {
     const sub = positional[1]
@@ -180,7 +180,7 @@ async function main() {
       ? loadDomainLifecycleConfig(flags.stack)
       : loadStackConfig(flags.stack)
   } else {
-    cfg = await loadConfig(flags.config)
+    throw new Error('缺少 --stack <dsh-stack.json>（作者层用 launchpads/*.stack DSL，由 launchpad 编译）')
   }
   if (cfg.kind === 'domain') {
     cfg = assertDomainConfig(cfg, { forStart: command === 'start' })

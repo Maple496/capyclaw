@@ -33,9 +33,9 @@
 | dsh-state-service | 是（每次 push 落盘） | 写 92 ops/s，读 38,795 ops/s | **中**（写是 durability 成本，不宜牺牲） | 稳定性加固：损坏隔离/checkpoint 回退、journal 轮转 |
 | dsh-asset-service | 是（图片插入） | 写 217 MB/s，读 862 MB/s | **低** | 稳定性加固：上传 404、sha256 复核、MIME 降级 |
 | dsh-editor-host | 是（编辑器静态资源） | 1818 req/s，p95 0.99ms | **低** | 保持现状 |
-| dsh-ppt-workbench | 是（状态/push/watch/MCP） | status p95 0.29ms，push p95 5.98ms，watch 31.1ms/13 wakeups/s | **高**（watch 轮询有真实权衡） | **进化优化 + 稳定性加固** |
+| capyclaw-ppt-workbench | 是（状态/push/watch/MCP） | status p95 0.29ms，push p95 5.98ms，watch 31.1ms/13 wakeups/s | **高**（watch 轮询有真实权衡） | **进化优化 + 稳定性加固** |
 | dsh-ppt-skills | 否（按需加载） | list 7.53M ops/s，get 7.4k ops/s | **无** | 仅修契约注入边界 |
-| dsh-ppt-suite | 否（安装/组合期） | load 709 ops/s，validate 3.55k ops/s，compose 6.05k ops/s | **无** | 仅修组合/迁移正确性 |
+| capyclaw-ppt-suite | 否（安装/组合期） | load 709 ops/s，validate 3.55k ops/s，compose 6.05k ops/s | **无** | 仅修组合/迁移正确性 |
 
 ## 分模块说明
 
@@ -69,7 +69,7 @@
 - 基线：`app.js`（44KB）p95 0.99ms，1818 req/s；静态托管远未成为瓶颈。
 - 结论：**保持现状**。
 
-### 6. dsh-ppt-workbench（唯一高价值优化对象）
+### 6. capyclaw-ppt-workbench（唯一高价值优化对象）
 
 - 基线：`/status` p95 0.29ms；单批 push p95 5.98ms；watch 更新延迟 31.1ms，空闲唤醒 13 次/秒。
 - 真实权衡：`watchPollMs` 越小，编辑器看到变化越快，但服务端空闲唤醒越多。

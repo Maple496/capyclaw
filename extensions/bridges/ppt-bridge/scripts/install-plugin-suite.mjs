@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 把 dsh-ppt-suite 装进一个 DSH profile。
+ * 把 @capyclaw/ppt-suite 装进一个 DSH profile。
  *
  * 安装本身走通用标准件 packages/dsh-suite-kit；这里只传 PPT 套件自己的迁移参数：
  * 移除旧版聚合 skill 行；workbench/mcp 的 domain override 行必须保留。
@@ -15,7 +15,7 @@ import { installSuites } from 'dsh-suite-kit'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(HERE, '..')
-const SUITE_DIR = path.join(ROOT, 'plugin', 'dsh-ppt-suite')
+const SUITE_DIR = path.join(ROOT, 'plugin', 'capyclaw-ppt-suite')
 
 function argValue(name, fallback) {
   const i = process.argv.indexOf(name)
@@ -54,4 +54,4 @@ console.log(`dependencies: ${plan.dependencies.join(', ')}`)
 console.log(`overrides: ${(plan.overrides || []).map((item) => `${item.name}@${item.version}`).join(', ') || '-'}`)
 console.log(`linked: ${(plan.linked || plan.managedPackages).join(', ')}`)
 if (dryRun) console.log('dry-run：未写入任何文件')
-else console.log('✓ dsh-ppt-suite 安装完成；重启 dsh 会话后生效')
+else console.log('✓ @capyclaw/ppt-suite 安装完成；重启 dsh 会话后生效')

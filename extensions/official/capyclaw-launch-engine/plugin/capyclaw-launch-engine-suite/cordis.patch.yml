@@ -1,0 +1,9 @@
+# 由 dsh-suite-kit 生成；改 dsh-suite.json 后重跑 compose。
+
+- insert:
+    - id: plugin-sync-host
+      name: "@capyclaw/plugin-sync"
+      config: {"sourceKind":"local","sourcePath":"","enableHttp":true}
+    - id: launch-engine-host
+      name: "@capyclaw/launch-engine"
+      config: {"registryKind":"profile","enableHttp":true}

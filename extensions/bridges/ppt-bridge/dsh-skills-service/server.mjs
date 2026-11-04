@@ -67,16 +67,44 @@ async function loadProviders(dirs) {
   return providers
 }
 
-/** 候选技能目录：dev 树（../plugin/dsh-ppt-skill-*）+ 安装态（本目录同级
- *  node_modules 里的 dsh-ppt-skill-*，套件捆绑布局）。 */
+/** 候选技能目录：三种布局都要覆盖。
+ *  dev 树：../plugin/dsh-ppt-skill-*（磁盘目录保留旧名）。
+ *  npm 扁平安装：node_modules/@capyclaw/ppt-skill-*——注意父目录本身就是 @capyclaw
+ *    作用域目录，ppt-skill-* 是它的直接子项，不是再嵌一层 @capyclaw。
+ *  pnpm 安装：本包真实路径在 <profile>/node_modules/.pnpm/<pkg>/node_modules/@capyclaw/skills-service，
+ *    上溯 4 级是 <profile>/node_modules，套件依赖平铺在其 @capyclaw/ 下。 */
 function defaultProviderDirs() {
-  const roots = [path.resolve(HERE, '..', 'plugin'), path.resolve(HERE, '..')]
+  const roots = [
+    path.resolve(HERE, '..', 'plugin'),
+    path.resolve(HERE, '..'),
+    path.resolve(HERE, '..', '..'),
+    path.resolve(HERE, '..', '..', 'node_modules'),
+    path.resolve(HERE, '..', 'node_modules'),
+    path.resolve(HERE, 'node_modules'),
+    path.resolve(HERE, '..', '..', '..', '..'),
+  ]
+  const seen = new Set()
   const dirs = []
+  const add = (dir) => {
+    const key = path.resolve(dir)
+    if (!seen.has(key)) { seen.add(key); dirs.push(key) }
+  }
   for (const root of roots) {
     let entries = []
     try { entries = fs.readdirSync(root, { withFileTypes: true }) } catch { continue }
     for (const e of entries) {
-      if (e.isDirectory() && e.name.startsWith('dsh-ppt-skill-')) dirs.push(path.join(root, e.name))
+      if (!e.isDirectory()) continue
+      // dev 旧目录名 dsh-ppt-skill-* 与发布名 ppt-skill-* 都认（后者只在作用域目录下出现）
+      if (e.name.startsWith('dsh-ppt-skill-') || (root.endsWith('@capyclaw') && e.name.startsWith('ppt-skill-'))) {
+        add(path.join(root, e.name))
+      } else if (e.name === '@capyclaw') {
+        // 作用域目录：扫一层，收 ppt-skill-*
+        let scoped = []
+        try { scoped = fs.readdirSync(path.join(root, e.name), { withFileTypes: true }) } catch { continue }
+        for (const s of scoped) {
+          if (s.isDirectory() && s.name.startsWith('ppt-skill-')) add(path.join(root, e.name, s.name))
+        }
+      }
     }
   }
   return dirs

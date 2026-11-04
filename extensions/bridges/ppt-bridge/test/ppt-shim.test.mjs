@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { BridgeStore } from '../plugin/dsh-ppt-workbench/server/store.mjs'
+import { BridgeStore } from '../plugin/capyclaw-ppt-workbench/server/store.mjs'
 import { createJsonPptApp } from '../src/mcp/ppt-shim.mjs'
 import { applyOp } from '../src/core/ops.js'
 

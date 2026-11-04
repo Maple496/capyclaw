@@ -1,9 +1,9 @@
 /**
  * 构建：源码 + 资产 → plugin/ 下的 10 个可安装包。
  *
- *   plugin/dsh-ppt-workbench/   运行时（relay + editor + MCP 工具）
- *   plugin/dsh-ppt-skill-NAME/  8 个单 skill provider 包
- *   plugin/dsh-ppt-suite/       组合入口（workbench + 8 个 skill 包）
+ *   plugin/capyclaw-ppt-workbench/   运行时（relay + editor + MCP 工具）
+ *   plugin/dsh-ppt-skill-NAME/       8 个单 skill provider 包
+ *   plugin/capyclaw-ppt-suite/       组合入口（workbench + 8 个 skill 包）
  *
  * 用法：node scripts/build-plugin.mjs [--check]
  *
@@ -37,15 +37,18 @@ const PLUGIN_ROOT = join(ROOT, 'plugin')
 const KIT_ROOT = join(ROOT, '..', '..', '..', 'packages', 'dsh-plugin-kit')
 const WORKBENCH = join(PLUGIN_ROOT, 'capyclaw-ppt-workbench')
 const SUITE_PKG = join(PLUGIN_ROOT, 'capyclaw-ppt-suite')
+/* skill 包：npm 发布名是 @capyclaw/ppt-skill-*（与 dsh-suite.json rows 一致），
+ * 磁盘目录保留旧名 dsh-ppt-skill-*（skills-service 的 dev 扫描、suite path 引用不变）。
+ * version：narrative 的 2.2.1 已被 npm 占用，跳到 2.2.2；其余首发补丁版 2.2.1。 */
 const SKILL_PACKAGES = [
-  { slug: 'ppt', skill: 'ppt', pkg: 'dsh-ppt-skill-ppt', title: 'PPT 路由', description: 'PPT 总入口：按意图路由到执行、成稿、审美、审计、研究技能。' },
-  { slug: 'narrative', skill: 'pptmaster-narrative', pkg: 'dsh-ppt-skill-narrative', title: 'PPT 叙事', description: 'SCQA、金字塔、一页一观点、deck_brief。' },
-  { slug: 'design', skill: 'pptmaster-design', pkg: 'dsh-ppt-skill-design', title: 'PPT 审美', description: 'design token、版式、反 AI slop；只做视觉决策。' },
-  { slug: 'api', skill: 'pptist-api', pkg: 'dsh-ppt-skill-api', title: 'PPT 工具手册', description: 'PPTist 工具契约、参数、状态、撤销。' },
-  { slug: 'authoring', skill: 'pptist-authoring', pkg: 'dsh-ppt-skill-authoring', title: 'PPT 成稿', description: 'deck_brief → clean 简洁版式成稿。' },
-  { slug: 'editing', skill: 'pptist-editing', pkg: 'dsh-ppt-skill-editing', title: 'PPT 纯执行', description: '指哪打哪的修改执行器：每步落盘、不审美、不审计、不回头验证。' },
-  { slug: 'visual-check', skill: 'pptist-visual-check', pkg: 'dsh-ppt-skill-visual-check', title: 'PPT 审计', description: '只读审计与按需截图，报告 pass/blocking；不改稿。' },
-  { slug: 'research', skill: 'pptist-research', pkg: 'dsh-ppt-skill-research', title: 'PPT 研究', description: '外部资料、数据、配图研究，产出分析卡。' },
+  { slug: 'ppt', skill: 'ppt', name: '@capyclaw/ppt-skill-ppt', dir: 'dsh-ppt-skill-ppt', version: '2.2.1', title: 'PPT 路由', description: 'PPT 总入口：按意图路由到执行、成稿、审美、审计、研究技能。' },
+  { slug: 'narrative', skill: 'pptmaster-narrative', name: '@capyclaw/ppt-skill-narrative', dir: 'dsh-ppt-skill-narrative', version: '2.2.2', title: 'PPT 叙事', description: 'SCQA、金字塔、一页一观点、deck_brief。' },
+  { slug: 'design', skill: 'pptmaster-design', name: '@capyclaw/ppt-skill-design', dir: 'dsh-ppt-skill-design', version: '2.2.1', title: 'PPT 审美', description: 'design token、版式、反 AI slop；只做视觉决策。' },
+  { slug: 'api', skill: 'pptist-api', name: '@capyclaw/ppt-skill-api', dir: 'dsh-ppt-skill-api', version: '2.2.1', title: 'PPT 工具手册', description: 'PPTist 工具契约、参数、状态、撤销。' },
+  { slug: 'authoring', skill: 'pptist-authoring', name: '@capyclaw/ppt-skill-authoring', dir: 'dsh-ppt-skill-authoring', version: '2.2.1', title: 'PPT 成稿', description: 'deck_brief → clean 简洁版式成稿。' },
+  { slug: 'editing', skill: 'pptist-editing', name: '@capyclaw/ppt-skill-editing', dir: 'dsh-ppt-skill-editing', version: '2.2.1', title: 'PPT 纯执行', description: '指哪打哪的修改执行器：每步落盘、不审美、不审计、不回头验证。' },
+  { slug: 'visual-check', skill: 'pptist-visual-check', name: '@capyclaw/ppt-skill-visual-check', dir: 'dsh-ppt-skill-visual-check', version: '2.2.1', title: 'PPT 审计', description: '只读审计与按需截图，报告 pass/blocking；不改稿。' },
+  { slug: 'research', skill: 'pptist-research', name: '@capyclaw/ppt-skill-research', dir: 'dsh-ppt-skill-research', version: '2.2.1', title: 'PPT 研究', description: '外部资料、数据、配图研究，产出分析卡。' },
 ]
 const ASSET = resolve(process.env.PPT_ASSET || join(ROOT, 'assets', 'ppt-full-app.js'))
 const CHECK_ONLY = process.argv.includes('--check')
@@ -128,11 +131,11 @@ function syncDir(src, dst, label, ignore = []) {
   console.log(`· ${label}/ 已是最新`)
 }
 
-const skillPkgDir = (entry) => join(PLUGIN_ROOT, entry.pkg)
+const skillPkgDir = (entry) => join(PLUGIN_ROOT, entry.dir)
 
 function skillProviderIndex(entry) {
   return [
-    `/** ${entry.pkg}：单 skill provider。 */`,
+    `/** ${entry.name}（目录 ${entry.dir}）：单 skill provider。 */`,
     `import { fileURLToPath } from 'node:url'`,
     `import { createSkillProvider } from './provider.mjs'`,
     '',
@@ -149,7 +152,7 @@ function skillProviderIndex(entry) {
     '    skillDirs: [SKILL],',
     "    contractNote: (version, skillName) => (String(skillName || '').startsWith('pptmaster-')",
     "      ? ''",
-    "      : '契约：PPTist Workbench ' + version + '。动作前先调用 ppt_capabilities；工具缺失或 major 不一致时停止，并提示用户安装/升级 dsh-ppt-suite。'),",
+    "      : '契约：PPTist Workbench ' + version + '。动作前先调用 ppt_capabilities；工具缺失或 major 不一致时停止，并提示用户安装/升级 @capyclaw/ppt-suite。'),",
     '  })',
     '}',
     '',
@@ -162,30 +165,48 @@ function skillProviderIndex(entry) {
 function syncSkillPackage(entry) {
   const pkgDir = skillPkgDir(entry)
   const pkgJson = JSON.stringify({
-    name: entry.pkg,
-    version: '2.2.0',
+    name: entry.name,
+    version: entry.version,
     description: `PPT skill：${entry.description}`,
     type: 'module',
     main: './lib/index.mjs',
     exports: { '.': './lib/index.mjs', './package.json': './package.json' },
-    dsh: { bundle: { patch: './cordis.patch.yml' } },
+    engines: { node: '>=18', dsh: '^0.2.0-rc.2' },
+    publishConfig: { access: 'public' },
+    dsh: { bundle: { patch: './cordis.patch.yml' }, category: 'skills', platform: 'both' },
     meta: { title: `PPT Skill · ${entry.title}`, description: entry.description },
     files: ['lib/', 'skills/', 'contract/', 'cordis.patch.yml', 'README.md'],
     license: 'MIT',
-    private: true,
+    scripts: { test: 'node --test test/smoke.test.mjs' },
+    dependencies: { '@capyclaw/plugin-kit': '^0.2.0' },
   }, null, 2) + '\n'
-  writeChecked(join(pkgDir, 'package.json'), pkgJson, `${entry.pkg}/package.json`)
+  writeChecked(join(pkgDir, 'package.json'), pkgJson, `${entry.dir}/package.json`)
   writeChecked(join(pkgDir, 'cordis.patch.yml'), [
-    `# ${entry.pkg} bundle patch：只注册 ${entry.skill} 一个 skill provider。`,
+    `# ${entry.name}（目录 ${entry.dir}） bundle patch：只注册 ${entry.skill} 一个 skill provider。`,
     '- insert:',
     `    - id: ppt-skill-${entry.slug}`,
-    `      name: ${entry.pkg}`,
+    `      name: ${entry.name}`,
     '',
-  ].join('\n'), `${entry.pkg}/cordis.patch.yml`)
-  writeChecked(join(pkgDir, 'lib', 'index.mjs'), skillProviderIndex(entry), `${entry.pkg}/lib/index.mjs`)
-  copyChecked(join(KIT_ROOT, 'src', 'skills', 'provider.mjs'), join(pkgDir, 'lib', 'provider.mjs'), `${entry.pkg}/lib/provider.mjs`)
-  syncDir(join(ROOT, 'src', 'skills', entry.skill), join(pkgDir, 'skills', entry.skill), `${entry.pkg}/skills/${entry.skill}`, ['references/tool-contract.md'])
-  writeChecked(join(pkgDir, 'README.md'), `# ${entry.pkg}\n\nPPT skill 单包：\`${entry.skill}\`。只注册一个 skill provider，不启动服务。\n`, `${entry.pkg}/README.md`)
+  ].join('\n'), `${entry.dir}/cordis.patch.yml`)
+  writeChecked(join(pkgDir, 'lib', 'index.mjs'), skillProviderIndex(entry), `${entry.dir}/lib/index.mjs`)
+  copyChecked(join(KIT_ROOT, 'src', 'skills', 'provider.mjs'), join(pkgDir, 'lib', 'provider.mjs'), `${entry.dir}/lib/provider.mjs`)
+  syncDir(join(ROOT, 'src', 'skills', entry.skill), join(pkgDir, 'skills', entry.skill), `${entry.dir}/skills/${entry.skill}`, ['references/tool-contract.md'])
+  writeChecked(join(pkgDir, 'README.md'), `# ${entry.name}\n\nPPT skill 单包：\`${entry.skill}\`。只注册一个 skill provider，不启动服务。\n`, `${entry.dir}/README.md`)
+  writeChecked(join(pkgDir, 'test', 'smoke.test.mjs'), [
+    `import assert from 'node:assert/strict'`,
+    `import test from 'node:test'`,
+    `import { apply, name, inject } from '../lib/index.mjs'`,
+    ``,
+    `test('skill provider 注册', () => {`,
+    `  assert.equal(name, 'ppt-skill-${entry.slug}')`,
+    `  assert.deepEqual(inject, ['skills'])`,
+    `  const registered = []`,
+    `  apply({ skills: { registerProvider: (make) => registered.push(make) } }, {})`,
+    `  assert.equal(registered.length, 1)`,
+    `  assert.equal(typeof registered[0], 'function')`,
+    `})`,
+    ``,
+  ].join('\n'), `${entry.dir}/test/smoke.test.mjs`)
 }
 
 function toolContractMarkdown(contract) {
@@ -254,11 +275,9 @@ const contractTargets = [
   [join(ROOT, 'contract'), 'contract/ppt-contract.json'],
   [join(WORKBENCH, 'contract'), 'capyclaw-ppt-workbench/contract/ppt-contract.json'],
   [join(SUITE_PKG, 'contract'), 'capyclaw-ppt-suite/contract/ppt-contract.json'],
-  /* legacy 副本的快照也要同步（skills.test 以它为基准对账） */
-  [join(PLUGIN_ROOT, 'dsh-ppt-workbench', 'contract'), 'dsh-ppt-workbench/contract/ppt-contract.json'],
 ]
 for (const entry of SKILL_PACKAGES) {
-  contractTargets.push([join(skillPkgDir(entry), 'contract'), `${entry.pkg}/contract/ppt-contract.json`])
+  contractTargets.push([join(skillPkgDir(entry), 'contract'), `${entry.dir}/contract/ppt-contract.json`])
 }
 for (const [dir, label] of contractTargets) {
   writeChecked(join(dir, 'ppt-contract.json'), contractJson, label)
@@ -293,7 +312,7 @@ for (const [dir, label] of contractTargets) {
   }
   
   const capabilitiesJson = JSON.stringify(capabilitiesMetadata, null, 2) + '\n'
-  writeChecked(join(WORKBENCH, 'capabilities.json'), capabilitiesJson, 'dsh-ppt-workbench/capabilities.json')
+  writeChecked(join(WORKBENCH, 'capabilities.json'), capabilitiesJson, 'capyclaw-ppt-workbench/capabilities.json')
 }
 
 /* 3. MCP 三件套 + contract 拷贝 */
@@ -319,19 +338,6 @@ if (CHECK_ONLY) {
 } else {
   rmSync(join(WORKBENCH, 'server', 'tools-deps'), { recursive: true, force: true })
 }
-/* legacy 副本 dsh-ppt-workbench 同步同一批单一真源文件（suite 本地组合仍指向该目录） */
-const LEGACY = join(PLUGIN_ROOT, 'dsh-ppt-workbench')
-for (const [src, dst] of COPIES) {
-  copyChecked(join(ROOT, src), join(LEGACY, dst), `dsh-ppt-workbench/${dst}`)
-}
-syncDir(join(ROOT, 'src', 'mcp', 'tools'), join(LEGACY, 'server', 'tools'), 'dsh-ppt-workbench/server/tools')
-syncDir(join(ROOT, 'src', 'core'), join(LEGACY, 'core'), 'dsh-ppt-workbench/core')
-copyFlattened(join(KIT_ROOT, 'src', 'service', 'http.mjs'), join(LEGACY, 'server', 'infra', 'http.mjs'), 'dsh-ppt-workbench/server/infra/http.mjs')
-copyChecked(join(KIT_ROOT, 'src', 'tuning.mjs'), join(LEGACY, 'server', 'infra', 'tuning.mjs'), 'dsh-ppt-workbench/server/infra/tuning.mjs')
-copyChecked(join(KIT_ROOT, 'src', 'util', 'fs-lock.mjs'), join(LEGACY, 'server', 'infra', 'util', 'fs-lock.mjs'), 'dsh-ppt-workbench/server/infra/util/fs-lock.mjs')
-copyChecked(join(KIT_ROOT, 'src', 'store', 'blob-store.mjs'), join(LEGACY, 'server', 'infra', 'store', 'blob-store.mjs'), 'dsh-ppt-workbench/server/infra/store/blob-store.mjs')
-copyChecked(join(KIT_ROOT, 'src', 'workspace', 'manager.mjs'), join(LEGACY, 'server', 'infra', 'workspace', 'manager.mjs'), 'dsh-ppt-workbench/server/infra/workspace/manager.mjs')
-copyChecked(join(KIT_ROOT, 'src', 'runtime', 'context.mjs'), join(LEGACY, 'server', 'infra', 'runtime', 'context.mjs'), 'dsh-ppt-workbench/server/infra/runtime/context.mjs')
 copyFlattened(join(KIT_ROOT, 'src', 'service', 'http.mjs'), join(WORKBENCH, 'server', 'infra', 'http.mjs'), 'server/infra/http.mjs')
 copyChecked(join(KIT_ROOT, 'src', 'tuning.mjs'), join(WORKBENCH, 'server', 'infra', 'tuning.mjs'), 'server/infra/tuning.mjs')
 copyChecked(join(KIT_ROOT, 'src', 'util', 'fs-lock.mjs'), join(WORKBENCH, 'server', 'infra', 'util', 'fs-lock.mjs'), 'server/infra/util/fs-lock.mjs')
@@ -371,7 +377,7 @@ for (const entry of SKILL_PACKAGES) {
     writeChecked(
       join(skillPkgDir(entry), 'skills', entry.skill, 'references', 'tool-contract.md'),
       toolContractMarkdown(contract),
-      `${entry.pkg}/skills/${entry.skill}/references/tool-contract.md`,
+      `${entry.dir}/skills/${entry.skill}/references/tool-contract.md`,
     )
   }
 }
@@ -404,7 +410,7 @@ for (const entry of SKILL_PACKAGES) {
     suiteVersion: suiteManifest.version,
     packages: Object.fromEntries(Object.entries(packages).sort(([a], [b]) => a.localeCompare(b))),
   }
-  writeChecked(join(SUITE_PKG, 'composition.lock.json'), JSON.stringify(lock, null, 2) + '\n', 'dsh-ppt-suite/composition.lock.json')
+  writeChecked(join(SUITE_PKG, 'composition.lock.json'), JSON.stringify(lock, null, 2) + '\n', 'capyclaw-ppt-suite/composition.lock.json')
 }
 
 /* 6. 所有包的完整性 sanity */
@@ -433,23 +439,24 @@ for (const [dir, files] of required) {
 for (const entry of SKILL_PACKAGES) {
   const dir = skillPkgDir(entry)
   for (const file of ['package.json', 'cordis.patch.yml', 'lib/index.mjs', 'lib/provider.mjs', `skills/${entry.skill}/SKILL.md`, 'contract/ppt-contract.json']) {
-    if (!existsSync(join(dir, file))) fail(`${entry.pkg} 缺少文件: ${file}`)
+    if (!existsSync(join(dir, file))) fail(`${entry.dir} 缺少文件: ${file}`)
   }
   const manifest = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'))
-  if (!manifest.dsh?.bundle?.patch) fail(`${entry.pkg} 缺 dsh.bundle.patch`)
-  if (!existsSync(join(dir, manifest.main))) fail(`${entry.pkg} 的 main 不存在: ${manifest.main}`)
+  if (manifest.name !== entry.name) fail(`${entry.dir} 的 package.json name=${manifest.name} 与预期 ${entry.name} 不一致`)
+  if (manifest.version !== entry.version) fail(`${entry.dir} 的 package.json version=${manifest.version} 与预期 ${entry.version} 不一致`)
+  if (!manifest.dsh?.bundle?.patch) fail(`${entry.dir} 缺 dsh.bundle.patch`)
+  if (!existsSync(join(dir, manifest.main))) fail(`${entry.dir} 的 main 不存在: ${manifest.main}`)
 }
 const workbenchManifest = JSON.parse(readFileSync(join(WORKBENCH, 'package.json'), 'utf8'))
 if (workbenchManifest.version !== PACKAGE_VERSION) {
   fail(`contract.mjs 的 PACKAGE_VERSION=${PACKAGE_VERSION} 与 workbench package.json=${workbenchManifest.version} 不一致`)
 }
 const suiteManifest = JSON.parse(readFileSync(join(SUITE_PKG, 'package.json'), 'utf8'))
-/* suite 的 dependencies 引用 npm 发布名（@capyclaw/*），本地目录名仍是 dsh-ppt-* */
-const npmNameOf = (pkg) => '@capyclaw/' + pkg.replace(/^dsh-ppt-/, 'ppt-')
-for (const dep of [npmNameOf('dsh-ppt-workbench'), ...SKILL_PACKAGES.map((entry) => npmNameOf(entry.pkg))]) {
-  if (!suiteManifest.dependencies?.[dep]) fail(`dsh-ppt-suite 缺少依赖: ${dep}`)
+/* suite 的 dependencies 引用 npm 发布名（@capyclaw/*），skill 本地目录名仍是 dsh-ppt-* */
+for (const dep of ['@capyclaw/ppt-workbench', ...SKILL_PACKAGES.map((entry) => entry.name)]) {
+  if (!suiteManifest.dependencies?.[dep]) fail(`@capyclaw/ppt-suite 缺少依赖: ${dep}`)
 }
-if (suiteManifest.dsh?.suite !== './dsh-suite.json') fail('dsh-ppt-suite 未声明 dsh.suite')
+if (suiteManifest.dsh?.suite !== './dsh-suite.json') fail('@capyclaw/ppt-suite 未声明 dsh.suite')
 const suiteKit = await import('dsh-suite-kit')
 const loadedSuite = suiteKit.loadSuiteManifest(SUITE_PKG)
 const suiteValidation = suiteKit.validateSuiteManifest(loadedSuite.manifest)
@@ -457,7 +464,7 @@ if (!suiteValidation.ok) fail('dsh-suite.json 校验失败:\n' + suiteValidation
 const composedSuite = suiteKit.composeSuites([loadedSuite])
 if (!composedSuite.ok) fail('dsh-suite.json 组合失败:\n' + composedSuite.errors.join('\n'))
 const expectedSuitePatch = suiteKit.renderCordisPatch(composedSuite.rows)
-writeChecked(join(SUITE_PKG, 'cordis.patch.yml'), expectedSuitePatch, 'dsh-ppt-suite/cordis.patch.yml（由 manifest 生成）')
+writeChecked(join(SUITE_PKG, 'cordis.patch.yml'), expectedSuitePatch, 'capyclaw-ppt-suite/cordis.patch.yml（由 manifest 生成）')
 
 console.log(CHECK_ONLY
   ? '✓ 所有包全部最新（check 通过）'

@@ -297,8 +297,9 @@ CORS 只放行回环 Origin（`127.0.0.1` / `localhost` / `::1`），方便本�
 
 ## 注册为 broker 服务
 
-把 `services.example.json` 里的条目合并进你的 broker 开机清单
-（例如 `tools/dsh-launcher/local-services.json`）：
+仓库内推荐把服务直接写进 `launchpads/*.stack` 的 `service` 块（本插件在
+`dev.stack` 里就是这么挂的）；在别的 broker 清单里引用时，把
+`services.example.json` 里的条目合并进去：
 
 ```json
 {

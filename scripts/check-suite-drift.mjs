@@ -28,6 +28,8 @@ const PUBLIC_PACKAGES = [
 const OPTIONAL_PACKAGES = new Set(['dsh-state-service'])
 
 const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8'))
+/* suite manifest 的 packages key 统一用 npm 发布名（@capyclaw/*），本地目录名仍是 dsh-* */
+const npmNameOf = (pkg) => '@capyclaw/' + pkg.replace(/^dsh-/, '')
 const pickProvides = (entry) => ({
   services: [...(entry.provides?.services || [])].sort(),
   capabilities: Object.fromEntries(Object.entries(entry.provides?.capabilities || {}).sort()),
@@ -45,8 +47,8 @@ export function checkSuiteDrift({ quiet = false } = {}) {
       continue
     }
     const own = readJson(ownPath)
-    const ownEntry = own.packages?.[name]
-    const pptEntry = ppt.packages?.[name]
+    const ownEntry = own.packages?.[npmNameOf(name)] || own.packages?.[name]
+    const pptEntry = ppt.packages?.[npmNameOf(name)]
       || (components.has(path.resolve(ROOT, 'packages', name)) ? ownEntry : null)
     if (!ownEntry) { issues.push(`${name}: 自己的 suite 缺少 package 条目`); continue }
     if (!pptEntry) {
@@ -70,13 +72,13 @@ export function checkSuiteDrift({ quiet = false } = {}) {
     }
     const apiVersion = pkg.dsh?.apiVersion
     if (!apiVersion) issues.push(`${name}: package.json 缺少 dsh.apiVersion`)
-    const locked = ppt.packages?.['dsh-plugin-kit']
-    if (!locked) issues.push('capyclaw-ppt-suite 缺少 dsh-plugin-kit support package')
+    const locked = ppt.packages?.['@capyclaw/plugin-kit']
+    if (!locked) issues.push('capyclaw-ppt-suite 缺少 @capyclaw/plugin-kit support package')
   }
   const kitVersion = readJson(path.join(ROOT, 'packages', 'dsh-plugin-kit', 'package.json')).version
-  const pptKit = ppt.packages?.['dsh-plugin-kit']?.version
+  const pptKit = ppt.packages?.['@capyclaw/plugin-kit']?.version
   if (pptKit && !pptKit.includes(kitVersion)) {
-    issues.push(`dsh-plugin-kit: package.json=${kitVersion} ppt=${pptKit}`)
+    issues.push(`@capyclaw/plugin-kit: package.json=${kitVersion} ppt=${pptKit}`)
   }
   if (!quiet) {
     if (issues.length) console.error('✗ suite 元数据漂移:\n- ' + issues.join('\n- '))

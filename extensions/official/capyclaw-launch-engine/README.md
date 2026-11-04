@@ -17,10 +17,18 @@
 
 ## 能力注册表
 
-声明「要求 → 关联插件」。三种来源：
+声明「要求 → 关联插件」。四种来源：
+
+- **`profile`（domain 型 profile 推荐）**：读 suite-kit 安装期生成的
+  `<DSH_HOME>/profiles/<DSH_PROFILE>/launch-engine.registry.json`——
+  它由 `dsh-suite-kit` 的 `installSuites`/`installDomain` 从 `dsh-suite.json`
+  组合结果**自动编译**（`dsh-suite registry` / `dsh-domain registry` 可预览），
+  注册表不再手写，`dsh-suite.json` 是唯一事实来源；
+- `local`（registryPath 指向文件）/ `inline`（config.capabilities 直接给）：手写或工具注入；
+- `http`：预留，显式 NOT_IMPLEMENTED。
 
 ```jsonc
-// registryKind: local（registryPath 指向文件；inline 则由 config.capabilities 直接给）
+// registryKind: profile 时由 suite-kit 自动生成，结构如下（local/inline 同构）
 {
   "version": 1,
   "capabilities": {
@@ -84,14 +92,15 @@ curl -s -X POST .../__launch_engine__/deactivate -d '{"capability":"ppt"}'
 
 | 字段 | env | 默认 | 说明 |
 |---|---|---|---|
-| `registryKind` | `DSH_LE_REGISTRY` | `inline` | `inline` / `local` / `http`（http 预留，显式 NOT_IMPLEMENTED） |
-| `registryPath` | `DSH_LE_PATH` | 空 | local 源 JSON 路径（每次操作重读） |
+| `registryKind` | `DSH_LE_REGISTRY` | `inline` | `inline` / `local` / `profile` / `http`（domain 型 profile 用 `profile`；http 预留，显式 NOT_IMPLEMENTED） |
+| `registryPath` | `DSH_LE_PATH` | 空 | local/profile 源 JSON 路径（每次操作重读；profile 空缺时按 `DSH_HOME`/`DSH_PROFILE` 推导） |
 | `capabilities` | —（结构化） | `{}` | inline 注册表对象 |
 | `enableHttp` | `DSH_LE_HTTP` | `true` | 是否挂 HTTP 路由 |
 | `engineToken` | `DSH_LE_TOKEN` | 空 | 写操作 token（请求头 `x-launch-token`；空＝仅校验回环） |
 | `verifyTimeoutMs` | `DSH_LE_VERIFY_TIMEOUT` | `60000` | 每波验证超时 |
 
-注册表建议由启动清单注入（`stack.plugins.configs`），不要写死在 `cordis.patch.yml`。
+domain 型 profile 直接 `registryKind: profile`（本插件套件的默认配置）；
+手写注册表用 inline/local，由启动清单注入（`stack.plugins.configs`），不要写死在 `cordis.patch.yml`。
 
 ## 边界与阶段路线
 

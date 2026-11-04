@@ -90,8 +90,8 @@ test('suite：依赖 4 个公共插件 + workbench + 8 个 skill 包，patch 组
   const patch = readFileSync(join(SUITE, 'cordis.patch.yml'), 'utf8')
   /* relay 由 service-broker 独立进程拉起；patch 里只有 MCP 接入行和 skill 包。 */
   for (const token of [
-    'dsh-service-host', 'dsh-tool-host', 'dsh-asset-service', 'dsh-editor-host',
-    ...SKILL_PACKAGES, 'mcp-ppt', 'streamable-http',
+    '@capyclaw/service-host', '@capyclaw/tool-host', '@capyclaw/asset-service', '@capyclaw/editor-host',
+    ...SKILL_PACKAGES.map(npmNameOf), 'mcp-ppt', 'streamable-http',
   ]) {
     assert.ok(patch.includes(token), `suite patch 缺少 ${token}`)
   }
@@ -102,10 +102,10 @@ test('composition.lock 记录解析后的包版本与 API 版本', () => {
   const lock = readJson(join(SUITE, 'composition.lock.json'))
   assert.equal(lock.suite, 'capyclaw-ppt-suite')
   assert.equal(lock.suiteVersion, suite.version)
-  for (const name of ['dsh-plugin-kit', 'dsh-service-host', 'dsh-tool-host', 'dsh-asset-service', 'dsh-editor-host', 'dsh-ppt-workbench', ...SKILL_PACKAGES]) {
+  for (const name of ['@capyclaw/plugin-kit', '@capyclaw/service-host', '@capyclaw/tool-host', '@capyclaw/asset-service', '@capyclaw/editor-host', '@capyclaw/ppt-workbench', ...SKILL_PACKAGES.map(npmNameOf)]) {
     assert.ok(lock.packages[name], `lock 缺少 ${name}`)
   }
-  for (const name of ['dsh-service-host', 'dsh-tool-host', 'dsh-asset-service', 'dsh-editor-host']) {
+  for (const name of ['@capyclaw/service-host', '@capyclaw/tool-host', '@capyclaw/asset-service', '@capyclaw/editor-host']) {
     assert.equal(lock.packages[name].apiVersion, '1.0.0')
   }
   assert.ok(!lock.packages['dsh-state-service'], 'lock 不应再记录 dsh-state-service')
