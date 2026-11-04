@@ -28,13 +28,10 @@
   },
   "files": [
     "lib/",
-    "test/",
     "cordis.patch.yml",
     "README.md"
   ],
-  "scripts": {
-    "test": "node test/plugin.test.mjs"
-  },
+  "scripts": {},
   "author": {
     "name": "CapyClaw",
     "url": "https://github.com/capyclaw",

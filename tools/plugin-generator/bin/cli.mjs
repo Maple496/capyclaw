@@ -70,7 +70,7 @@ try {
   console.log('\n下一步:')
   console.log(`  cd ${result.path}`)
   console.log('  npm install')
-  console.log('  npm test')
+  console.log(`  npm run validate-plugin -- ${result.path}`)
   console.log('')
 } catch (error) {
   console.error('\n❌ 创建失败:', error.message)

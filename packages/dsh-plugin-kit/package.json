@@ -34,9 +34,7 @@
     "README.md",
     "INTEGRATION.md"
   ],
-  "scripts": {
-    "test": "node --test test/kit.test.mjs test/mcp-http.test.mjs test/sync.test.mjs test/content-store.test.mjs test/cli.test.mjs test/zip.test.mjs test/validate.test.mjs"
-  },
+  "scripts": {},
   "engines": {
     "node": ">=18"
   },

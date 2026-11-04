@@ -7,8 +7,6 @@
   "bin": {
     "create-plugin": "./bin/cli.mjs"
   },
-  "scripts": {
-    "test": "echo 'No tests yet'"
-  },
+  "scripts": {},
   "license": "MIT"
 }

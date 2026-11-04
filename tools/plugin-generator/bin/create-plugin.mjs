@@ -134,9 +134,6 @@ function makePackageJson({ name, title, description, type, version }) {
     },
     meta: { title, description },
     files,
-    scripts: {
-      test: 'node --test test/plugin.test.mjs',
-    },
     license: 'MIT',
   }
 }
@@ -322,7 +319,6 @@ export function apply() {
     writeTemplate('plugin/server/tools.mjs.tmpl', path.join(pluginDir, 'server', 'tools.mjs'), tokens)
     writeTemplate('plugin/server/impl.mjs.tmpl', path.join(pluginDir, 'server', 'impl.mjs'), tokens)
     writeTemplate('plugin/contract/contract.json.tmpl', path.join(pluginDir, 'contract', `${slug}-contract.json`), tokens)
-    writeTemplate('plugin/test/plugin.test.mjs.tmpl', path.join(pluginDir, 'test', 'plugin.test.mjs'), tokens)
     if (type === 'ui') {
       writeTemplate('plugin/editor/index.html.tmpl', path.join(pluginDir, 'editor', 'index.html'), tokens)
       writeTemplate('plugin/editor/app.js.tmpl', path.join(pluginDir, 'editor', 'app.js'), tokens)
@@ -337,7 +333,7 @@ ${options.description}
 ## 开发
 
 \`\`\`bash
-npm test
+npm run validate-plugin -- ${pluginDir.replace(/\\/g, '/')}
 \`\`\`
 
 ## 安装到 DSH
@@ -442,7 +438,7 @@ ${type === 'ui' ? `启动后浏览器打开：http://127.0.0.1:${options.port}/\
     console.log(`  domain: ${domainDir}`)
   }
   console.log('\n下一步:')
-  console.log(`  cd ${pluginDir} && npm test`)
+  console.log(`  npm run validate-plugin -- ${pluginDir.replace(/\\/g, '/')}`)
   if (withSuite) {
     console.log(`  node packages/dsh-suite-kit/bin/dsh-suite.mjs validate ${suiteDir}`)
     console.log(`  node packages/dsh-suite-kit/bin/dsh-domain.mjs validate ${domainDir}`)

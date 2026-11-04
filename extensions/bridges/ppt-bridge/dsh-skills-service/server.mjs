@@ -67,12 +67,14 @@ async function loadProviders(dirs) {
   return providers
 }
 
-/** 候选技能目录：三种布局都要覆盖。
+/** 候选技能目录：四种布局都要覆盖。
  *  dev 树：../plugin/dsh-ppt-skill-*（磁盘目录保留旧名）。
- *  npm 扁平安装：node_modules/@capyclaw/ppt-skill-*——注意父目录本身就是 @capyclaw
- *    作用域目录，ppt-skill-* 是它的直接子项，不是再嵌一层 @capyclaw。
- *  pnpm 安装：本包真实路径在 <profile>/node_modules/.pnpm/<pkg>/node_modules/@capyclaw/skills-service，
- *    上溯 4 级是 <profile>/node_modules，套件依赖平铺在其 @capyclaw/ 下。 */
+ *  npm 扁平安装：node_modules/@capyclaw/ppt-skill-*——父目录本身就是 @capyclaw
+ *    作用域目录，ppt-skill-* 是它的直接子项。
+ *  pnpm 提升可见时：<profile>/node_modules/@capyclaw/ppt-skill-*（同上）。
+ *  pnpm 严格布局：本包真实路径在 <profile>/node_modules/.pnpm/<pkg>/node_modules/@capyclaw/skills-service，
+ *    上溯 4 级是 .pnpm；技能包以虚拟目录 @capyclaw+ppt-skill-<x>@<ver> 平铺在 .pnpm 下，
+ *    每个虚拟目录的真实树在其 node_modules/@capyclaw/ 里。 */
 function defaultProviderDirs() {
   const roots = [
     path.resolve(HERE, '..', 'plugin'),
@@ -104,6 +106,11 @@ function defaultProviderDirs() {
         for (const s of scoped) {
           if (s.isDirectory() && s.name.startsWith('ppt-skill-')) add(path.join(root, e.name, s.name))
         }
+      } else if (e.name.startsWith('@capyclaw+ppt-skill-') && e.name.includes('@', '@capyclaw+ppt-skill-'.length)) {
+        // pnpm 虚拟目录：@capyclaw+ppt-skill-<x>@<version> → 真实树在 <dir>/node_modules/@capyclaw/<x>
+        const base = e.name.slice('@capyclaw+'.length).split('@')[0]
+        const real = path.join(root, e.name, 'node_modules', '@capyclaw', base)
+        if (fs.existsSync(path.join(real, 'package.json'))) add(real)
       }
     }
   }

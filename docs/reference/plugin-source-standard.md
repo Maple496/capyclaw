@@ -273,7 +273,7 @@ POST /api/desktop/plugins/source
 | # | 闸 | 位置 | 证明什么 |
 |---|---|---|---|
 | 1 | 源校验器（28 项负向 + 正向） | `npm run verify-source -- <源>`（`tools/plugin-release`） | 索引形状、sha256、包名/版本一致、patch 存在、engines.dsh、无 link: 依赖、路径安全、HTTP/file 双形态 |
-| 2 | 发布闸（9 项） | `npm run test-release` | 发布闸拒收（缺 engines/patch、link 依赖）、zip 内容自足、索引自证、整源打包 |
+| 2 | 发布闸（9 项） | `npm run verify-source` | 发布闸拒收（缺 engines/patch、link 依赖）、zip 内容自足、索引自证、整源打包 |
 | 3 | 消费方标准一致性（31 项） | `python -m unittest test_plugin_source_standard`（消费方 backend） | 合规源可装、不合规源在**换源闸**被拒且旧源不坏、三处注册正确、换源不影响已装、多版本/回滚、源宕机降级 |
 | 4 | 消费方投递面（22 项） | `python -m unittest test_works_plugins` | 源归一、目录合并、sha256 拒收、安装/升级/卸载回路、兼容性判定 |
 | 5 | 投递 E2E（真网关） | `bash backend/checks/run.sh e2e-plugins` | HTTP 全链路：设源→目录→安装→profile 注册→dsh 管理面无断链→卸载 |

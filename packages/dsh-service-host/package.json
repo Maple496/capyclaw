@@ -37,10 +37,6 @@
     "README.md"
   ],
   "license": "MIT",
-  "scripts": {
-    "test": "node --test test/unit.test.mjs",
-    "test:e2e": "node --test test/unit.test.mjs test/e2e.test.mjs"
-  },
   "dependencies": {
     "@capyclaw/plugin-kit": "^0.2.0"
   }

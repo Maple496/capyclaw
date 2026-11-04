@@ -302,14 +302,13 @@ npm run validate-plugin extensions/official/dsh-my-plugin
 }
 ```
 
-### 错误 3: 缺少测试
+### 错误 3: 缺少 suite 组合包的豁免
 ```
-❌ [REQUIRED_FILES] 缺少 test/ 目录
+❌ [REQUIRED_FILES] 缺少必需文件: lib
 ```
-**解决**: 创建 `test/plugin.test.mjs`：
-```javascript
-console.log('✅ 测试通过')
-```
+**解决**: 普通插件必须有 `lib/` 与 `main`；纯 suite 组合包（只有 `dsh-suite.json`，
+无代码入口）会被自动豁免——若报此错，说明包声明了 `main` 却没有 `lib/` 目录，
+补齐其一即可。
 
 ---
 

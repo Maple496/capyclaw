@@ -133,7 +133,7 @@ export const callTool = (name, args) => registry.TOOL_IMPL[name]?.(args)
 
 ```bash
 # 测试插件
-cd my-plugins/my-service/plugin/my-service && npm test
+cd my-plugins/my-service/plugin/my-service && npm run validate-plugin -- .
 
 # 同步公共插件到 server/shared
 node scripts/sync-shared.mjs \

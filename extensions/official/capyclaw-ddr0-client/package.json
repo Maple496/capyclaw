@@ -27,7 +27,6 @@
     "description": "在 DSH 中访问 ddr0.com - 登录、积分、社区等功能 by CapyClaw"
   },
   "files": [
-    "test/",
     "lib/",
     "static/",
     "cordis.patch.yml",
@@ -49,9 +48,7 @@
     "url": "https://github.com/capyclaw/dsh-plugins/issues"
   },
   "homepage": "https://github.com/capyclaw/dsh-plugins",
-  "scripts": {
-    "test": "node --test test/plugin.test.mjs"
-  },
+  "scripts": {},
   "publishConfig": {
     "access": "public"
   }

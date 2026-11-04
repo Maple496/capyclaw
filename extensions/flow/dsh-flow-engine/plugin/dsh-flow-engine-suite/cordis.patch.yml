@@ -1,9 +1,0 @@
-# 由 dsh-suite-kit 生成；改 dsh-suite.json 后重跑 compose。
-
-- insert:
-    - id: dsh-flow-engine-host
-      name: "dsh-flow-engine"
-      config: {"port":39600}
-    - id: mcp-flow-engine
-      name: "@deepseek-ai/dsh-mcp-client"
-      config: {"serverName":"flow-engine","transport":"streamable-http","url":"http://127.0.0.1:39600/mcp","failOnStartupError":false,"toolCallTimeoutMs":120000}

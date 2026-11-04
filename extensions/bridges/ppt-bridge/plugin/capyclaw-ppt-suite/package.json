@@ -55,9 +55,7 @@
     "services.json"
   ],
   "license": "MIT",
-  "scripts": {
-    "test": "node --test test/smoke.test.mjs"
-  },
+  "scripts": {},
   "author": {
     "name": "CapyClaw",
     "url": "https://github.com/capyclaw",

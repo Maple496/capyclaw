@@ -1,8 +1,0 @@
-[
-  { "name": "founder(当前默认 poll=25 jKB=2048 ka=5000)", "genome": { "fsLockSyncTimeoutMs": 10000, "fsLockStaleMs": 30000, "fsLockPollMs": 25, "journalMaxKB": 2048, "journalTailLimit": 8, "catalogThrottleMs": 5000, "keepAliveTimeoutMs": 5000 } },
-  { "name": "poll=5  jKB=256  ka=15000", "genome": { "fsLockSyncTimeoutMs": 10000, "fsLockStaleMs": 30000, "fsLockPollMs": 5, "journalMaxKB": 256, "journalTailLimit": 8, "catalogThrottleMs": 5000, "keepAliveTimeoutMs": 15000 } },
-  { "name": "poll=10 jKB=256  ka=15000", "genome": { "fsLockSyncTimeoutMs": 10000, "fsLockStaleMs": 30000, "fsLockPollMs": 10, "journalMaxKB": 256, "journalTailLimit": 8, "catalogThrottleMs": 5000, "keepAliveTimeoutMs": 15000 } },
-  { "name": "poll=10 jKB=512  ka=15000", "genome": { "fsLockSyncTimeoutMs": 10000, "fsLockStaleMs": 30000, "fsLockPollMs": 10, "journalMaxKB": 512, "journalTailLimit": 8, "catalogThrottleMs": 5000, "keepAliveTimeoutMs": 15000 } },
-  { "name": "poll=25 jKB=512  ka=15000", "genome": { "fsLockSyncTimeoutMs": 10000, "fsLockStaleMs": 30000, "fsLockPollMs": 25, "journalMaxKB": 512, "journalTailLimit": 8, "catalogThrottleMs": 5000, "keepAliveTimeoutMs": 15000 } },
-  { "name": "poll=5  jKB=512  ka=5000", "genome": { "fsLockSyncTimeoutMs": 10000, "fsLockStaleMs": 30000, "fsLockPollMs": 5, "journalMaxKB": 512, "journalTailLimit": 8, "catalogThrottleMs": 5000, "keepAliveTimeoutMs": 5000 } }
-]

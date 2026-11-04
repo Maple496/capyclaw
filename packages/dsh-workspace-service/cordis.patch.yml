@@ -1,4 +1,0 @@
-# 由 dsh-workspace-service 提供；功能插件通过 inject: ['workspace'] 或 ctx.get('workspace') 使用。
-- insert:
-    - id: workspace-service
-      name: "dsh-workspace-service"

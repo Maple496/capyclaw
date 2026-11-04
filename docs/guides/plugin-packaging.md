@@ -102,7 +102,7 @@ bash start.sh
 
 ## 6. 发布前检查
 
-- [ ] 插件 `npm test` 通过
+- [ ] 插件 `npm run validate-plugin -- <目录>` 通过
 - [ ] `dsh-suite validate` / `dsh-domain validate` 通过
 - [ ] 打包产物解压后有 `package.json`
 - [ ] 安装到干净 profile 后 `/healthz` 返回 200

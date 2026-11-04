@@ -1,17 +1,15 @@
 {
   "name": "dsh-suite-kit",
   "version": "0.1.0",
-  "description": "DSH 统一中间层：suite/domain 打包、runtime 端口分配、workspace 声明、catalog 与生命周期管理。",
+  "description": "DSH suite/domain 清单校验与组合工具：manifest 校验、compose、profile 生成、domain 解析。",
   "type": "module",
   "main": "./src/index.mjs",
   "exports": {
     ".": "./src/index.mjs",
-    "./runtime": "./src/runtime.mjs",
     "./domain": "./src/domain.mjs",
     "./compose": "./src/compose.mjs",
     "./manifest": "./src/manifest.mjs",
     "./profile": "./src/profile.mjs",
-    "./workspace": "./src/workspace.mjs",
     "./artifacts": "./src/artifacts.mjs",
     "./schema": "./suite.schema.json",
     "./package.json": "./package.json",
@@ -19,10 +17,7 @@
   },
   "bin": {
     "dsh-suite": "./bin/dsh-suite.mjs",
-    "dsh-domain": "./bin/dsh-domain.mjs",
-    "dsh-runtime": "./bin/dsh-runtime.mjs",
-    "dsh-deploy": "./bin/dsh-deploy.mjs",
-    "dsh-works": "./bin/dsh-works.mjs"
+    "dsh-domain": "./bin/dsh-domain.mjs"
   },
   "files": [
     "README.md",
@@ -31,9 +26,6 @@
     "src/",
     "suite.schema.json"
   ],
-  "scripts": {
-    "test": "node --test test/manifest.test.mjs test/compose.test.mjs test/profile.test.mjs test/domain.test.mjs test/runtime.test.mjs test/artifacts.test.mjs test/deploy.test.mjs test/works-source.test.mjs test/works-parser.test.mjs test/seam.test.mjs test/extensibility.test.mjs test/e2e-distribution.test.mjs test/activation-registry.test.mjs"
-  },
   "engines": {
     "node": ">=18"
   },

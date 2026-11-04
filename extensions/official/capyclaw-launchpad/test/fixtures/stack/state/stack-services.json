@@ -1,6 +1,0 @@
-{
-  "_generatedBy": "dsh-stack-kit",
-  "services": [
-    { "id": "other", "ports": { "main": 42002 } }
-  ]
-}

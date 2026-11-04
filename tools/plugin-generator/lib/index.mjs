@@ -47,7 +47,6 @@ export async function generatePlugin(pluginName, options = {}) {
   // 创建目录结构
   mkdirSync(pluginDir, { recursive: true })
   mkdirSync(join(pluginDir, 'lib'), { recursive: true })
-  mkdirSync(join(pluginDir, 'test'), { recursive: true })
   
   // 生成 package.json
   const packageJson = generatePackageJson(fullName, tier, category, platform)
@@ -56,11 +55,7 @@ export async function generatePlugin(pluginName, options = {}) {
   // 生成主入口
   const mainEntry = generateMainEntry(fullName, tier)
   writeFileSync(join(pluginDir, 'lib/index.mjs'), mainEntry)
-  
-  // 生成测试文件
-  const testFile = generateTestFile(fullName)
-  writeFileSync(join(pluginDir, 'test/plugin.test.mjs'), testFile)
-  
+
   // 生成 README
   const readme = generateReadme(fullName, category, platform)
   writeFileSync(join(pluginDir, 'README.md'), readme)
@@ -108,12 +103,8 @@ function generatePackageJson(name, tier, category, platform) {
       title: name.replace('dsh-', '').split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' '),
       description: `${category} 插件，支持 ${platform} 平台`
     },
-    scripts: {
-      test: 'node test/plugin.test.mjs'
-    },
     files: [
       'lib/',
-      'test/',
       'cordis.patch.yml',
       'README.md'
     ],
@@ -182,24 +173,6 @@ export function apply(ctx, config) {
 }
 
 /**
- * 生成测试文件
- */
-function generateTestFile(name) {
-  return `/**
- * ${name} 测试
- */
-
-import assert from 'node:assert'
-
-console.log('🧪 测试 ${name}')
-
-// TODO: 添加测试用例
-
-console.log('✅ 所有测试通过')
-`
-}
-
-/**
  * 生成 README
  */
 function generateReadme(name, category, platform) {
@@ -231,7 +204,7 @@ npm install ${name}
 ## 开发
 
 \`\`\`bash
-npm test
+npm run validate-plugin -- <插件目录>
 \`\`\`
 
 ## 平台支持

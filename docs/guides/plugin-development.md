@@ -189,7 +189,7 @@ node packages/dsh-suite-kit/bin/dsh-domain.mjs validate <domain-dir>
 
 ```bash
 cd my-plugins/my-service/plugin/my-service
-npm test
+npm run validate-plugin -- .
 ```
 
 接入真实服务后，至少再补：

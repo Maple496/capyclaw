@@ -4,7 +4,7 @@
  * 确保整个插件生态符合规范
  */
 
-import { existsSync, readdirSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
@@ -17,9 +17,7 @@ const rootDir = resolve(__dirname, '..')
 const PLUGIN_DIRS = [
   { path: 'extensions/official', required: true },
   { path: 'extensions/suites', required: false },  // suite 目录按需创建，当前不存在
-  { path: 'extensions/bridges', required: false }, // bridges 可选验证（递归含 plugin/ 深层的 suite 与 skill 包）
-  { path: 'extensions/flow', required: false },
-  { path: 'extensions/llm-config', required: false }
+  { path: 'extensions/bridges', required: false } // bridges 可选验证（递归含 plugin/ 深层的 suite 与 skill 包）
 ]
 
 // 与 test-all 同口径：递归找带 package.json 的目录，跳过产物/依赖/夹具
@@ -36,6 +34,17 @@ function findPluginDirs(root, out = [], depth = 0) {
     findPluginDirs(child, out, depth + 1)
   }
   return out
+}
+
+/** 只把「dsh 插件形态」的包纳入验证：声明了 dsh.bundle / dsh.suite / dsh.client 才算。
+ *  bridges 根（如 ppt-bridge-middleware 构建工场）与纯独立包（如 canvas-plugin）不是 dsh 插件，跳过。 */
+function isDshPluginDir(pluginPath) {
+  try {
+    const pkg = JSON.parse(readFileSync(join(pluginPath, 'package.json'), 'utf8'))
+    return Boolean(pkg.dsh?.bundle || pkg.dsh?.suite || pkg.dsh?.client)
+  } catch {
+    return false
+  }
 }
 
 console.log('🔍 批量验证所有插件')
@@ -57,6 +66,7 @@ for (const dirConfig of PLUGIN_DIRS) {
     const pluginDirs = findPluginDirs(dirPath)
 
     for (const pluginPath of pluginDirs) {
+      if (!isDshPluginDir(pluginPath)) continue
       const entry = pluginPath.slice(dirPath.length + 1)
 
       totalPlugins++

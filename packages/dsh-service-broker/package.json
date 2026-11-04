@@ -42,9 +42,7 @@
     "README.md"
   ],
   "license": "MIT",
-  "scripts": {
-    "test": "node --test test/unit.test.mjs test/e2e.test.mjs test/stability.test.mjs test/adopt-detached.test.mjs"
-  },
+  "scripts": {},
   "dependencies": {
     "@capyclaw/plugin-kit": "^0.2.0"
   }

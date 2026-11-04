@@ -28,7 +28,7 @@ deepseekharness_dev/
 │   ├── plugin-validator/                # 插件验证工具
 │   ├── plugin-generator/                # 插件脚手架生成器
 │   ├── plugin-release/                  # 发布、源索引与校验
-│   └── dsh-launcher/                    # dsh 全栈启动器（--stack）
+
 │
 └── vendor/                              # 外来引入代码（flow-executor）
 
@@ -178,7 +178,7 @@ npm run validate-plugin extensions/official/my-plugin
 
 ### 3. 测试插件
 ```bash
-npm run test-plugin extensions/official/my-plugin
+npm run validate-plugin -- extensions/official/my-plugin
 # 运行测试 + 集成验证
 ```
 

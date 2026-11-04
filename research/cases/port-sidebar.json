@@ -1,6 +1,0 @@
-[
-  { "name": "founder（当前默认 retry=200/1000 tick=300 pending=800）", "genome": { "retry2Ms": 200, "retry3Ms": 1000, "checkIntervalMs": 300, "pendingOpenMs": 800, "reviveCooldownMs": 400, "maxFailuresPerSession": 5, "collapseGate": true } },
-  { "name": "快轮询（tick=150）", "genome": { "retry2Ms": 200, "retry3Ms": 1000, "checkIntervalMs": 150, "pendingOpenMs": 800, "reviveCooldownMs": 400, "maxFailuresPerSession": 5, "collapseGate": true } },
-  { "name": "保守重试（retry=500/2000）", "genome": { "retry2Ms": 500, "retry3Ms": 2000, "checkIntervalMs": 300, "pendingOpenMs": 1500, "reviveCooldownMs": 800, "maxFailuresPerSession": 6, "collapseGate": true } },
-  { "name": "无折叠门", "genome": { "retry2Ms": 200, "retry3Ms": 1000, "checkIntervalMs": 300, "pendingOpenMs": 800, "reviveCooldownMs": 400, "maxFailuresPerSession": 5, "collapseGate": false } }
-]

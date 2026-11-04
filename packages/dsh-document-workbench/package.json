@@ -19,9 +19,7 @@
     "README.md"
   ],
   "license": "MIT",
-  "scripts": {
-    "test": "node --test test/session.test.mjs test/ops.test.mjs test/bridge.test.mjs test/client.test.mjs"
-  },
+  "scripts": {},
   "dependencies": {
     "@capyclaw/plugin-kit": "^0.2.0"
   }

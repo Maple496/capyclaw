@@ -1,6 +1,0 @@
-[
-  { "name": "founder(当前默认 poll=500 stop=100)", "genome": { "portScanRange": 200, "readyPollMs": 500, "probeHttpTimeoutMs": 1000, "canConnectTimeoutMs": 500, "stopPollMs": 100 } },
-  { "name": "readyPoll=300 stop=50 ", "genome": { "portScanRange": 200, "readyPollMs": 300, "probeHttpTimeoutMs": 1000, "canConnectTimeoutMs": 500, "stopPollMs": 50 } },
-  { "name": "readyPoll=200 stop=50 ", "genome": { "portScanRange": 200, "readyPollMs": 200, "probeHttpTimeoutMs": 1000, "canConnectTimeoutMs": 500, "stopPollMs": 50 } },
-  { "name": "readyPoll=300 stop=100", "genome": { "portScanRange": 200, "readyPollMs": 300, "probeHttpTimeoutMs": 1000, "canConnectTimeoutMs": 500, "stopPollMs": 100 } }
-]

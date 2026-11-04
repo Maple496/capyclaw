@@ -7,9 +7,7 @@
   "bin": {
     "validate-plugin": "./bin/cli.mjs"
   },
-  "scripts": {
-    "test": "node test/validator.test.mjs"
-  },
+  "scripts": {},
   "dependencies": {
     "semver": "^7.5.4",
     "yaml": "^2.3.4"

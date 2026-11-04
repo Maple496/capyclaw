@@ -8,7 +8,6 @@
 
 1. 阅读 [README.md](README.md) 了解项目概况
 2. 阅读 [ARCHITECTURE.md](ARCHITECTURE.md) 了解架构设计
-3. 阅读 [QUICKSTART.md](QUICKSTART.md) 搭建开发环境
 
 ---
 
@@ -18,13 +17,11 @@
 
 **遵循目录职责，不跨层放置代码**：
 
-- `apps/` - 可执行应用
-- `packages/` - 可复用库
-- `extensions/` - 可插拔扩展
-- `tools/` - 开发工具
+- `packages/` - 构建库与基建插件
+- `extensions/` - 插件本体
+- `tools/` - 插件工具链
+- `scripts/` - 流水线脚本
 - `docs/` - 文档
-- `examples/` - 示例代码
-- `research/` - 实验代码（稳定后迁移）
 
 ### 新增目录
 
@@ -61,14 +58,14 @@ git checkout -b fix/bug-description
 ### 2. 开发和测试
 
 ```bash
-# 运行相关测试
-npm run test-all
+# 校验插件结构
+npm run validate-all
 
-# 验证代码标准
-npm run verify-all
+# 构建插件包（PPT 线）
+npm run build:plugin
 
-# 构建产品（如有需要）
-npm run build-product
+# 打包产物
+npm run release-all
 ```
 
 ### 3. 提交代码
@@ -191,33 +188,25 @@ npm run validate-plugin -- path/to/plugin
 ### 保持依赖方向
 
 ```
-产品 → 应用 → 扩展 → 核心库 → 第三方
+extensions/ → packages/ → 第三方
+tools/      → packages/ + extensions/
+scripts/    → packages/ + tools/
 ```
 
 **不允许**：
-- 核心库依赖扩展
-- 扩展依赖应用
-- 下层依赖上层
+- `packages/` 依赖 `extensions/`
+- 工具链之外的代码模仿 `tools/` 的深层相对路径引用
 
 ### 实验代码
 
-**放在 `research/` 目录**，稳定后再迁移：
-
-```bash
-# 实验阶段
-research/my-experiment/
-
-# 稳定后迁移
-extensions/my-feature/  # 或
-packages/my-lib/
-```
+实验性代码不进本仓库；请放在仓库之外独立验证，稳定后再作为插件或构建库引入。
 
 ---
 
 ## 获取帮助
 
 - 查看文档：[docs/](docs/)
-- 查看示例：[examples/](examples/)
+- 发布流程：[docs/PUBLISHING.md](docs/PUBLISHING.md)
 - 提出 Issue：[GitHub Issues](#)
 
 ---

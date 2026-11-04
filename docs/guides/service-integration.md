@@ -127,7 +127,7 @@ case 'my_service_query':
 
 ```bash
 cd my-plugins/my-service/plugin/dsh-my-service
-npm test
+npm run validate-plugin -- .
 ```
 
 ### 5. 安装
@@ -163,6 +163,6 @@ node create-plugin.mjs --name dsh-my-ui --type ui --port 39501 \
 - [ ] 每个工具都有 inputSchema，且限制 `maxLength` / `maxItems`
 - [ ] 有 `*_capabilities` 契约工具
 - [ ] 单实例锁 + 退出释放
-- [ ] `npm test` 通过
+- [ ] `npm run validate-plugin -- <目录>` 通过
 - [ ] `dsh-suite validate` 通过
 - [ ] `dsh-domain validate` 通过

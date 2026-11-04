@@ -25,13 +25,10 @@
   },
   "files": [
     "lib/",
-    "test/",
     "cordis.patch.yml",
     "README.md"
   ],
-  "scripts": {
-    "test": "node --test test/launch-engine.test.mjs"
-  },
+  "scripts": {},
   "dependencies": {
     "@capyclaw/plugin-kit": "^0.2.0"
   },

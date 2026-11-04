@@ -1,6 +1,0 @@
-[
-  { "name": "founder(jKB=2048 tail=8)", "genome": { "journalMaxKB": 2048, "journalTailLimit": 8 } },
-  { "name": "jKB=256 tail=8", "genome": { "journalMaxKB": 256, "journalTailLimit": 8 } },
-  { "name": "jKB=512 tail=8", "genome": { "journalMaxKB": 512, "journalTailLimit": 8 } },
-  { "name": "jKB=1024 tail=8", "genome": { "journalMaxKB": 1024, "journalTailLimit": 8 } }
-]

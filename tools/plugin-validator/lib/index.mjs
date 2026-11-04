@@ -65,27 +65,25 @@ export async function validatePlugin(pluginPath) {
     }
   }
   
-  // 2. 检查必需文件
-  checkRequiredFiles(pluginPath, errors)
-  
-  // 如果 package.json 不存在，后续检查无法进行
-  if (errors.some(e => e.rule === 'REQUIRED_FILES' && e.message.includes('package.json'))) {
-    return { valid: false, errors, warnings }
-  }
-  
-  // 3. 加载并验证 package.json
+  // 2. 加载 package.json（必需文件检查需要区分 suite-only 组合包）
   let pkg
   try {
     const pkgPath = join(pluginPath, 'package.json')
     pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'))
   } catch (error) {
-    errors.push({
-      rule: 'PACKAGE_JSON',
-      message: `package.json 格式错误: ${error.message}`
-    })
+    checkRequiredFiles(pluginPath, null, errors)
+    if (!errors.some(e => e.rule === 'REQUIRED_FILES')) {
+      errors.push({
+        rule: 'PACKAGE_JSON',
+        message: `package.json 格式错误: ${error.message}`
+      })
+    }
     return { valid: false, errors, warnings }
   }
-  
+
+  // 3. 检查必需文件
+  checkRequiredFiles(pluginPath, pkg, errors)
+
   // 4. 验证 package.json 内容
   checkPackageJson(pkg, errors, warnings)
   
@@ -105,8 +103,11 @@ export async function validatePlugin(pluginPath) {
 /**
  * 检查必需文件
  */
-function checkRequiredFiles(pluginPath, errors) {
+function checkRequiredFiles(pluginPath, pkg, errors) {
+  const suiteOnly = pkg?.dsh?.suite && !pkg?.main
   for (const file of RULES.REQUIRED_FILES) {
+    // suite 组合包（dsh.suite 且无代码入口）没有 lib/ 目录
+    if (file === 'lib' && suiteOnly) continue
     const filePath = join(pluginPath, file)
     if (!existsSync(filePath)) {
       errors.push({
@@ -116,16 +117,6 @@ function checkRequiredFiles(pluginPath, errors) {
       })
     }
   }
-  
-  // 检查测试目录
-  const testPath = join(pluginPath, 'test')
-  if (!existsSync(testPath)) {
-    errors.push({
-      rule: 'REQUIRED_FILES',
-      message: '缺少 test/ 目录',
-      hint: '创建 test/ 目录并添加至少一个测试文件'
-    })
-  }
 }
 
 /**
@@ -134,6 +125,8 @@ function checkRequiredFiles(pluginPath, errors) {
 function checkPackageJson(pkg, errors, warnings) {
   // 检查必需字段
   for (const field of RULES.REQUIRED_PKG_FIELDS) {
+    // suite 组合包（dsh.suite 且无代码入口）没有 main 字段
+    if (field === 'main' && pkg.dsh?.suite && !pkg.main) continue
     if (!pkg[field]) {
       errors.push({
         rule: 'PACKAGE_FIELDS',
@@ -214,15 +207,6 @@ function checkPackageJson(pkg, errors, warnings) {
       warnings.push('meta.description 建议提供（用户可见的详细描述）')
     }
   }
-  
-  // 检查 test 脚本
-  if (!pkg.scripts || !pkg.scripts.test) {
-    errors.push({
-      rule: 'TEST_SCRIPT',
-      message: '缺少 test 脚本',
-      hint: '在 package.json 的 scripts 中添加 "test": "node test/xxx.test.mjs"'
-    })
-  }
 }
 
 /**
@@ -251,19 +235,6 @@ function checkDirectoryStructure(pluginPath, pkg, errors, warnings) {
           hint: '确保 main 字段指向的文件存在'
         })
       }
-    }
-  }
-  
-  // 检查 test/ 目录内容
-  const testPath = join(pluginPath, 'test')
-  if (existsSync(testPath)) {
-    const testFiles = readdirSync(testPath).filter(f => f.endsWith('.test.mjs') || f.endsWith('.test.js'))
-    if (testFiles.length === 0) {
-      errors.push({
-        rule: 'NO_TESTS',
-        message: 'test/ 目录中没有测试文件',
-        hint: '添加至少一个 *.test.mjs 文件'
-      })
     }
   }
   

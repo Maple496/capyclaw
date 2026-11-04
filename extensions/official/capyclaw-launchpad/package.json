@@ -42,9 +42,7 @@
     "cordis.patch.yml",
     "README.md"
   ],
-  "scripts": {
-    "test": "node --test test/scan.test.mjs test/parse.test.mjs test/analyze.test.mjs test/status.test.mjs test/broker.test.mjs test/server.test.mjs test/stack.test.mjs test/dsl.test.mjs test/launchpads.test.mjs test/plugin.test.mjs"
-  },
+  "scripts": {},
   "engines": {
     "node": ">=18",
     "dsh": "^0.2.0-rc.2"

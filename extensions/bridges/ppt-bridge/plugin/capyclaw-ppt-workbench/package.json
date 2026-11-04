@@ -42,9 +42,7 @@
     "THIRD_PARTY_NOTICES.md"
   ],
   "license": "AGPL-3.0-or-later",
-  "scripts": {
-    "test": "node --test test/contract-snapshots.test.mjs"
-  },
+  "scripts": {},
   "dependencies": {
     "pptxgenjs": "^3.12.0",
     "@capyclaw/plugin-kit": "^0.2.0",

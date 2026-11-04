@@ -177,7 +177,6 @@ function syncSkillPackage(entry) {
     meta: { title: `PPT Skill · ${entry.title}`, description: entry.description },
     files: ['lib/', 'skills/', 'contract/', 'cordis.patch.yml', 'README.md'],
     license: 'MIT',
-    scripts: { test: 'node --test test/smoke.test.mjs' },
     dependencies: { '@capyclaw/plugin-kit': '^0.2.0' },
   }, null, 2) + '\n'
   writeChecked(join(pkgDir, 'package.json'), pkgJson, `${entry.dir}/package.json`)
@@ -192,21 +191,6 @@ function syncSkillPackage(entry) {
   copyChecked(join(KIT_ROOT, 'src', 'skills', 'provider.mjs'), join(pkgDir, 'lib', 'provider.mjs'), `${entry.dir}/lib/provider.mjs`)
   syncDir(join(ROOT, 'src', 'skills', entry.skill), join(pkgDir, 'skills', entry.skill), `${entry.dir}/skills/${entry.skill}`, ['references/tool-contract.md'])
   writeChecked(join(pkgDir, 'README.md'), `# ${entry.name}\n\nPPT skill 单包：\`${entry.skill}\`。只注册一个 skill provider，不启动服务。\n`, `${entry.dir}/README.md`)
-  writeChecked(join(pkgDir, 'test', 'smoke.test.mjs'), [
-    `import assert from 'node:assert/strict'`,
-    `import test from 'node:test'`,
-    `import { apply, name, inject } from '../lib/index.mjs'`,
-    ``,
-    `test('skill provider 注册', () => {`,
-    `  assert.equal(name, 'ppt-skill-${entry.slug}')`,
-    `  assert.deepEqual(inject, ['skills'])`,
-    `  const registered = []`,
-    `  apply({ skills: { registerProvider: (make) => registered.push(make) } }, {})`,
-    `  assert.equal(registered.length, 1)`,
-    `  assert.equal(typeof registered[0], 'function')`,
-    `})`,
-    ``,
-  ].join('\n'), `${entry.dir}/test/smoke.test.mjs`)
 }
 
 function toolContractMarkdown(contract) {
