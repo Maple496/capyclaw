@@ -1,9 +1,9 @@
 /**
- * canvas-workbench 宿主插件（cordis 入口，loader 经包名加载本模块）。
+ * @capyclaw/canvas-workbench 宿主插件（cordis 入口，loader 经包名加载本模块）。
  *
  * 服务解耦标准：relay 是独立端口服务（server/relay.mjs 即 standalone 入口），
  * 由 dsh-service-broker 按清单以独立进程拉起；本模块只在被 insert 时
- * 以同样装配拉起 relay 并返回 disposer。
+ * 以同样装配拉起 relay 并返回 disposer（兼容入口，生产路径走 broker）。
  */
 import os from 'node:os'
 import path from 'node:path'

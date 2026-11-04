@@ -2,9 +2,21 @@
   "services": [
     {
       "id": "canvas-workbench",
-      "cmd": ["node", "${PACKAGE_DIR}/server/relay.mjs", "--port", "${PORT}"],
-      "ports": { "main": 39313 },
+      "portFrom": "content",
+      "dirFrom": "contentState",
+      "cmd": [
+        "node",
+        "${PACKAGE_DIR}/node_modules/@capyclaw/canvas-workbench/server/relay.mjs",
+        "--port",
+        "${PORT}",
+        "--dir",
+        "${PACKAGE_DIR}/.host"
+      ],
+      "ports": {
+        "main": 39313
+      },
       "url": "http://127.0.0.1:${PORT}",
+      "keepAlive": true,
       "healthPath": "/healthz"
     }
   ]

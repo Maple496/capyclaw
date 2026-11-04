@@ -16,7 +16,8 @@
         "main": 39311
       },
       "url": "http://127.0.0.1:${PORT}/",
-      "keepAlive": true
+      "keepAlive": true,
+      "healthPath": "/healthz"
     },
     {
       "id": "dsh-skills",
@@ -30,7 +31,8 @@
         "main": 39321
       },
       "url": "http://127.0.0.1:${PORT}",
-      "keepAlive": true
+      "keepAlive": true,
+      "healthPath": "/healthz"
     }
   ]
 }

@@ -27,7 +27,7 @@ dsh-ppt-suite
 - **skill 可以独立评测和替换**：每个 `capyclaw-ppt-skill-*` 有自己的 package/contract，单独升版本或替换不影响其他 skill。
 - **套件负责兼容性**：用户不需要理解 8 个 skill 包的版本矩阵。
 - **拆模块不拆进程**：workbench 内部按 capability / 端口 / store / route / editor session 拆成单一职责模块；它们仍共享同一个 relay、editor 状态、undo 历史和截图通道，避免跨进程竞态。
-- **能力可组合**：15 个 capability 通过 `requires` / `dependsOn` / `provides` 声明依赖，`createRegistry(..., { enabled })` 可按 profile 选择；新增能力只加一个文件。
+- **能力可组合**：24 个 capability 通过 `requires` / `dependsOn` / `provides` 声明依赖，`createRegistry(..., { enabled })` 可按 profile 选择；新增能力只加一个文件。
 - **不新造搜索插件**：内容研究用 DSH 内置 `web_search` / `web_fetch`；素材搜索以后才考虑独立 provider。
 
 ## 契约
@@ -40,9 +40,9 @@ dsh-ppt-suite
 ## 构建与测试
 
 ```bash
-cd bridges/ppt-bridge
+cd extensions/bridges/ppt-bridge
 node scripts/build-plugin.mjs
-node --test test/*.test.mjs
+npm --prefix ../../../../.. run test   # 单测在 canvas-bridge（本 bridge 无 test/）
 ```
 
 构建会：

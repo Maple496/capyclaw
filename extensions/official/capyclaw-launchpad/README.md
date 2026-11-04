@@ -115,7 +115,7 @@ stack "ppt" {
   domain 型由 dshd 交给 `@capyclaw/suite-kit` runtime（broker + dsh + suite services）；
   管理界面/状态从 runtime.json + discovery 读，不再依赖 profile 的 state.json。
 - 当前服务所在的栈会在列表里标 `HOST`；停止它会中断本页面，因此禁用。
-- 执行器默认找仓库内 `tools/dsh-launcher/bin/dshd.mjs`；可用
+- 执行器需要 `dshd`（来自外部 dsh-launcher 仓，本仓库不包含）；可用
   `--dshd` / `DSH_LAUNCHPAD_DSHD` 覆盖。DSL 目录用 `--launchpads` /
   `DSH_LAUNCHPAD_DIR` 覆盖。
 
@@ -159,7 +159,7 @@ http://127.0.0.1:13596/
 或手动起服务：
 
 ```bash
-node extensions/official/dsh-launchpad/server.mjs \
+node extensions/official/capyclaw-launchpad/server.mjs \
   --port 39700 \
   --launchpads launchpads \
   --dshd tools/dsh-launcher/bin/dshd.mjs

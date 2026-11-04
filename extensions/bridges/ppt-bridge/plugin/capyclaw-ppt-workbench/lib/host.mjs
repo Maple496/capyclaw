@@ -1,13 +1,9 @@
 /**
- * 【已退役 2026-11-01 服务解耦标准】本文件不再作为 cordis 入口使用。
+ * @capyclaw/ppt-workbench 宿主插件（cordis 入口，loader 经包名加载本模块）。
  *
- * 旧设计：本模块被 insert 进 dsh 进程，在 apply 里进程内拉起桥 relay——
- * 违反「服务彼此独立、跨端口拉起交给中间件」原则，已废弃。
- *
- * 新形态：relay 是独立端口服务（server/relay.mjs 即 standalone 入口，
- * dsh-service-host 骨架：/healthz 带 pid、单实例锁、优雅关闭），由
- * dsh-service-broker 按清单以独立进程拉起（服务规格见包根
- * cordis.patch.yml 注释）。本文件仅为过渡期兼容保留，勿再 insert。
+ * 服务解耦标准：relay 是独立端口服务（server/relay.mjs 即 standalone 入口），
+ * 由 dsh-service-broker 按清单以独立进程拉起；本模块只在被 insert 时
+ * 以同样装配拉起 relay 并返回 disposer（兼容入口，生产路径走 broker）。
  */
 /**
  * capyclaw-ppt-workbench 宿主插件（cordis 入口，loader 经包名加载本模块）。

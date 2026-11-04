@@ -9,7 +9,6 @@
     "@deepseek-ai/dsh-web-app"
   ],
   "components": [
-    "../../../../../packages/capyclaw-workspace-service",
     "../../plugin/capyclaw-canvas-suite",
     "../../../../../extensions/official/capyclaw-launch-engine/plugin/capyclaw-launch-engine-suite"
   ],
@@ -28,7 +27,6 @@
         "canvas_*"
       ],
       "capabilities": [
-        "workspace.runtime@^1.0.0",
         "host.http@^1.0.0",
         "tools.registry@^1.0.0",
         "assets.store@^1.0.0",
@@ -38,21 +36,11 @@
         "canvas.workflows@^1.0.0"
       ],
       "services": [
-        "workspace",
         "serviceHost",
         "toolHost",
         "assets",
         "editorHost",
         "canvas-workbench"
-      ]
-    },
-    "scope": {
-      "workspace": [
-        "state.json",
-        "journal.jsonl",
-        "checkpoints/**",
-        "exports/**",
-        "assets/**"
       ]
     },
     "ports": {
