@@ -13,5 +13,14 @@
     "README.md"
   ],
   "scripts": {},
-  "private": true
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "tools/capyclaw-plugin-release"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/tools/capyclaw-plugin-release#readme"
 }

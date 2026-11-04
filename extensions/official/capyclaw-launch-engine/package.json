@@ -42,7 +42,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/capyclaw/dsh-plugins",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
     "directory": "extensions/official/capyclaw-launch-engine"
   },
   "keywords": [
@@ -51,5 +51,9 @@
     "activation",
     "capability-registry",
     "container-injection"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/extensions/official/capyclaw-launch-engine#readme"
 }

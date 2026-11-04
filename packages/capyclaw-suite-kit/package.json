@@ -30,5 +30,14 @@
     "node": ">=18"
   },
   "license": "MIT",
-  "private": true
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "packages/capyclaw-suite-kit"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/packages/capyclaw-suite-kit#readme"
 }

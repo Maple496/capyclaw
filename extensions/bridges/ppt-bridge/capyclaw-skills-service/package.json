@@ -14,5 +14,14 @@
     "server.mjs",
     "README.md"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "extensions/bridges/ppt-bridge/capyclaw-skills-service"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/extensions/bridges/ppt-bridge/capyclaw-skills-service#readme"
 }

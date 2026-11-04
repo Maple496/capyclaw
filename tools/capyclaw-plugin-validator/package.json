@@ -12,5 +12,14 @@
     "semver": "^7.5.4",
     "yaml": "^2.3.4"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "tools/capyclaw-plugin-validator"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/tools/capyclaw-plugin-validator#readme"
 }

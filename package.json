@@ -36,5 +36,13 @@
     "extensions/official/*",
     "extensions/bridges/*",
     "tools/*"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw"
 }

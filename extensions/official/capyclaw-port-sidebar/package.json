@@ -45,11 +45,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/capyclaw/dsh-plugins",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
     "directory": "extensions/official/capyclaw-port-sidebar"
   },
   "bugs": {
-    "url": "https://github.com/capyclaw/dsh-plugins/issues"
+    "url": "https://github.com/Maple496/capyclaw/issues"
   },
   "homepage": "https://github.com/capyclaw/dsh-plugins",
   "license": "MIT",

@@ -8,5 +8,14 @@
     "create-plugin": "./bin/cli.mjs"
   },
   "scripts": {},
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "tools/capyclaw-plugin-generator"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/tools/capyclaw-plugin-generator#readme"
 }

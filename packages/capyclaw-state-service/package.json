@@ -28,5 +28,14 @@
   "scripts": {},
   "dependencies": {
     "@capyclaw/plugin-kit": "^0.2.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "packages/capyclaw-state-service"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/packages/capyclaw-state-service#readme"
 }

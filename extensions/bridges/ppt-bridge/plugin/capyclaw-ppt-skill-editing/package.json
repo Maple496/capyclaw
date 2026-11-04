@@ -36,5 +36,14 @@
   "license": "MIT",
   "dependencies": {
     "@capyclaw/plugin-kit": "^0.2.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-skill-editing"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-skill-editing#readme"
 }

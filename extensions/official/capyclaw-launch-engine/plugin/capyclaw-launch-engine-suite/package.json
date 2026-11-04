@@ -26,5 +26,14 @@
     "README.md"
   ],
   "license": "MIT",
-  "private": true
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "extensions/official/capyclaw-launch-engine/plugin/capyclaw-launch-engine-suite"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/extensions/official/capyclaw-launch-engine/plugin/capyclaw-launch-engine-suite#readme"
 }

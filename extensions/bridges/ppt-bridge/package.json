@@ -9,12 +9,23 @@
     "check:plugin": "node scripts/build-plugin.mjs --check",
     "lint:skills": "node scripts/lint-skills.mjs",
     "suite:validate": "node ../../../packages/capyclaw-suite-kit/bin/dsh-suite.mjs validate plugin/capyclaw-ppt-suite",
-    "suite:compose": "node ../../../packages/capyclaw-suite-kit/bin/dsh-suite.mjs compose plugin/capyclaw-ppt-suite --out dist/suite"
+    "suite:compose": "node ../../../packages/capyclaw-suite-kit/bin/dsh-suite.mjs compose plugin/capyclaw-ppt-suite --out dist/suite",
+    "start:workbench": "node plugin/capyclaw-ppt-workbench/server/relay.mjs --port 39311",
+    "start:standalone": "node src/mcp/index.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.21.5"
   },
   "dependencies": {
     "pptxgenjs": "^3.12.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "extensions/bridges/ppt-bridge"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/extensions/bridges/ppt-bridge#readme"
 }
