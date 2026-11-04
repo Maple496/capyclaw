@@ -1,0 +1,58 @@
+{
+  "name": "@capyclaw/plugin-kit",
+  "version": "0.2.0",
+  "description": "DSH 插件基础设施标准件：HTTP/MCP、单实例锁、参数校验、技能 provider、journal 存储、编辑器传输与租约。",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./service/http": "./src/service/http.mjs",
+    "./service/mcp-http": "./src/service/mcp-http.mjs",
+    "./service/single-instance": "./src/service/single-instance.mjs",
+    "./service/api": "./src/service/api.mjs",
+    "./tools/validate": "./src/tools/validate.mjs",
+    "./skills/provider": "./src/skills/provider.mjs",
+    "./editor/transport": "./src/editor/transport.js",
+    "./editor/lease": "./src/editor/lease.mjs",
+    "./store/journal-store": "./src/store/journal-store.mjs",
+    "./store/blob-store": "./src/store/blob-store.mjs",
+    "./store/content-store": "./src/store/content-store.mjs",
+    "./workspace/manager": "./src/workspace/manager.mjs",
+    "./runtime/context": "./src/runtime/context.mjs",
+    "./packaging/pack": "./src/pack.mjs",
+    "./packaging/zip": "./src/zip.mjs",
+    "./cli": "./src/cli.mjs",
+    "./package.json": "./package.json",
+    "./config": "./src/config.mjs"
+  },
+  "bin": {
+    "dsh-plugin-kit-sync": "./bin/sync.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md",
+    "INTEGRATION.md"
+  ],
+  "scripts": {
+    "test": "node --test test/kit.test.mjs test/mcp-http.test.mjs test/sync.test.mjs test/content-store.test.mjs test/cli.test.mjs test/zip.test.mjs test/validate.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capyclaw/dsh-plugins",
+    "directory": "packages/dsh-plugin-kit"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "cordis",
+    "plugin-sdk"
+  ]
+}

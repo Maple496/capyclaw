@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "startedAt": "2026-11-02T00:00:00.000Z",
+  "broker": {
+    "pid": 999999,
+    "port": 39610,
+    "manifest": "../../tools/launcher/local-services.json",
+    "url": "http://127.0.0.1:39610"
+  },
+  "dsh": {
+    "pid": 999999,
+    "proxyPort": 3080,
+    "upPort": 3017,
+    "url": "http://127.0.0.1:3080",
+    "ready": true
+  }
+}

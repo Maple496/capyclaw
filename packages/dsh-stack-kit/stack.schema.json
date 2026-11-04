@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://deepseek-harness.local/schemas/dsh-stack.schema.json",
+  "title": "dsh-stack.json",
+  "description": "DSH 统一启动清单：kind=profile 编译插件 bundles + broker 服务；kind=domain 由一个 dsh-domain.json 决定插件/服务，由 dshd 创建并启动 runtime。",
+  "type": "object",
+  "required": ["name"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "kind": { "type": "string", "enum": ["profile", "domain"], "description": "缺省：有 domain 段则按 domain，否则 profile" },
+    "name": { "type": "string", "minLength": 1 },
+    "home": { "type": "string", "minLength": 1, "description": "profile 型必填：DSH_HOME，相对 stack 文件" },
+    "profile": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "profile 型必填（domain 型可选，覆盖 domain.profile）" },
+    "workspace": { "type": "string", "description": "留空/缺省 = dsh 默认工作区（launcher 回退 <harnessDir>/workspace）；显式路径相对 stack 文件" },
+    "stateDir": { "type": "string", "description": "dshd 运行态；默认 <stackDir>/.dshd/state。domain 型默认 storeRoot=<stateDir>/store" },
+    "harnessDir": { "type": "string", "description": "可选；默认用环境变量 DSH_HARNESS_DIR 或兄弟目录 ../dsh-runtime/apps/harness/deepseek-harness" },
+    "brokerDir": { "type": "string", "description": "可选；默认用仓库内 packages/dsh-service-broker" },
+    "open": { "type": "boolean", "default": false },
+    "env": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "profile 型传给 broker/dsh；domain 型传给 runtime（与 domain.env 合并，stack.env 优先）"
+    },
+    "ports": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "broker": { "$ref": "#/$defs/port" },
+        "proxy": { "$ref": "#/$defs/port", "description": "浏览器入口（domain 型映射 runtime harness 端口）" },
+        "upstream": { "$ref": "#/$defs/port", "description": "dsh 上游端口（domain 型映射 runtime dsh 端口）" },
+        "content": { "$ref": "#/$defs/port", "description": "domain 型：runtime content 端口（PPT relay / 内容服务）" },
+        "services": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/port" },
+          "description": "domain 型作为 suite 服务端口偏好；profile 型作为 broker 服务端口"
+        }
+      }
+    },
+    "plugins": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "仅 profile 型；domain 型忽略（插件由 domain/suite 决定）",
+      "properties": {
+        "install": { "type": "boolean", "default": true, "description": "apply 时是否执行 pnpm install" },
+        "bundles": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "object",
+                "required": ["name"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string" },
+                  "path": { "type": "string", "description": "本地插件目录，编译为 link:<abs>" },
+                  "version": { "type": "string", "description": "registry 版本，编译为依赖版本" }
+                }
+              }
+            ]
+          }
+        },
+        "dependencies": {
+          "type": "object",
+          "description": "安装但不加入 bundles 的依赖：值为 link:<path>、version 或 {path|version}"
+        },
+        "overrides": {
+          "type": "object",
+          "description": "写入 profile package.json 的 pnpm.overrides；相对路径自动转 link:<abs>"
+        },
+        "configs": {
+          "type": "array",
+          "description": "给插件行注入配置：与插件自身 cordis.patch.yml 的默认 config 深合并后，写入 profile 的受管 patch 区块",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "bundle 包名（必须同时出现在 plugins.bundles 里）"
+              },
+              "row": {
+                "type": "string",
+                "description": "目标行 id；该 bundle 的 patch 只有一个 insert 行时可省略"
+              },
+              "config": {
+                "type": "object",
+                "description": "覆盖值，深合并到插件默认 config 上；值支持 ${ports.*} / ${home} 等占位符。不要放密钥，用 *Env 字段引用环境变量"
+              }
+            }
+          }
+        }
+      }
+    },
+    "services": {
+      "type": "array",
+      "description": "仅 profile 型；domain 型忽略（服务由 suite services.json 决定）",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" },
+          "path": { "type": "string", "description": "standalone 入口；与 cmd 二选一" },
+          "args": { "type": "array", "items": { "type": "string" } },
+          "cmd": { "type": "array", "items": { "type": "string" }, "description": "完整命令；与 path 二选一" },
+          "cwd": { "type": "string" },
+          "ports": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/$defs/port" }
+          },
+          "url": { "type": "string" },
+          "healthPath": { "type": "string", "default": "/healthz" },
+          "keepAlive": { "type": "boolean", "default": true },
+          "requires": { "type": "array", "items": { "type": "string" } },
+          "env": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "logFile": { "type": "string" }
+        }
+      }
+    },
+    "domain": {
+      "type": "object",
+      "description": "kind=domain 时必填：一个 dsh-domain.json + runtime 覆盖项",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": { "type": "string", "description": "domain 目录或 dsh-domain.json，相对 stack 文件" },
+        "name": { "type": "string", "description": "runtime 显示名，默认 stack.name" },
+        "profile": { "type": "string", "description": "覆盖 domain.profile.name" },
+        "runtimeId": { "type": "string", "description": "稳定 runtime id；默认 rt-stack-<stack slug>" },
+        "storeRoot": { "type": "string", "description": "runtime store 根，默认 <stateDir>/store" },
+        "recreate": { "type": "boolean", "default": false, "description": "apply/start 时先删除同名 runtime 再重建（破坏性）" },
+        "requires": { "type": "object", "description": "覆盖 domain.runtime.requires" },
+        "scope": { "type": "object", "description": "覆盖 domain.runtime.scope" },
+        "model": { "oneOf": [{ "type": "boolean" }, { "type": "object" }], "description": "覆盖 domain.runtime.model" },
+        "workspaceController": { "oneOf": [{ "type": "boolean" }, { "type": "object" }] },
+        "env": { "type": "object", "additionalProperties": { "type": "string" }, "description": "合并进 runtime env" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "kind": { "const": "domain" } },
+        "required": ["kind"]
+      },
+      "then": { "required": ["domain"] },
+      "else": {
+        "anyOf": [
+          { "required": ["home", "profile"] },
+          { "required": ["domain"] }
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "port": {
+      "oneOf": [
+        { "type": "integer", "minimum": 1, "maximum": 65535 },
+        { "const": "auto" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "dsh-plugin-kit",
+  "version": "0.2.0",
+  "source": "packages/dsh-plugin-kit/src",
+  "syncedAt": "2026-10-31T18:47:29.005Z",
+  "hash": "f11a1474ecaee4385dd5048714a9ba81ab1352d846c19b63229a29f1278b52a0",
+  "files": [
+    "editor/heartbeat-worker.js",
+    "editor/lease.mjs",
+    "editor/transport.js",
+    "index.mjs",
+    "runtime/context.mjs",
+    "service/api.mjs",
+    "service/http.mjs",
+    "service/mcp-http.mjs",
+    "skills/provider.mjs",
+    "store/blob-store.mjs",
+    "store/content-store.mjs",
+    "store/journal-store.mjs",
+    "tools/validate.mjs",
+    "tuning.mjs",
+    "util/fs-lock.mjs",
+    "workspace/manager.mjs"
+  ]
+}

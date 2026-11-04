@@ -1,0 +1,4 @@
+# 由 dsh-editor-host 提供；功能插件通过 inject: ['editorHost'] 或 ctx.get('editorHost') 使用。
+- insert:
+    - id: editor-host
+      name: "dsh-editor-host"

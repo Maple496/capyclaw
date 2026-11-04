@@ -1,0 +1,100 @@
+{
+  "name": "launch-1793782806096",
+  "home": ".temp\\dsh-1793782806096",
+  "profile": "web",
+  "workspace": "..",
+  "stateDir": ".temp\\dsh-1793782806096-state",
+  "ports": {
+    "broker": "auto",
+    "proxy": "auto",
+    "upstream": "auto"
+  },
+  "plugins": {
+    "bundles": [
+      "@deepseek-ai/dsh-base",
+      "@deepseek-ai/dsh-web-app",
+      {
+        "name": "@capyclaw/plugin-sync",
+        "path": "..\\extensions\\official\\capyclaw-plugin-sync"
+      },
+      {
+        "name": "@capyclaw/launchpad",
+        "path": "..\\extensions\\official\\capyclaw-launchpad"
+      },
+      {
+        "name": "@capyclaw/ppt-suite",
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite"
+      }
+    ],
+    "dependencies": {
+      "dsh-plugin-kit": {
+        "path": "..\\packages\\dsh-plugin-kit"
+      },
+      "dsh-ppt-skill-ppt": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-ppt-skill-ppt"
+      },
+      "dsh-ppt-skill-narrative": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-ppt-skill-narrative"
+      },
+      "dsh-ppt-skill-design": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-ppt-skill-design"
+      },
+      "dsh-ppt-skill-api": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-ppt-skill-api"
+      },
+      "dsh-ppt-skill-authoring": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-ppt-skill-authoring"
+      },
+      "dsh-ppt-skill-editing": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-ppt-skill-editing"
+      },
+      "dsh-ppt-skill-visual-check": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-ppt-skill-visual-check"
+      },
+      "dsh-ppt-skill-research": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-ppt-skill-research"
+      },
+      "dsh-service-host": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-service-host"
+      },
+      "dsh-tool-host": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-tool-host"
+      },
+      "dsh-asset-service": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-asset-service"
+      },
+      "dsh-editor-host": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-editor-host"
+      },
+      "dsh-skills-service": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\dsh-skills-service"
+      },
+      "dsh-ppt-workbench": {
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\dsh-ppt-workbench"
+      }
+    },
+    "configs": [
+      {
+        "name": "@capyclaw/plugin-sync",
+        "config": {
+          "sourcePath": "..\\examples\\manifest-with-ppt.json"
+        }
+      }
+    ],
+    "install": true
+  },
+  "services": [
+    {
+      "id": "ppt-workbench",
+      "name": "ppt-workbench",
+      "ports": {
+        "main": 39311
+      },
+      "env": {},
+      "cmd": [
+        "node",
+        "./extensions/bridges/ppt-bridge/plugin/dsh-ppt-workbench/server/relay.mjs"
+      ]
+    }
+  ]
+}

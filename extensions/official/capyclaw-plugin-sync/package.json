@@ -1,0 +1,56 @@
+{
+  "name": "@capyclaw/plugin-sync",
+  "version": "0.1.0",
+  "description": "把运行中的 dsh 插件集合与外部清单对齐：报告差异、按清单启用/停用 bundle 与插件行（复用 dsh 原生 pluginManager，不重启）",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./manifest": "./lib/manifest.mjs",
+    "./diff": "./lib/diff.mjs",
+    "./report": "./lib/report.mjs",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "category": "tool",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "插件同步",
+    "description": "读取外部清单（本地 JSON；HTTP 源预留），与当前 profile 的插件集合比对，输出差异报告；可按清单启用/停用 bundle 与插件行。开关能力全部复用 dsh 原生 pluginManager，不自己实现。"
+  },
+  "files": [
+    "lib/",
+    "test/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/plugin.test.mjs"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capyclaw/dsh-plugins",
+    "directory": "extensions/official/capyclaw-plugin-sync"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "plugin-manager",
+    "manifest"
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "$schema": "../../../../../packages/dsh-suite-kit/domain.schema.json",
+  "name": "ppt",
+  "version": "2.1.0",
+  "title": "PPT 工作台领域包",
+  "description": "只加载 PPT 领域所需的运行时、工具与 8 个独立 skill 包；其他领域的插件不会被注册。",
+  "baseBundles": [
+    "@deepseek-ai/dsh-base",
+    "@deepseek-ai/dsh-web-app"
+  ],
+  "components": [
+    "../../../../../packages/dsh-workspace-service",
+    "../../plugin/capyclaw-ppt-suite"
+  ],
+  "profile": {
+    "name": "domain-ppt",
+    "port": 3080
+  },
+  "runtime": {
+    "driver": "node",
+    "workId": "main",
+    "env": {
+      "PPT_BRIDGE_HOME": "${paths.contentState}"
+    },
+    "model": {
+      "id": "llm-deepseek",
+      "plugin": "@deepseek-ai/dsh-llm-deepseek-api-key",
+      "apiKeyEnv": "DEEPSEEK_API_KEY",
+      "baseUrlEnv": "DEEPSEEK_BASE_URL",
+      "baseURL": "https://api.deepseek.com/anthropic"
+    },
+    "requires": {
+      "tools": [
+        "ppt_*"
+      ],
+      "capabilities": [
+        "workspace.runtime@^1.0.0",
+        "host.http@^1.0.0",
+        "tools.registry@^1.0.0",
+        "assets.store@^1.0.0",
+        "editor.host@^1.0.0",
+        "ppt.runtime@^2.2.0",
+        "ppt.tools@^2.2.0",
+        "ppt.workflows@^2.2.0"
+      ],
+      "services": [
+        "workspace",
+        "serviceHost",
+        "toolHost",
+        "assets",
+        "editorHost",
+        "ppt-workbench"
+      ]
+    },
+    "scope": {
+      "sessions": {
+        "path": ".dsh/sessions",
+        "isolated": true
+      },
+      "files": [
+        {
+          "id": "workspace",
+          "kind": "workspace",
+          "path": "workspace",
+          "patterns": [
+            "**"
+          ]
+        },
+        {
+          "id": "ppt-content",
+          "kind": "content",
+          "path": "content/ppt",
+          "patterns": [
+            "state.json",
+            "journal.jsonl",
+            "checkpoints/**",
+            "assets/**"
+          ]
+        }
+      ],
+      "workspace": {
+        "workId": "main",
+        "files": [
+          "state.json",
+          "journal.jsonl",
+          "checkpoints/**",
+          "assets/**"
+        ],
+        "allowNew": false
+      },
+      "network": {
+        "bind": [
+          "127.0.0.1"
+        ],
+        "outbound": "none"
+      },
+      "processes": {
+        "killTree": true
+      }
+    },
+    "ports": {
+      "harness": {
+        "preferred": 3080,
+        "range": 100
+      },
+      "dsh": {
+        "preferred": 0,
+        "range": 100
+      },
+      "content": {
+        "preferred": 39311,
+        "range": 100
+      },
+      "services": {
+        "dsh-skills": 39321
+      }
+    }
+  },
+  "removeRows": [
+    "service-host",
+    "tool-host",
+    "asset-service",
+    "editor-host",
+    "mcp-ppt",
+    "ppt-skill-ppt",
+    "ppt-skill-narrative",
+    "ppt-skill-design",
+    "ppt-skill-api",
+    "ppt-skill-authoring",
+    "ppt-skill-editing",
+    "ppt-skill-visual-check",
+    "ppt-skill-research"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "dsh-plugin-manifest",
+  "version": "1.0.0",
+  "description": "DSH 启动清单管理插件 - 负责插件的发现、清单管理和动态启停",
+  "type": "module",
+  "main": "lib/index.mjs",
+  "bin": {
+    "dsh-manifest": "cli.mjs"
+  },
+  "scripts": {
+    "test": "node test/test.mjs"
+  },
+  "keywords": [
+    "dsh",
+    "plugin",
+    "manifest",
+    "discovery"
+  ],
+  "dependencies": {
+    "glob": "^10.0.0",
+    "minimist": "^1.2.0"
+  }
+}

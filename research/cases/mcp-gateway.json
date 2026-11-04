@@ -1,0 +1,5 @@
+[
+  { "name": "founder(timeout=15000)", "genome": { "upstreamTimeoutMs": 15000 } },
+  { "name": "timeout=8000", "genome": { "upstreamTimeoutMs": 8000 } },
+  { "name": "timeout=20000", "genome": { "upstreamTimeoutMs": 20000 } }
+]

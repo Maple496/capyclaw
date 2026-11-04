@@ -1,0 +1,56 @@
+{
+  "name": "@capyclaw/llm-tempkey",
+  "version": "1.0.1",
+  "description": "DDH 千帆临时 Key 分发客户端：校验主站登录态 → 签发临时 LLM Key（计费预扣积分）→ 到期前自动轮换 → 通过凭据缝注入 dsh 的 pi-ai 路由。",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "category": "service",
+    "platform": "both"
+  },
+  "engines": {
+    "dsh": "^0.2.0-rc.2",
+    "node": ">=18"
+  },
+  "meta": {
+    "title": "LLM 临时Key客户端",
+    "description": "登录校验 + 千帆临时 Key 自动签发/轮换 + 积分计费，经 pi-ai 路由注入 dsh。"
+  },
+  "files": [
+    "lib/",
+    "test/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node test/plugin.test.mjs"
+  },
+  "author": {
+    "name": "CapyClaw",
+    "url": "https://github.com/capyclaw",
+    "email": "support@capyclaw.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capyclaw/dsh-plugins",
+    "directory": "extensions/official/capyclaw-llm-tempkey"
+  },
+  "bugs": {
+    "url": "https://github.com/capyclaw/dsh-plugins/issues"
+  },
+  "homepage": "https://github.com/capyclaw/dsh-plugins",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

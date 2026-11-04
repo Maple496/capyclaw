@@ -1,0 +1,81 @@
+{
+  "generatedAt": "2026-10-31T18:32:12.120Z",
+  "cases": [
+    {
+      "case": "founder(当前固化)",
+      "genome": {
+        "watchPollMs": 75,
+        "statusPollMs": 100,
+        "pushBaseDeadlineMs": 12000,
+        "pushPerOpMs": 50,
+        "watchTimeoutSec": 20,
+        "httpKeepAliveTimeoutMs": 5000,
+        "journalMaxKB": 2048
+      },
+      "runs": [
+        {
+          "opsApplyMsPerBatch": 9.97,
+          "pushP95Ms": 10.47,
+          "watchLatencyMs": 38.2,
+          "watchWakeupsPerSec": 13,
+          "journalBytes": 8696,
+          "stabilityFailures": 0
+        },
+        {
+          "opsApplyMsPerBatch": 8.5,
+          "pushP95Ms": 19.09,
+          "watchLatencyMs": 32.1,
+          "watchWakeupsPerSec": 13,
+          "journalBytes": 8689,
+          "stabilityFailures": 0
+        },
+        {
+          "opsApplyMsPerBatch": 9.51,
+          "pushP95Ms": 10.24,
+          "watchLatencyMs": 31.7,
+          "watchWakeupsPerSec": 13,
+          "journalBytes": 8653,
+          "stabilityFailures": 0
+        }
+      ]
+    },
+    {
+      "case": "两轮进化膝点",
+      "genome": {
+        "watchPollMs": 175,
+        "statusPollMs": 200,
+        "pushBaseDeadlineMs": 12000,
+        "pushPerOpMs": 0,
+        "watchTimeoutSec": 20,
+        "httpKeepAliveTimeoutMs": 5000,
+        "journalMaxKB": 256
+      },
+      "runs": [
+        {
+          "opsApplyMsPerBatch": 9.04,
+          "pushP95Ms": 11.6,
+          "watchLatencyMs": 19.2,
+          "watchWakeupsPerSec": 6,
+          "journalBytes": 8682,
+          "stabilityFailures": 0
+        },
+        {
+          "opsApplyMsPerBatch": 9.2,
+          "pushP95Ms": 9.91,
+          "watchLatencyMs": 22.33,
+          "watchWakeupsPerSec": 6,
+          "journalBytes": 8684,
+          "stabilityFailures": 0
+        },
+        {
+          "opsApplyMsPerBatch": 8.17,
+          "pushP95Ms": 13.03,
+          "watchLatencyMs": 21.17,
+          "watchWakeupsPerSec": 6,
+          "journalBytes": 8653,
+          "stabilityFailures": 0
+        }
+      ]
+    }
+  ]
+}

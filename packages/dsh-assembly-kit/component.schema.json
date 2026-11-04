@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dsh.local/schemas/component.schema.json",
+  "title": "DSH Component Manifest",
+  "description": "单个组件的元数据：capability 模块、plugin 包或 library。",
+  "type": "object",
+  "required": ["id", "version", "kind"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "组件唯一标识（kebab-case）"
+    },
+    "name": {
+      "type": "string",
+      "description": "包名或模块名（可选，默认与 id 相同）"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$",
+      "description": "语义化版本"
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["plugin", "capability", "library", "skill"],
+      "description": "组件类型"
+    },
+    "title": {
+      "type": "string",
+      "description": "显示标题"
+    },
+    "description": {
+      "type": "string",
+      "description": "组件描述"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "标签（用于搜索和分类）"
+    },
+    "keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "关键词（用于搜索）"
+    },
+    "entry": {
+      "type": "object",
+      "description": "组件入口",
+      "oneOf": [
+        {
+          "required": ["module", "export"],
+          "properties": {
+            "module": { "type": "string", "description": "模块相对路径（capability）" },
+            "export": { "type": "string", "description": "导出的符号名" }
+          }
+        },
+        {
+          "required": ["package"],
+          "properties": {
+            "package": { "type": "string", "description": "包目录相对路径（plugin/library）" }
+          }
+        }
+      ]
+    },
+    "provides": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "提供的能力",
+      "properties": {
+        "tools": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "工具名列表（支持通配符）"
+        },
+        "services": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "服务名列表"
+        },
+        "ports": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1, "maximum": 65535 },
+          "description": "使用的端口"
+        },
+        "skills": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "技能名列表"
+        },
+        "features": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "特性标签"
+        },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "能力 id -> 版本映射"
+        }
+      }
+    },
+    "requires": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "依赖的端口/服务命名空间"
+    },
+    "dependsOn": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "依赖的组件 id"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "源码位置（扫描生成）",
+      "properties": {
+        "workspace": { "type": "string", "description": "工作区根目录" },
+        "package": { "type": "string", "description": "包相对路径" },
+        "file": { "type": "string", "description": "文件相对路径（capability）" }
+      }
+    }
+  }
+}

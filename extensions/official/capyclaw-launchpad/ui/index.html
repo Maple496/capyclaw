@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>启动清单管理器</title>
+  <link rel="stylesheet" href="/ui/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">▶</span>
+        <h1>启动清单</h1>
+        <span class="sub">launchpad</span>
+      </div>
+      <div class="actions">
+        <input id="token" type="password" placeholder="token（可选）" autocomplete="off">
+        <button id="refresh" class="btn">刷新</button>
+        <button id="new" class="btn primary">＋ 新建</button>
+      </div>
+    </header>
+
+    <div id="banner" class="banner" hidden></div>
+    <section class="install-panel" aria-label="安装本地包">
+      <strong>安装本地启动包</strong>
+      <input id="archive" type="file" aria-label="选择本地安装包">
+      <input id="install-token" type="password" placeholder="安装 token" autocomplete="off" aria-label="安装 token">
+      <button id="install" class="btn">安装</button>
+      <span class="muted">令牌位于产品的 data/launcher-install.token。启动包包含可执行代码，请仅安装信任的包。</span>
+      <div id="install-result" role="status" aria-live="polite"></div>
+    </section>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-head">
+          <span>启动模式</span>
+          <span id="count" class="muted"></span>
+        </div>
+        <div id="list" class="list"></div>
+        <div id="dir" class="dir"></div>
+      </aside>
+
+      <section class="detail">
+        <div id="empty" class="empty">
+          <div class="empty-icon">▶</div>
+          <h2>选择一个启动清单</h2>
+          <p>从左侧选择，或新建一个 DSL。启动会调用 dshd，在独立 home/端口上拉起对应模式。</p>
+        </div>
+
+        <div id="workspace" class="workspace" hidden>
+          <div class="detail-head">
+            <div>
+              <h2 id="title">—</h2>
+              <div id="meta" class="meta"></div>
+            </div>
+            <div id="badges" class="badges"></div>
+          </div>
+
+          <div class="toolbar">
+            <button id="save" class="btn">保存</button>
+            <button id="validate" class="btn">校验</button>
+            <button id="plan" class="btn">Plan</button>
+            <button id="start" class="btn primary">▶ 启动</button>
+            <button id="stop" class="btn danger">■ 停止</button>
+            <button id="delete" class="btn ghost">删除</button>
+            <span id="dirty" class="dirty" hidden>未保存</span>
+          </div>
+
+          <div class="editor-wrap">
+            <textarea id="editor" spellcheck="false" autocomplete="off"></textarea>
+          </div>
+
+          <div class="plugins-panel">
+            <div class="panel-head">
+              <span>插件 bundles</span>
+              <span class="muted">添加/移除会立即写回 DSL 的 plugins 块</span>
+            </div>
+            <div class="plugins-body">
+              <div class="plugins-col">
+                <div class="subhead"><span>DSL 声明</span><span id="plugins-desired-count" class="muted"></span></div>
+                <div id="plugins-desired" class="plugin-list"></div>
+                <div class="plugin-add">
+                  <input id="plugin-name" placeholder="bundle 名" autocomplete="off">
+                  <input id="plugin-path" placeholder="本地路径（可选）" autocomplete="off">
+                  <button id="plugin-add" class="btn tiny">添加</button>
+                </div>
+              </div>
+              <div class="plugins-col">
+                <div class="subhead"><span>Profile 实际</span><span id="plugins-actual-count" class="muted"></span></div>
+                <div id="plugins-actual" class="plugin-list"></div>
+                <div id="plugins-drift" class="drift muted"></div>
+                <div class="subhead" style="margin-top:10px"><span>仓库可用</span><span id="plugins-catalog-count" class="muted"></span></div>
+                <div id="plugins-catalog" class="plugin-list catalog"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panels">
+            <div class="panel">
+              <div class="panel-head"><span>状态</span><span id="status-state" class="muted"></span></div>
+              <div id="status" class="status"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><span>问题</span><span id="issue-count" class="muted"></span></div>
+              <div id="issues" class="issues"></div>
+            </div>
+          </div>
+
+          <div class="output-wrap">
+            <div class="panel-head"><span>输出</span><button id="clear-output" class="btn tiny">清空</button></div>
+            <pre id="output" class="output"></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="/ui/app.js"></script>
+</body>
+</html>

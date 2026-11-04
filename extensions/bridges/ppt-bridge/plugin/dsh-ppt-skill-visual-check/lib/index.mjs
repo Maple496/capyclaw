@@ -1,0 +1,23 @@
+/** dsh-ppt-skill-visual-check：单 skill provider。 */
+import { fileURLToPath } from 'node:url'
+import { createSkillProvider } from './provider.mjs'
+
+export const name = 'ppt-skill-visual-check'
+export const inject = ['skills']
+const SKILL = "pptist-visual-check"
+
+function defaultProvider(config = {}) {
+  return createSkillProvider({
+    assetRoot: config.assetRoot ?? fileURLToPath(new URL('../skills/', import.meta.url)),
+    contractRoot: config.contractRoot ?? fileURLToPath(new URL('../contract/', import.meta.url)),
+    contractFile: 'ppt-contract.json',
+    providerName: "dsh-ppt-visual-check",
+    skillDirs: [SKILL],
+    contractNote: (version, skillName) => (String(skillName || '').startsWith('pptmaster-')
+      ? ''
+      : '契约：PPTist Workbench ' + version + '。动作前先调用 ppt_capabilities；工具缺失或 major 不一致时停止，并提示用户安装/升级 dsh-ppt-suite。'),
+  })
+}
+
+export function createProvider(config = {}) { return defaultProvider(config) }
+export function apply(ctx, config = {}) { ctx.skills.registerProvider(() => defaultProvider(config)) }

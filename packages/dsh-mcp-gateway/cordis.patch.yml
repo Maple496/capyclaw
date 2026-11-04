@@ -1,0 +1,4 @@
+# 由 dsh-mcp-gateway 提供；功能插件通过 inject: ['mcpGateway'] 或 ctx.get('mcpGateway') 使用。
+- insert:
+    - id: mcp-gateway
+      name: "dsh-mcp-gateway"

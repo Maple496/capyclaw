@@ -1,0 +1,33 @@
+{
+  "name": "@capyclaw/service-host",
+  "version": "0.1.0",
+  "description": "DSH 公共服务宿主插件：统一 HTTP 路由、健康检查、指标、单实例锁、端口复用与静态资源，向插件提供 ctx.serviceHost。",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./src": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "suite": "./dsh-suite.json",
+    "apiVersion": "1.0.0"
+  },
+  "files": [
+    "lib/",
+    "src/",
+    "cordis.patch.yml",
+    "dsh-suite.json",
+    "README.md"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test test/unit.test.mjs test/e2e.test.mjs"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  }
+}

@@ -1,0 +1,6 @@
+[
+  { "name": "founder(probe=400 grace=2000)", "genome": { "portScanLimit": 50, "reuseProbeTimeoutMs": 400, "lockFreshGraceMs": 2000, "closeGraceMs": 50 } },
+  { "name": "probe=100", "genome": { "portScanLimit": 50, "reuseProbeTimeoutMs": 100, "lockFreshGraceMs": 2000, "closeGraceMs": 50 } },
+  { "name": "probe=200", "genome": { "portScanLimit": 50, "reuseProbeTimeoutMs": 200, "lockFreshGraceMs": 2000, "closeGraceMs": 50 } },
+  { "name": "probe=200 grace=750", "genome": { "portScanLimit": 50, "reuseProbeTimeoutMs": 200, "lockFreshGraceMs": 750, "closeGraceMs": 50 } }
+]

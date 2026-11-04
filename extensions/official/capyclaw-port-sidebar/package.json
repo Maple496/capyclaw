@@ -1,0 +1,62 @@
+{
+  "name": "@capyclaw/port-sidebar",
+  "version": "1.0.2",
+  "description": "在 DSH 右侧边栏稳定展示一个本机端口页面：每个会话的侧边栏都确保存在指向该端口的 Browser tab，切换话题不消失。",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./client": "./client/client.js",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    },
+    "category": "ui",
+    "platform": "web"
+  },
+  "meta": {
+    "title": "端口侧边栏",
+    "description": "右侧边栏常驻展示指定服务（服务解耦标准：config.service 走中间件 discovery，端口不写死）的界面，切换会话/话题不消失。"
+  },
+  "files": [
+    "lib/",
+    "client/",
+    "test/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node test/plugin.test.mjs"
+  },
+  "engines": {
+    "dsh": "^0.2.0-rc.2",
+    "node": ">=18"
+  },
+  "author": {
+    "name": "CapyClaw",
+    "url": "https://github.com/capyclaw",
+    "email": "support@capyclaw.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capyclaw/dsh-plugins",
+    "directory": "extensions/official/capyclaw-port-sidebar"
+  },
+  "bugs": {
+    "url": "https://github.com/capyclaw/dsh-plugins/issues"
+  },
+  "homepage": "https://github.com/capyclaw/dsh-plugins",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

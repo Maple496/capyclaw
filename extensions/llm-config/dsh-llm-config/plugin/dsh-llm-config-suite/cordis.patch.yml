@@ -1,0 +1,9 @@
+# 由 dsh-suite-kit 生成；改 dsh-suite.json 后重跑 compose。
+
+- insert:
+    - id: dsh-llm-config-host
+      name: "dsh-llm-config"
+      config: {"port":39600}
+    - id: mcp-llm-config
+      name: "@deepseek-ai/dsh-mcp-client"
+      config: {"serverName":"llm-config","transport":"streamable-http","url":"http://127.0.0.1:39600/mcp","failOnStartupError":false,"toolCallTimeoutMs":120000}

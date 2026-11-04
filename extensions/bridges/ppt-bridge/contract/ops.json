@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "description": "PPT 桥指令契约：MCP 推送 / studio 消费的唯一 op 表。工具清单见生成物 contract/ppt-contract.json；后端不解读 op。",
+  "envelope": {
+    "post": "{title?, cmds:[op…]} → {seq, …}",
+    "get": "{seq, cmds, applied_seq, applied, error, deck?, shot_req, shot}",
+    "ack": "POST /ack {seq, applied, error}",
+    "state": "POST /state {deck}",
+    "shot": "POST /shot-request {} → shot_req; POST /shot-result {req,data}",
+    "watch": "GET /watch?seq=&shot= （长轮询，变化即返）",
+    "limits": {
+      "maxCmds": 100,
+      "maxTotalBytes": 8388608,
+      "maxShotBytes": 4194304
+    }
+  },
+  "ops": [
+    {
+      "op": "load",
+      "desc": "整副替换 {deck}"
+    },
+    {
+      "op": "set-background",
+      "desc": "背景色 {color, indices?, contrast?}"
+    },
+    {
+      "op": "recolor",
+      "desc": "整体换色 {background, text?, shapes?, indices?}：背景+全部文字对比色+装饰形状一次完成"
+    },
+    {
+      "op": "set-text",
+      "desc": "改文字 {id|index, elementId?, text?, html?, fontSize?, color?, bold?, align?}"
+    },
+    {
+      "op": "set-element",
+      "desc": "元素属性 {slide, elementId, props}"
+    },
+    {
+      "op": "add-element",
+      "desc": "加元素 {slide, element}"
+    },
+    {
+      "op": "remove-element",
+      "desc": "删元素 {slide, elementId}"
+    },
+    {
+      "op": "fill-slot",
+      "desc": "填文字槽位 {slide, slot, text, …}"
+    },
+    {
+      "op": "add-slide",
+      "desc": "加页 {slide, index?}"
+    },
+    {
+      "op": "update-slide",
+      "desc": "整页替换 {id|index, slide}"
+    },
+    {
+      "op": "remove-slide",
+      "desc": "删页 {id|index}"
+    },
+    {
+      "op": "move-slide",
+      "desc": "移页 {from, to}"
+    },
+    {
+      "op": "duplicate-slide",
+      "desc": "复制页 {id|index}"
+    },
+    {
+      "op": "select",
+      "desc": "选中页 {id|index}"
+    },
+    {
+      "op": "title",
+      "desc": "deck 标题 {title}"
+    },
+    {
+      "op": "theme",
+      "desc": "主题局部合并 {theme}"
+    },
+    {
+      "op": "snapshot",
+      "desc": "服务端历史快照（导入前使用，不改 deck）"
+    },
+    {
+      "op": "import-pptx",
+      "desc": "导入 PPTX（仅编辑器页面执行）{req, url, name, resultUrl?}"
+    },
+    {
+      "op": "undo",
+      "desc": "撤销"
+    },
+    {
+      "op": "redo",
+      "desc": "重做"
+    },
+    {
+      "op": "present",
+      "desc": "开始放映 {index?}"
+    },
+    {
+      "op": "exit-present",
+      "desc": "退出放映"
+    },
+    {
+      "op": "sleep",
+      "desc": "节奏控制 {ms≤3000}"
+    },
+    {
+      "op": "add-chart",
+      "desc": "加图表 {slide, element:{chartType, data, options?, colors?}}；data 支持 labels+series / headers+rows / items 等格式"
+    },
+    {
+      "op": "update-chart",
+      "desc": "更新图表 {slide, elementId, props:{chartType?, data?, options?, colors?, textColor?, left/top/width/height?}}"
+    },
+    {
+      "op": "add-table",
+      "desc": "加表格 {slide, element:{rows, header?, themeColor?, colWidths?, outline?}}"
+    },
+    {
+      "op": "update-table",
+      "desc": "更新表格 {slide, elementId, props:{themeColor?, rowHeader?, colHeader?, outline?, colWidths?, rowHeights?, left/top/width/height?}}"
+    },
+    {
+      "op": "set-table-cells",
+      "desc": "精修表格单元格 {slide, elementId, cells:[{row, col, text?, bold?, color?, backcolor?, align?, fontsize?}], themeColor?}"
+    },
+    {
+      "op": "set-notes",
+      "desc": "设置演讲者备注 {slide, notes}"
+    }
+  ]
+}

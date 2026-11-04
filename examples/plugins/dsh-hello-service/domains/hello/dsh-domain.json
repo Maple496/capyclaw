@@ -1,0 +1,100 @@
+{
+  "name": "hello",
+  "version": "1.0.0",
+  "title": "Hello Service 领域包",
+  "description": "只加载 Hello Service 所需的运行时和工具。",
+  "baseBundles": [
+    "@deepseek-ai/dsh-base",
+    "@deepseek-ai/dsh-web-app"
+  ],
+  "components": [
+    "../../plugin/dsh-hello-service-suite"
+  ],
+  "profile": {
+    "name": "domain-hello",
+    "port": 3080
+  },
+  "runtime": {
+    "driver": "node",
+    "workId": "main",
+    "bindings": [
+      {
+        "row": "dsh-hello-service-host",
+        "config": {
+          "port": "${ports.content}"
+        }
+      }
+    ],
+    "model": {
+      "id": "llm-deepseek",
+      "plugin": "@deepseek-ai/dsh-llm-deepseek-api-key",
+      "apiKeyEnv": "DEEPSEEK_API_KEY",
+      "baseUrlEnv": "DEEPSEEK_BASE_URL",
+      "baseURL": "https://api.deepseek.com/anthropic"
+    },
+    "requires": {
+      "tools": [
+        "hello_service_*"
+      ],
+      "services": [
+        "hello-service-service"
+      ],
+      "capabilities": [
+        "hello-service.runtime"
+      ]
+    },
+    "scope": {
+      "sessions": {
+        "path": ".dsh/sessions",
+        "isolated": true
+      },
+      "files": [
+        {
+          "id": "workspace",
+          "kind": "workspace",
+          "path": "workspace",
+          "patterns": [
+            "**"
+          ]
+        },
+        {
+          "id": "plugin-content",
+          "kind": "content",
+          "path": "content/plugin",
+          "patterns": [
+            "**"
+          ]
+        }
+      ],
+      "workspace": {
+        "workId": "main",
+        "files": [
+          "**"
+        ],
+        "allowNew": true
+      },
+      "network": {
+        "bind": [
+          "127.0.0.1"
+        ]
+      },
+      "processes": {
+        "killTree": true
+      }
+    },
+    "ports": {
+      "harness": {
+        "preferred": 3080,
+        "range": 100
+      },
+      "content": {
+        "preferred": 39500,
+        "range": 100
+      }
+    }
+  },
+  "removeRows": [
+    "dsh-hello-service-host",
+    "mcp-hello-service"
+  ]
+}

@@ -1,0 +1,10 @@
+# 依赖
+node_modules/
+
+# 文档持久化工作区（运行时数据）
+.canvas-docs/
+
+# 测试/调试产物
+*.jpg
+*.png
+*.log

@@ -1,0 +1,28 @@
+{
+  "name": "@capyclaw/document-workbench",
+  "version": "0.1.0",
+  "description": "通用文档工作台框架：版本化文档会话、命令注册、桥路由、浏览器编辑器客户端与截图协议。",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./session": "./src/session/index.mjs",
+    "./ops": "./src/ops/index.mjs",
+    "./bridge": "./src/bridge/index.mjs",
+    "./client": "./src/client/index.mjs",
+    "./screenshot": "./src/client/screenshot.mjs",
+    "./testing": "./src/testing/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src/",
+    "README.md"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test test/session.test.mjs test/ops.test.mjs test/bridge.test.mjs test/client.test.mjs"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  }
+}

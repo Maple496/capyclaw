@@ -1,0 +1,15 @@
+{
+  "name": "@zcode/canvas-plugin",
+  "version": "0.1.0",
+  "description": "Canvas 文档生成插件：独立 MCP 服务器 + Headless 编辑器",
+  "type": "module",
+  "main": "./standalone/server.mjs",
+  "scripts": {
+    "start": "node standalone/server.mjs",
+    "test": "node standalone/test.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.40.0"
+  },
+  "license": "MIT"
+}

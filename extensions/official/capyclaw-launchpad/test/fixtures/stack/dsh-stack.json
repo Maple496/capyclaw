@@ -1,0 +1,17 @@
+{
+  "name": "fixture-stack",
+  "home": "./home",
+  "profile": "web",
+  "workspace": "./ws",
+  "stateDir": "./state",
+  "plugins": {
+    "bundles": ["@deepseek-ai/dsh-base", "demo-plugin"]
+  },
+  "services": [
+    {
+      "id": "demo",
+      "path": "./plugin/server.mjs",
+      "ports": { "main": 42001 }
+    }
+  ]
+}

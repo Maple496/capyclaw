@@ -1,0 +1,56 @@
+# dev — 本地开发栈：dsh-base + web-app + 管理界面 + flow 引擎
+#
+# 这份 DSL 是作者视图；dshd 只认编译后的 dsh-stack.json（launchpad 网页端启动会自动编译）。
+# 运行前需要 dsh 宿主：设置 DSH_HARNESS_DIR（本仓库不再内置宿主）。
+#
+#   export DSH_HARNESS_DIR=../dsh-runtime/apps/harness/deepseek-harness
+#   node scripts/compile-stack.mjs launchpads/dev.stack   # DSL → dev.dsh-stack.json
+#   npm run dshd -- start --stack launchpads/dev.dsh-stack.json
+stack "dev" {
+  kind "profile"
+  home "../tools/dsh-launcher/.dshd/home"
+  profile "web"
+  # workspace 由 dshHome 下的实例自行创建；留空表示用 profile 默认
+  workspace ""
+  stateDir "../tools/dsh-launcher/.dshd/dev-state"
+
+  ports {
+    broker 13593
+    proxy 13594
+    upstream 13595
+  }
+
+  plugins {
+    bundle "@deepseek-ai/dsh-base"
+    bundle "@deepseek-ai/dsh-web-app"
+
+    # 路径相对本 DSL 文件（launchpads/），执行器会展开成绝对路径
+    plugin "@capyclaw/launchpad" {
+      path "../extensions/official/capyclaw-launchpad"
+    }
+    plugin "dsh-flow-engine-suite" {
+      path "../extensions/flow/dsh-flow-engine/plugin/dsh-flow-engine-suite"
+    }
+    plugin "dsh-flow-engine" {
+      path "../extensions/flow/dsh-flow-engine/plugin/dsh-flow-engine"
+    }
+    dependency "dsh-plugin-kit" {
+      path "../packages/dsh-plugin-kit"
+    }
+    install true
+  }
+
+  service "launchpad" {
+    path "../extensions/official/capyclaw-launchpad/server.mjs"
+    args [
+      "--roots", "${STACK_DIR}/..",
+      "--dsh-home", "${home}",
+      "--broker-url", "http://127.0.0.1:${ports.broker}",
+      "--launchpads", "${STACK_DIR}",
+      "--dshd", "${STACK_DIR}/../tools/dsh-launcher/bin/dshd.mjs"
+    ]
+    port 13596
+    health "/healthz"
+    keepAlive true
+  }
+}

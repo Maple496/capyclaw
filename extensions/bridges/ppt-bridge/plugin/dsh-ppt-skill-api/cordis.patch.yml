@@ -1,0 +1,4 @@
+# dsh-ppt-skill-api bundle patch：只注册 pptist-api 一个 skill provider。
+- insert:
+    - id: ppt-skill-api
+      name: dsh-ppt-skill-api

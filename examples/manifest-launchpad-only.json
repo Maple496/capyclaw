@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "plugins": [
+    {
+      "name": "@capyclaw/launchpad",
+      "path": "./extensions/official/capyclaw-launchpad",
+      "enabled": true
+    },
+    {
+      "name": "@capyclaw/ppt-suite",
+      "path": "./extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-suite",
+      "enabled": false
+    }
+  ],
+  "entries": []
+}

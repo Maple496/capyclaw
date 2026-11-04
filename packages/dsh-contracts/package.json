@@ -1,0 +1,29 @@
+{
+  "name": "dsh-contracts",
+  "version": "0.1.0",
+  "description": "DSH 核心接口契约层 - 定义模块间的抽象接口",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./plugin": "./src/plugin/index.mjs",
+    "./service": "./src/service/index.mjs",
+    "./runtime": "./src/runtime/index.mjs",
+    "./workspace": "./src/workspace/index.mjs",
+    "./state": "./src/state/index.mjs",
+    "./asset": "./src/asset/index.mjs",
+    "./editor": "./src/editor/index.mjs",
+    "./orchestration": "./src/orchestration/index.mjs",
+    "./di": "./src/di/index.mjs",
+    "./schemas": "./src/schemas/index.mjs"
+  },
+  "files": [
+    "src/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "private": true
+}

@@ -1,0 +1,20 @@
+{
+  "_comment": "把这段 services 数组项合并进你的 broker 开机清单（例如 tools/dsh-launcher/local-services.json）。${PACKAGE_DIR} 由 broker 展开为清单文件所在目录；如果 launchpad 的 cwd 不在仓库内，给 cmd 追加 \"--roots\", \"<仓库根>\"，或设置 LAUNCHPAD_ROOTS。",
+  "services": [
+    {
+      "id": "launchpad",
+      "cmd": [
+        "node",
+        "${PACKAGE_DIR}/server.mjs",
+        "--port",
+        "${PORT}"
+      ],
+      "ports": {
+        "main": 39700
+      },
+      "url": "http://127.0.0.1:${PORT}",
+      "healthPath": "/healthz",
+      "keepAlive": true
+    }
+  ]
+}

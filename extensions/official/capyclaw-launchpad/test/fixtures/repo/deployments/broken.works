@@ -1,0 +1,14 @@
+%%%WORKS-META%%%
+{
+  "name": "Broken Deployment",
+  "brief": "source 不存在",
+  "view": { "kind": "deployment" }
+}
+
+%%%WORKS-CODE%%%
+{
+  "deployment": {
+    "type": "domain",
+    "source": "./nope"
+  }
+}

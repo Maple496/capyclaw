@@ -1,0 +1,27 @@
+{
+  "$schema": "../dsh-suite-kit/suite.schema.json",
+  "name": "dsh-editor-host-suite",
+  "version": "0.1.0",
+  "title": "Editor Host",
+  "description": "通用编辑器宿主：静态托管、租约、心跳、连接状态。",
+  "packages": {
+    "dsh-editor-host": {
+      "role": "provider",
+      "version": "^0.1.0",
+      "path": ".",
+      "provides": {
+        "services": ["editorHost"],
+        "capabilities": {
+          "editor.host": "1.0.0"
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "editor-host",
+      "name": "dsh-editor-host"
+    }
+  ],
+  "checks": []
+}

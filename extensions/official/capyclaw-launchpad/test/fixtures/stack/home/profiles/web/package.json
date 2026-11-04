@@ -1,0 +1,9 @@
+{
+  "name": "dsh-profile-web",
+  "private": true,
+  "dsh": {
+    "profile": {
+      "bundles": ["@deepseek-ai/dsh-base", "demo-plugin", "old-plugin"]
+    }
+  }
+}

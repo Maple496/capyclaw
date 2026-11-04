@@ -1,0 +1,58 @@
+{
+  "name": "@capyclaw/ddr0-client",
+  "version": "1.0.1",
+  "description": "ddr0.com 客户端 - 在 DSH 中直接登录和浏览 ddr0 内容 by CapyClaw",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "category": "service",
+    "platform": "both"
+  },
+  "engines": {
+    "dsh": "^0.2.0-rc.2",
+    "node": ">=18"
+  },
+  "meta": {
+    "title": "ddr0 客户端",
+    "description": "在 DSH 中访问 ddr0.com - 登录、积分、社区等功能 by CapyClaw"
+  },
+  "files": [
+    "test/",
+    "lib/",
+    "static/",
+    "cordis.patch.yml",
+    "README.md",
+    "standalone-server.mjs"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "CapyClaw",
+    "url": "https://github.com/capyclaw",
+    "email": "support@capyclaw.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capyclaw/dsh-plugins",
+    "directory": "extensions/official/capyclaw-ddr0-client"
+  },
+  "bugs": {
+    "url": "https://github.com/capyclaw/dsh-plugins/issues"
+  },
+  "homepage": "https://github.com/capyclaw/dsh-plugins",
+  "scripts": {
+    "test": "node --test test/plugin.test.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

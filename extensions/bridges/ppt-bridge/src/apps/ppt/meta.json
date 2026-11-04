@@ -1,0 +1,9 @@
+{
+  "name": "Keynote",
+  "icon": "📊",
+  "tags": "应用",
+  "view": {
+    "kind": "engine",
+    "engine": "ppt"
+  }
+}

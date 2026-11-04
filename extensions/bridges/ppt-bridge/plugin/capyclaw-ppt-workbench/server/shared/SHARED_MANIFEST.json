@@ -1,0 +1,47 @@
+{
+  "version": "0.1.0",
+  "packages": {
+    "service-host": {
+      "package": "dsh-service-host",
+      "version": "0.1.0",
+      "apiVersion": "1.0.0",
+      "sha256": "b5339ad02e6736ccbd2aebcb5db210df2d7a10495ad302eef79538aa6272e5e6"
+    },
+    "tool-host": {
+      "package": "dsh-tool-host",
+      "version": "0.1.0",
+      "apiVersion": "1.0.0",
+      "sha256": "35b16fdcd707d3335162b8c8eb234753d84d38afb122868392af8a4d9660dc36"
+    },
+    "state-service": {
+      "package": "dsh-state-service",
+      "version": "0.1.0",
+      "apiVersion": "1.0.0",
+      "sha256": "4cafa45a580a3c118f45f4492531548e2adf581450792fa1a0b416e31405a4b0"
+    },
+    "asset-service": {
+      "package": "dsh-asset-service",
+      "version": "0.1.0",
+      "apiVersion": "1.0.0",
+      "sha256": "eb80ee9bb01eaeaa2efbf9763fb4ed005aa4e94d6f3d994998c2a00bbcb834d4"
+    },
+    "editor-host": {
+      "package": "dsh-editor-host",
+      "version": "0.1.0",
+      "apiVersion": "1.0.0",
+      "sha256": "57d8818a4dbddb31164b7e99ebee6be1c06ed47f7a5bd96e2aad472d65e1e3a6"
+    }
+  },
+  "kit": {
+    "tuning.mjs": "ed45624f42d4c0dddee106f5dd1c5bf363207c1ab19b03ac146af6ef01257476",
+    "service/api.mjs": "94fa4ced06ec0abe56071abe7cde0316765508995376b323b2734214e2520762",
+    "service/http.mjs": "a80346c6fabf893cecff89507a3575b6f342a4db77a375013f1f03f1f1439af3",
+    "service/mcp-http.mjs": "a45fa4ab71e5ee385203fe33893c76e1bc34807d9b1f251bb8df4bd6ee86f444",
+    "tools/validate.mjs": "ed7bc55d4fcbab406f883d54f587e44cf24f06be6e75456bdcbdd1b2cf9739be",
+    "editor/lease.mjs": "5c4e9cb37079b6fd8541deb208a780e144f394befafdb027fb589dc715ef3374",
+    "util/fs-lock.mjs": "0eb754f067466ccf90505242e80e4a4de248db5aaa7040e825efa66da386105a"
+  },
+  "pkgRoot": {
+    "dsh-service-host/tuning.mjs": "51d4145d8a94b0adea989924fd65042fc372e343a47fdceeac97d418e9766347"
+  }
+}

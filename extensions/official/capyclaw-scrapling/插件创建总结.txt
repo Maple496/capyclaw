@@ -1,0 +1,318 @@
+═══════════════════════════════════════════════════════════════
+          Scrapling DSH 插件创建完成！
+═══════════════════════════════════════════════════════════════
+
+✅ 插件信息
+-----------
+插件名称: dsh-scrapling
+版本: 1.0.0
+类型: DSH (DeepSeek Harness) 官方扩展插件
+类别: tool (工具)
+平台: both (服务器和浏览器)
+
+📦 插件位置
+-----------
+插件目录: <repo>\extensions\official\dsh-scrapling
+所属分类: extensions/official/ (官方稳定插件)
+
+🎯 包含内容
+-----------
+✓ package.json         # 包定义和依赖声明
+✓ cordis.patch.yml     # Bundle 配置
+✓ lib/host.mjs         # Cordis 插件入口（宿主半）
+✓ lib/index.mjs        # API 导出
+✓ client/client.js     # 浏览器端代码
+✓ test/plugin.test.mjs # 测试文件
+✓ README.md           # 完整文档
+
+📂 目录结构
+-----------
+extensions/official/dsh-scrapling/
+├── lib/
+│   ├── host.mjs           # 宿主半：Cordis 入口，提供服务
+│   └── index.mjs          # API 导出
+├── client/
+│   └── client.js          # 浏览器半：前端集成
+├── test/
+│   └── plugin.test.mjs    # 单元测试
+├── package.json           # NPM 包配置
+├── cordis.patch.yml       # Cordis Bundle 配置
+└── README.md              # 插件文档
+
+🚀 安装步骤
+-----------
+
+第一步：安装 Scrapling Python 包
+```bash
+pip install "scrapling[all]>=0.5"
+scrapling install --force
+```
+
+第二步：插件已经在项目中
+插件位于 extensions/official/dsh-scrapling/
+DSH 启动时会自动加载官方插件
+
+第三步：构建和启动 DSH
+```bash
+cd <repo>
+
+# 安装依赖
+npm install
+
+# 构建
+npm run build-product
+
+# 启动 Harness
+cd apps/harness/deepseek-harness
+node start-safe.mjs
+```
+
+🔧 技术架构
+-----------
+
+1. DSH 插件系统
+   - 基于 Cordis 依赖注入框架
+   - 双半架构：宿主半（Node.js）+ 浏览器半（Web）
+   - 通过 cordis.patch.yml 配置加载
+
+2. 宿主半（lib/host.mjs）
+   - 实现 Cordis 插件接口：name 和 apply
+   - 通过 ctx.provide() 注册服务
+   - 管理 Scrapling Python 进程调用
+
+3. 浏览器半（client/client.js）
+   - 使用 __ModuleLoader__ 加载
+   - 可以注册 UI 组件、命令等
+   - 通过 ctx.slots 注入界面元素
+
+4. Bundle 配置（cordis.patch.yml）
+   - 定义插件 ID 和配置
+   - 在 DSH 启动时由 bundle 系统加载
+
+📚 使用方法
+-----------
+
+### 在其他插件中使用 Scrapling 服务
+
+```javascript
+// 在你的插件中声明依赖
+export const inject = ['scrapling']
+
+export async function apply(ctx) {
+  // HTTP 抓取
+  const result = await ctx.scrapling.fetch('https://example.com')
+  
+  // 浏览器模式
+  const page = await ctx.scrapling.fetchWithBrowser('https://example.com', {
+    waitFor: '.content'
+  })
+  
+  // 解析 HTML
+  const doc = ctx.scrapling.parse(result.html)
+  const titles = doc.css('h1::text')
+}
+```
+
+### DSH Package.json 配置
+
+```json
+{
+  "name": "dsh-scrapling",
+  "dsh": {
+    "category": "tool",           // 工具类插件
+    "platform": "both",           // 服务器和浏览器都支持
+    "client": {
+      "platform": "web",          // 客户端在 Web 平台
+      "immediately": false        // 非立即加载
+    }
+  }
+}
+```
+
+🎨 插件特性
+-----------
+✓ 快速 HTTP 请求 - 高性能静态页面抓取
+✓ 隐身浏览器模式 - 绕过反爬虫检测
+✓ Cloudflare 自动绕过 - 处理 Turnstile/Interstitial
+✓ JavaScript 渲染 - 完整 JS 页面支持
+✓ 强大选择器 - CSS 和 XPath
+✓ 并发爬虫 - 高效多线程爬取
+✓ 代理轮换 - 自动代理管理
+✓ 自适应解析 - 智能元素追踪
+✓ 多格式导出 - JSON/CSV/XML
+
+🔍 API 接口
+-----------
+
+### ctx.scrapling.fetch(url, options)
+HTTP 模式抓取页面
+
+参数:
+- url: string - 目标 URL
+- options: object - 可选配置
+  - headers: object - 自定义请求头
+  - proxy: string - 代理地址
+  - timeout: number - 超时时间（毫秒）
+
+返回: Promise<{ url, html, status }>
+
+### ctx.scrapling.fetchWithBrowser(url, options)
+浏览器模式抓取页面
+
+参数:
+- url: string - 目标 URL
+- options: object - 可选配置
+  - waitFor: string - 等待的选择器
+  - timeout: number - 超时时间
+  - screenshot: boolean - 是否截图
+
+返回: Promise<{ url, html, screenshot? }>
+
+### ctx.scrapling.parse(html)
+解析 HTML 内容
+
+参数:
+- html: string - HTML 字符串
+
+返回: ParsedDocument - 包含 css() 和 xpath() 方法
+
+🧪 运行测试
+-----------
+```bash
+cd extensions/official/dsh-scrapling
+npm test
+```
+
+测试覆盖：
+✓ 插件加载
+✓ 服务注册
+✓ API 接口可用性
+
+📋 验证清单
+-----------
+✅ package.json 格式正确
+✅ 包含 dsh 配置字段
+✅ 依赖 dsh-plugin-kit
+✅ cordis.patch.yml 配置完整
+✅ host.mjs 实现 name 和 apply
+✅ client.js 使用 __ModuleLoader__
+✅ 测试文件存在
+✅ README.md 文档完整
+✅ 文件结构符合 DSH 规范
+
+🔄 开发工作流
+-----------
+
+1. 修改代码
+2. 运行测试：npm test
+3. 构建产品：npm run build-product（在项目根目录）
+4. 重启 Harness 验证
+
+💡 扩展建议
+-----------
+
+### 添加实际的 Python 调用
+
+目前 host.mjs 中的实现是存根（stub），需要实现实际的 Python 调用：
+
+方式 1: 子进程调用
+```javascript
+import { spawn } from 'node:child_process'
+
+async function callScrapling(command, args) {
+  return new Promise((resolve, reject) => {
+    const proc = spawn('python', ['-m', 'scrapling', ...args])
+    let output = ''
+    proc.stdout.on('data', data => output += data)
+    proc.on('close', code => {
+      if (code === 0) resolve(JSON.parse(output))
+      else reject(new Error('Scrapling failed'))
+    })
+  })
+}
+```
+
+方式 2: HTTP API
+```javascript
+async function callScraplingAPI(endpoint, data) {
+  const response = await fetch(`http://localhost:8000/api/${endpoint}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  return response.json()
+}
+```
+
+方式 3: MCP Server
+利用 Scrapling 的 MCP Server 功能，通过 stdio 通信
+
+### 添加 UI 界面
+
+在 client.js 中可以添加：
+- 抓取任务管理界面
+- 实时日志显示
+- 结果查看器
+- 配置面板
+
+### 添加命令
+
+注册 DSH 命令：
+```javascript
+ctx.command('scrapling.fetch <url>', '抓取网页')
+  .action(async (_, url) => {
+    const result = await ctx.scrapling.fetch(url)
+    return `抓取成功: ${result.html.length} 字节`
+  })
+```
+
+🌐 相关链接
+-----------
+- Scrapling 官方: https://github.com/D4Vinci/Scrapling
+- Scrapling 文档: https://scrapling.readthedocs.io
+- DSH 文档: ../../docs/
+- Cordis 框架: https://cordis.js.org
+
+📞 支持
+-------
+- DSH 问题: 项目 GitHub Issues
+- Scrapling 问题: https://github.com/D4Vinci/Scrapling/issues
+- Discord: https://discord.gg/EMgGbDceNQ
+
+⚠️  注意事项
+-------------
+1. 需要 Python 3.10+ 环境
+2. 需要安装 Scrapling 及其依赖
+3. 浏览器模式需要安装浏览器引擎
+4. 遵守目标网站的 robots.txt
+5. 合理控制请求频率
+6. 使用代理时确保合法性
+7. 遵守相关法律法规
+
+🎯 下一步
+---------
+1. ✅ 插件文件已创建
+2. ⏭️ 实现实际的 Python 集成逻辑
+3. ⏭️ 添加错误处理和日志
+4. ⏭️ 开发 UI 界面（可选）
+5. ⏭️ 编写更多测试用例
+6. ⏭️ 集成到完整的 DSH 构建流程
+
+═══════════════════════════════════════════════════════════════
+                    插件框架已就绪！
+═══════════════════════════════════════════════════════════════
+
+创建时间: 2026-11-04
+插件版本: 1.0.0
+DSH 版本要求: ^0.2.0-rc.2
+Node.js 要求: >=18
+
+插件已创建在：
+<repo>\extensions\official\dsh-scrapling
+
+现在可以：
+1. 完善 Python 集成逻辑
+2. 运行测试验证
+3. 在 DSH 中加载测试
+
+Happy Coding! 🕷️

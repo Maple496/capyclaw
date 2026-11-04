@@ -1,0 +1,63 @@
+{
+  "name": "@capyclaw/scrapling",
+  "version": "1.0.1",
+  "description": "Scrapling 网页抓取集成：支持 HTTP 请求、隐身浏览器、JavaScript 渲染、Cloudflare 绕过、并发爬虫和数据导出",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./api": "./lib/index.mjs",
+    "./client": "./client/client.js",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": false
+    },
+    "category": "tool",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "Scrapling 网页抓取",
+    "description": "强大的网页抓取工具：支持快速 HTTP 请求、隐身浏览器模式、JavaScript 渲染、Cloudflare 自动绕过、CSS/XPath 选择器、并发爬虫、代理轮换和多格式数据导出(JSON/CSV/XML)。"
+  },
+  "files": [
+    "lib/",
+    "client/",
+    "test/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node test/plugin.test.mjs"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "CapyClaw",
+    "url": "https://github.com/capyclaw",
+    "email": "support@capyclaw.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capyclaw/dsh-plugins",
+    "directory": "extensions/official/capyclaw-scrapling"
+  },
+  "bugs": {
+    "url": "https://github.com/capyclaw/dsh-plugins/issues"
+  },
+  "homepage": "https://github.com/capyclaw/dsh-plugins",
+  "publishConfig": {
+    "access": "public"
+  }
+}

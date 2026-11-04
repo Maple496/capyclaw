@@ -1,0 +1,14 @@
+/** {{TITLE}} 业务实现。工具层只做 schema/分派，业务放这里。 */
+import { capabilities as report } from './tools.mjs'
+
+export function echo({ text }) {
+  return `echo: ${String(text)}`
+}
+
+export function capabilities() {
+  return {
+    name: '{{NAME}}',
+    version: '{{VERSION}}',
+    ...report(),
+  }
+}

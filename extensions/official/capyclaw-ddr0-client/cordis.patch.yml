@@ -1,0 +1,14 @@
+# dsh-ddr0-client bundle patch：集成 ddr0.com 前端
+#
+# 这里只保留「不设也能跑」的最小声明；所有可调项在插件内按
+#   ctx config → 环境变量 → 代码默认值
+# 解析（见 lib/host.mjs 的 resolveConfig）：
+#
+#   字段         环境变量                默认值
+#   port         DSH_DDR0_PORT           39620
+#   backendUrl   DSH_DDR0_BACKEND_URL    https://ddr0.com
+#
+# 需要不同值时，优先由启动器（stack.plugins.configs）注入，而不是改这个文件。
+- insert:
+    - id: ddr0-client
+      name: "@capyclaw/ddr0-client"

@@ -1,0 +1,58 @@
+{
+  "name": "@capyclaw/launch-engine",
+  "version": "0.1.0",
+  "description": "按需激活引擎（组合根）：按 capability 注册表把「要求」解析成有序激活动作，bundle/entry 开关全部转发 plugin-sync、服务进程全部转发 serviceBroker，激活证据只认 pluginInventory 的 fiberPhase=active",
+  "type": "module",
+  "main": "./lib/index.mjs",
+  "exports": {
+    ".": "./lib/index.mjs",
+    "./registry": "./lib/registry.mjs",
+    "./planner": "./lib/planner.mjs",
+    "./executor": "./lib/executor.mjs",
+    "./verify": "./lib/verify.mjs",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "category": "tool",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "按需激活引擎",
+    "description": "容器注入的组合根：capability 注册表声明「要求 → bundle/entry/服务」，引擎解析依赖闭包、逐波激活并按 fiberPhase=active 口径验证；不自己实现任何开关，进程生命周期仍归 dshd。"
+  },
+  "files": [
+    "lib/",
+    "test/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/launch-engine.test.mjs"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capyclaw/dsh-plugins",
+    "directory": "extensions/official/capyclaw-launch-engine"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "activation",
+    "capability-registry",
+    "container-injection"
+  ]
+}

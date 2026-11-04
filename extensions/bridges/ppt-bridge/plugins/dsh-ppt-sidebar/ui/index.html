@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PPT 工作台</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: white;
+    }
+
+    /* 顶部状态栏 */
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      opacity: 0.95;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* 主内容区 */
+    .main {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      background: #f8fafc;
+    }
+
+    /* 幻灯片列表 */
+    .slides-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+
+    .slide-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .slide-card:hover {
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+      border-color: #667eea;
+      transform: translateY(-2px);
+    }
+
+    .slide-card.active {
+      border-color: #667eea;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    }
+
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .slide-number {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .slide-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .slide-content {
+      color: #64748b;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* 空状态 */
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      text-align: center;
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-text {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-hint {
+      font-size: 0.9rem;
+    }
+
+    /* 加载动画 */
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #667eea;
+    }
+
+    .spinner {
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* 通知 */
+    .notification {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none;
+      animation: slideIn 0.3s ease;
+      z-index: 1000;
+    }
+
+    .notification.show {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* 滚动条样式 */
+    .slides-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .slides-container::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+
+    .slides-container::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .slides-container::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 顶部状态栏 -->
+    <div class="header">
+      <h1>
+        <span>📊</span>
+        <span>PPT 工作台</span>
+      </h1>
+      <div class="status">
+        <div class="status-item">
+          <span class="status-dot"></span>
+          <span id="connection-status">连接中...</span>
+        </div>
+        <div class="status-item">
+          <span>📄</span>
+          <span id="slide-count">0 页</span>
+        </div>
+        <div class="status-item">
+          <span>👁️</span>
+          <span id="current-slide">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main">
+      <div id="slides-container" class="slides-container">
+        <!-- 空状态 -->
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">🎨</div>
+          <div class="empty-text">还没有 PPT 内容</div>
+          <div class="empty-hint">在左侧对话框中，让 AI 帮你创建 PPT 吧！</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通知 -->
+  <div class="notification" id="notification"></div>
+
+  <script>
+    // WebSocket 连接
+    let ws = null
+    let reconnectAttempts = 0
+    const maxReconnectAttempts = 5
+
+    // 状态
+    let currentState = {
+      slides: [],
+      currentSlide: 0,
+      isGenerating: false,
+    }
+
+    // 初始化
+    function init() {
+      connectWebSocket()
+    }
+
+    // 连接 WebSocket
+    function connectWebSocket() {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+      const wsUrl = `${protocol}//${window.location.host}/ws`
+
+      console.log('正在连接 WebSocket:', wsUrl)
+      
+      ws = new WebSocket(wsUrl)
+
+      ws.onopen = () => {
+        console.log('WebSocket 已连接')
+        reconnectAttempts = 0
+        updateConnectionStatus('已连接', true)
+        
+        // 发送 ping
+        ws.send(JSON.stringify({ type: 'ping' }))
+      }
+
+      ws.onmessage = (event) => {
+        const msg = JSON.parse(event.data)
+        console.log('收到消息:', msg)
+        handleMessage(msg)
+      }
+
+      ws.onerror = (error) => {
+        console.error('WebSocket 错误:', error)
+        updateConnectionStatus('连接错误', false)
+      }
+
+      ws.onclose = () => {
+        console.log('WebSocket 已断开')
+        updateConnectionStatus('已断开', false)
+        
+        // 重连
+        if (reconnectAttempts < maxReconnectAttempts) {
+          reconnectAttempts++
+          console.log(`尝试重连 (${reconnectAttempts}/${maxReconnectAttempts})...`)
+          setTimeout(connectWebSocket, 2000 * reconnectAttempts)
+        }
+      }
+    }
+
+    // 处理消息
+    function handleMessage(msg) {
+      switch (msg.type) {
+        case 'pong':
+          console.log('收到 pong')
+          break
+
+        case 'init':
+          currentState = msg.data
+          renderSlides()
+          break
+
+        case 'update':
+          currentState = msg.data
+          renderSlides()
+          showNotification('PPT 已更新')
+          break
+
+        case 'slide_added':
+          currentState.slides.push(msg.data)
+          renderSlides()
+          showNotification(`已添加: ${msg.data.title}`)
+          break
+      }
+    }
+
+    // 渲染幻灯片
+    function renderSlides() {
+      const container = document.getElementById('slides-container')
+      const emptyState = document.getElementById('empty-state')
+      
+      // 更新状态栏
+      document.getElementById('slide-count').textContent = `${currentState.slides.length} 页`
+      document.getElementById('current-slide').textContent = 
+        currentState.slides.length > 0 ? `第 ${currentState.currentSlide + 1} 页` : '-'
+
+      if (currentState.slides.length === 0) {
+        emptyState.style.display = 'flex'
+        return
+      }
+
+      emptyState.style.display = 'none'
+
+      // 渲染幻灯片卡片
+      container.innerHTML = currentState.slides.map((slide, index) => `
+        <div class="slide-card ${index === currentState.currentSlide ? 'active' : ''}" 
+             onclick="selectSlide(${index})">
+          <div class="slide-header">
+            <span class="slide-number">幻灯片 ${slide.id}</span>
+          </div>
+          <div class="slide-title">${escapeHtml(slide.title)}</div>
+          <div class="slide-content">${escapeHtml(slide.content)}</div>
+        </div>
+      `).join('')
+    }
+
+    // 选择幻灯片
+    function selectSlide(index) {
+      currentState.currentSlide = index
+      renderSlides()
+    }
+
+    // 更新连接状态
+    function updateConnectionStatus(text, connected) {
+      const statusEl = document.getElementById('connection-status')
+      const dotEl = document.querySelector('.status-dot')
+      
+      statusEl.textContent = text
+      dotEl.style.background = connected ? '#4ade80' : '#f87171'
+    }
+
+    // 显示通知
+    function showNotification(message) {
+      const notif = document.getElementById('notification')
+      notif.textContent = message
+      notif.classList.add('show')
+      
+      setTimeout(() => {
+        notif.classList.remove('show')
+      }, 3000)
+    }
+
+    // HTML 转义
+    function escapeHtml(text) {
+      const div = document.createElement('div')
+      div.textContent = text
+      return div.innerHTML
+    }
+
+    // 启动
+    init()
+  </script>
+</body>
+</html>

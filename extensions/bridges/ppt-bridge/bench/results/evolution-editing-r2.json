@@ -1,0 +1,458 @@
+{
+  "module": "editing",
+  "round": 2,
+  "generatedAt": "2026-10-31T18:31:52.099Z",
+  "seed": 777,
+  "generations": 5,
+  "populationSize": 10,
+  "evaluated": 60,
+  "founderGenome": {
+    "watchPollMs": 175,
+    "statusPollMs": 100,
+    "pushBaseDeadlineMs": 14000,
+    "pushPerOpMs": 0,
+    "watchTimeoutSec": 20,
+    "httpKeepAliveTimeoutMs": 5000,
+    "journalMaxKB": 256
+  },
+  "founderObjectives": null,
+  "balanced": {
+    "genome": {
+      "watchPollMs": 175,
+      "statusPollMs": 200,
+      "pushBaseDeadlineMs": 12000,
+      "pushPerOpMs": 0,
+      "watchTimeoutSec": 20,
+      "httpKeepAliveTimeoutMs": 5000,
+      "journalMaxKB": 256
+    },
+    "objectives": {
+      "opsApplyMsPerBatch": 3.34,
+      "pushP95Ms": 4.58,
+      "watchLatencyMs": 14.85,
+      "watchWakeupsPerSec": 6,
+      "journalBytes": 8651,
+      "stabilityFailures": 0
+    },
+    "score": 0.03401513556868456
+  },
+  "pareto": [
+    {
+      "genome": {
+        "watchPollMs": 200,
+        "statusPollMs": 50,
+        "pushBaseDeadlineMs": 10000,
+        "pushPerOpMs": 0,
+        "watchTimeoutSec": 20,
+        "httpKeepAliveTimeoutMs": 4000,
+        "journalMaxKB": 256
+      },
+      "objectives": {
+        "opsApplyMsPerBatch": 3.51,
+        "pushP95Ms": 5.2,
+        "watchLatencyMs": 61.12,
+        "watchWakeupsPerSec": 5,
+        "journalBytes": 8690,
+        "stabilityFailures": 0
+      },
+      "meta": {
+        "opsApplyMsPerBatch": 3.51,
+        "pushP95Ms": 5.2,
+        "watchLatencyMs": 61.12,
+        "liveSlides": 18,
+        "engineFailures": 0,
+        "pushFailures": 0,
+        "concurrentFailures": 0
+      },
+      "ok": true,
+      "error": ""
+    },
+    {
+      "genome": {
+        "watchPollMs": 125,
+        "statusPollMs": 150,
+        "pushBaseDeadlineMs": 12000,
+        "pushPerOpMs": 40,
+        "watchTimeoutSec": 15,
+        "httpKeepAliveTimeoutMs": 5000,
+        "journalMaxKB": 1024
+      },
+      "objectives": {
+        "opsApplyMsPerBatch": 3.34,
+        "pushP95Ms": 4.21,
+        "watchLatencyMs": 49.05,
+        "watchWakeupsPerSec": 8,
+        "journalBytes": 8688,
+        "stabilityFailures": 0
+      },
+      "meta": {
+        "opsApplyMsPerBatch": 3.34,
+        "pushP95Ms": 4.21,
+        "watchLatencyMs": 49.05,
+        "liveSlides": 18,
+        "engineFailures": 0,
+        "pushFailures": 0,
+        "concurrentFailures": 0
+      },
+      "ok": true,
+      "error": ""
+    },
+    {
+      "genome": {
+        "watchPollMs": 200,
+        "statusPollMs": 50,
+        "pushBaseDeadlineMs": 16000,
+        "pushPerOpMs": 40,
+        "watchTimeoutSec": 25,
+        "httpKeepAliveTimeoutMs": 7000,
+        "journalMaxKB": 256
+      },
+      "objectives": {
+        "opsApplyMsPerBatch": 9.05,
+        "pushP95Ms": 10.22,
+        "watchLatencyMs": 63.78,
+        "watchWakeupsPerSec": 5,
+        "journalBytes": 8647,
+        "stabilityFailures": 0
+      },
+      "meta": {
+        "opsApplyMsPerBatch": 9.05,
+        "pushP95Ms": 10.22,
+        "watchLatencyMs": 63.78,
+        "liveSlides": 19,
+        "engineFailures": 0,
+        "pushFailures": 0,
+        "concurrentFailures": 0
+      },
+      "ok": true,
+      "error": ""
+    },
+    {
+      "genome": {
+        "watchPollMs": 175,
+        "statusPollMs": 200,
+        "pushBaseDeadlineMs": 12000,
+        "pushPerOpMs": 0,
+        "watchTimeoutSec": 20,
+        "httpKeepAliveTimeoutMs": 5000,
+        "journalMaxKB": 256
+      },
+      "objectives": {
+        "opsApplyMsPerBatch": 3.34,
+        "pushP95Ms": 4.58,
+        "watchLatencyMs": 14.85,
+        "watchWakeupsPerSec": 6,
+        "journalBytes": 8651,
+        "stabilityFailures": 0
+      },
+      "meta": {
+        "opsApplyMsPerBatch": 3.34,
+        "pushP95Ms": 4.58,
+        "watchLatencyMs": 14.85,
+        "liveSlides": 20,
+        "engineFailures": 0,
+        "pushFailures": 0,
+        "concurrentFailures": 0
+      },
+      "ok": true,
+      "error": ""
+    },
+    {
+      "genome": {
+        "watchPollMs": 200,
+        "statusPollMs": 100,
+        "pushBaseDeadlineMs": 16000,
+        "pushPerOpMs": 20,
+        "watchTimeoutSec": 20,
+        "httpKeepAliveTimeoutMs": 4000,
+        "journalMaxKB": 512
+      },
+      "objectives": {
+        "opsApplyMsPerBatch": 3.33,
+        "pushP95Ms": 4.94,
+        "watchLatencyMs": 62.71,
+        "watchWakeupsPerSec": 5,
+        "journalBytes": 8684,
+        "stabilityFailures": 0
+      },
+      "meta": {
+        "opsApplyMsPerBatch": 3.33,
+        "pushP95Ms": 4.94,
+        "watchLatencyMs": 62.71,
+        "liveSlides": 18,
+        "engineFailures": 0,
+        "pushFailures": 0,
+        "concurrentFailures": 0
+      },
+      "ok": true,
+      "error": ""
+    },
+    {
+      "genome": {
+        "watchPollMs": 225,
+        "statusPollMs": 200,
+        "pushBaseDeadlineMs": 10000,
+        "pushPerOpMs": 40,
+        "watchTimeoutSec": 15,
+        "httpKeepAliveTimeoutMs": 6000,
+        "journalMaxKB": 1024
+      },
+      "objectives": {
+        "opsApplyMsPerBatch": 8.53,
+        "pushP95Ms": 9.87,
+        "watchLatencyMs": 78.18,
+        "watchWakeupsPerSec": 4,
+        "journalBytes": 8690,
+        "stabilityFailures": 0
+      },
+      "meta": {
+        "opsApplyMsPerBatch": 8.53,
+        "pushP95Ms": 9.87,
+        "watchLatencyMs": 78.18,
+        "liveSlides": 18,
+        "engineFailures": 0,
+        "pushFailures": 0,
+        "concurrentFailures": 0
+      },
+      "ok": true,
+      "error": ""
+    },
+    {
+      "genome": {
+        "watchPollMs": 200,
+        "statusPollMs": 100,
+        "pushBaseDeadlineMs": 16000,
+        "pushPerOpMs": 20,
+        "watchTimeoutSec": 20,
+        "httpKeepAliveTimeoutMs": 4000,
+        "journalMaxKB": 256
+      },
+      "objectives": {
+        "opsApplyMsPerBatch": 9.23,
+        "pushP95Ms": 9.9,
+        "watchLatencyMs": 62.74,
+        "watchWakeupsPerSec": 5,
+        "journalBytes": 8651,
+        "stabilityFailures": 0
+      },
+      "meta": {
+        "opsApplyMsPerBatch": 9.23,
+        "pushP95Ms": 9.9,
+        "watchLatencyMs": 62.74,
+        "liveSlides": 19,
+        "engineFailures": 0,
+        "pushFailures": 0,
+        "concurrentFailures": 0
+      },
+      "ok": true,
+      "error": ""
+    },
+    {
+      "genome": {
+        "watchPollMs": 225,
+        "statusPollMs": 200,
+        "pushBaseDeadlineMs": 12000,
+        "pushPerOpMs": 20,
+        "watchTimeoutSec": 20,
+        "httpKeepAliveTimeoutMs": 6000,
+        "journalMaxKB": 512
+      },
+      "objectives": {
+        "opsApplyMsPerBatch": 6.67,
+        "pushP95Ms": 4.44,
+        "watchLatencyMs": 78.38,
+        "watchWakeupsPerSec": 4,
+        "journalBytes": 8654,
+        "stabilityFailures": 0
+      },
+      "meta": {
+        "opsApplyMsPerBatch": 6.67,
+        "pushP95Ms": 4.44,
+        "watchLatencyMs": 78.38,
+        "liveSlides": 19,
+        "engineFailures": 0,
+        "pushFailures": 0,
+        "concurrentFailures": 0
+      },
+      "ok": true,
+      "error": ""
+    },
+    {
+      "genome": {
+        "watchPollMs": 200,
+        "statusPollMs": 100,
+        "pushBaseDeadlineMs": 10000,
+        "pushPerOpMs": 0,
+        "watchTimeoutSec": 20,
+        "httpKeepAliveTimeoutMs": 4000,
+        "journalMaxKB": 1024
+      },
+      "objectives": {
+        "opsApplyMsPerBatch": 9.06,
+        "pushP95Ms": 10.03,
+        "watchLatencyMs": 61.62,
+        "watchWakeupsPerSec": 5,
+        "journalBytes": 8655,
+        "stabilityFailures": 0
+      },
+      "meta": {
+        "opsApplyMsPerBatch": 9.06,
+        "pushP95Ms": 10.03,
+        "watchLatencyMs": 61.62,
+        "liveSlides": 19,
+        "engineFailures": 0,
+        "pushFailures": 0,
+        "concurrentFailures": 0
+      },
+      "ok": true,
+      "error": ""
+    },
+    {
+      "genome": {
+        "watchPollMs": 175,
+        "statusPollMs": 150,
+        "pushBaseDeadlineMs": 10000,
+        "pushPerOpMs": 20,
+        "watchTimeoutSec": 25,
+        "httpKeepAliveTimeoutMs": 4000,
+        "journalMaxKB": 1024
+      },
+      "objectives": {
+        "opsApplyMsPerBatch": 4.9,
+        "pushP95Ms": 4.23,
+        "watchLatencyMs": 22.2,
+        "watchWakeupsPerSec": 6,
+        "journalBytes": 8687,
+        "stabilityFailures": 0
+      },
+      "meta": {
+        "opsApplyMsPerBatch": 4.9,
+        "pushP95Ms": 4.23,
+        "watchLatencyMs": 22.2,
+        "liveSlides": 18,
+        "engineFailures": 0,
+        "pushFailures": 0,
+        "concurrentFailures": 0
+      },
+      "ok": true,
+      "error": ""
+    }
+  ],
+  "history": [
+    {
+      "generation": 1,
+      "best": {
+        "genome": {
+          "watchPollMs": 200,
+          "statusPollMs": 50,
+          "pushBaseDeadlineMs": 10000,
+          "pushPerOpMs": 0,
+          "watchTimeoutSec": 20,
+          "httpKeepAliveTimeoutMs": 4000,
+          "journalMaxKB": 256
+        },
+        "objectives": {
+          "opsApplyMsPerBatch": 3.51,
+          "pushP95Ms": 5.2,
+          "watchLatencyMs": 61.12,
+          "watchWakeupsPerSec": 5,
+          "journalBytes": 8690,
+          "stabilityFailures": 0
+        }
+      },
+      "paretoSize": 10
+    },
+    {
+      "generation": 2,
+      "best": {
+        "genome": {
+          "watchPollMs": 200,
+          "statusPollMs": 50,
+          "pushBaseDeadlineMs": 10000,
+          "pushPerOpMs": 0,
+          "watchTimeoutSec": 20,
+          "httpKeepAliveTimeoutMs": 4000,
+          "journalMaxKB": 256
+        },
+        "objectives": {
+          "opsApplyMsPerBatch": 3.51,
+          "pushP95Ms": 5.2,
+          "watchLatencyMs": 61.12,
+          "watchWakeupsPerSec": 5,
+          "journalBytes": 8690,
+          "stabilityFailures": 0
+        }
+      },
+      "paretoSize": 10
+    },
+    {
+      "generation": 3,
+      "best": {
+        "genome": {
+          "watchPollMs": 200,
+          "statusPollMs": 50,
+          "pushBaseDeadlineMs": 10000,
+          "pushPerOpMs": 0,
+          "watchTimeoutSec": 20,
+          "httpKeepAliveTimeoutMs": 4000,
+          "journalMaxKB": 256
+        },
+        "objectives": {
+          "opsApplyMsPerBatch": 3.51,
+          "pushP95Ms": 5.2,
+          "watchLatencyMs": 61.12,
+          "watchWakeupsPerSec": 5,
+          "journalBytes": 8690,
+          "stabilityFailures": 0
+        }
+      },
+      "paretoSize": 10
+    },
+    {
+      "generation": 4,
+      "best": {
+        "genome": {
+          "watchPollMs": 200,
+          "statusPollMs": 50,
+          "pushBaseDeadlineMs": 10000,
+          "pushPerOpMs": 0,
+          "watchTimeoutSec": 20,
+          "httpKeepAliveTimeoutMs": 4000,
+          "journalMaxKB": 256
+        },
+        "objectives": {
+          "opsApplyMsPerBatch": 3.51,
+          "pushP95Ms": 5.2,
+          "watchLatencyMs": 61.12,
+          "watchWakeupsPerSec": 5,
+          "journalBytes": 8690,
+          "stabilityFailures": 0
+        }
+      },
+      "paretoSize": 10
+    },
+    {
+      "generation": 5,
+      "best": {
+        "genome": {
+          "watchPollMs": 200,
+          "statusPollMs": 50,
+          "pushBaseDeadlineMs": 10000,
+          "pushPerOpMs": 0,
+          "watchTimeoutSec": 20,
+          "httpKeepAliveTimeoutMs": 4000,
+          "journalMaxKB": 256
+        },
+        "objectives": {
+          "opsApplyMsPerBatch": 3.51,
+          "pushP95Ms": 5.2,
+          "watchLatencyMs": 61.12,
+          "watchWakeupsPerSec": 5,
+          "journalBytes": 8690,
+          "stabilityFailures": 0
+        }
+      },
+      "paretoSize": 10
+    }
+  ]
+}

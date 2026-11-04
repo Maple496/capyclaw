@@ -1,0 +1,15 @@
+{
+  "_comment": "示例配置：复制为同目录 dshd.config.json 后按需改。路径可绝对可相对（相对本文件）；端口为正整数或 \"auto\"。harnessDir 必须指向一个真实的 dsh 宿主目录（本仓库不再内置）。配置文件字段优先于环境变量 DSH_HARNESS_DIR——想让 env 生效就删掉这一行。",
+  "name": "dsh",
+  "harnessDir": "../../../dsh-runtime/apps/harness/deepseek-harness",
+  "brokerDir": "../../packages/dsh-service-broker",
+  "stateDir": ".dshd",
+  "dshHome": "./.dshd/home",
+  "profile": "web",
+  "workspace": "",
+  "manifest": "./local-services.json",
+  "dshProxyPort": "auto",
+  "dshUpPort": "auto",
+  "brokerPort": "auto",
+  "open": false
+}

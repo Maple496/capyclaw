@@ -1,0 +1,54 @@
+{
+  "$schema": "../../../../../packages/dsh-suite-kit/suite.schema.json",
+  "name": "capyclaw-launch-engine-suite",
+  "version": "0.1.0",
+  "title": "按需激活引擎套件",
+  "description": "launch-engine（组合根）+ 其执行依赖 plugin-sync（bundle/entry 开关的转发通道）。装上本套件后，dsh 进程内即可按 capability 注册表按需注入/停用关联插件；服务进程步骤另需 serviceBroker（dsh-service-broker 宿主插件），缺失时引擎会诚实上报 unavailable。",
+  "packages": {
+    "@capyclaw/plugin-sync": {
+      "role": "provider",
+      "version": "^0.1.0",
+      "path": "../../../capyclaw-plugin-sync",
+      "provides": {
+        "capabilities": {
+          "plugin-sync.switch": "0.1.0"
+        }
+      }
+    },
+    "@capyclaw/launch-engine": {
+      "role": "runtime",
+      "version": "^0.1.0",
+      "path": "../..",
+      "requires": {
+        "capabilities": {
+          "plugin-sync.switch": "^0.1.0"
+        }
+      },
+      "provides": {
+        "capabilities": {
+          "launch-engine.activation": "0.1.0"
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "plugin-sync-host",
+      "name": "@capyclaw/plugin-sync",
+      "config": {
+        "sourceKind": "local",
+        "sourcePath": "",
+        "enableHttp": true
+      }
+    },
+    {
+      "id": "launch-engine-host",
+      "name": "@capyclaw/launch-engine",
+      "config": {
+        "registryKind": "inline",
+        "capabilities": {},
+        "enableHttp": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "dsh-mcp-gateway",
+  "version": "0.1.0",
+  "description": "DSH 公共 MCP 网关插件：聚合多个插件 MCP 工具面，向外部客户端暴露单一 /mcp 端点。",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./src": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "suite": "./dsh-suite.json",
+    "apiVersion": "1.0.0"
+  },
+  "files": [
+    "lib/",
+    "src/",
+    "cordis.patch.yml",
+    "dsh-suite.json",
+    "README.md"
+  ],
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0",
+    "@capyclaw/service-host": "^0.1.0",
+    "@capyclaw/tool-host": "^0.1.0"
+  },
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test test/unit.test.mjs"
+  }
+}

@@ -1,0 +1,4 @@
+# 由 dsh-tool-host 提供；功能插件通过 inject: ['toolHost'] 或 ctx.get('toolHost') 使用。
+- insert:
+    - id: tool-host
+      name: "dsh-tool-host"

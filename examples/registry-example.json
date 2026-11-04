@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "name": "Capyclaw Plugin Registry",
+  "description": "开发阶段与生产阶段通用的插件 registry",
+  "plugins": [
+    {
+      "name": "@capyclaw/launchpad",
+      "version": "1.1.0",
+      "description": "工作区快速访问面板",
+      "path": "./extensions/official/capyclaw-launchpad",
+      "tarball": "https://registry.npmjs.org/@capyclaw/launchpad/-/launchpad-1.1.0.tgz",
+      "category": "tool",
+      "platform": "both"
+    },
+    {
+      "name": "@capyclaw/plugin-sync",
+      "version": "0.1.0",
+      "description": "运行时插件集合管理",
+      "path": "./extensions/official/capyclaw-plugin-sync",
+      "tarball": "https://registry.npmjs.org/@capyclaw/plugin-sync/-/plugin-sync-0.1.0.tgz",
+      "category": "tool",
+      "platform": "both"
+    },
+    {
+      "name": "@capyclaw/ppt-suite",
+      "version": "2.4.0",
+      "description": "PPT 工作台套件",
+      "path": "./extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-suite",
+      "tarball": "https://registry.npmjs.org/@capyclaw/ppt-suite/-/ppt-suite-2.4.0.tgz",
+      "category": "bridge",
+      "platform": "desktop",
+      "requires": {
+        "services": ["ppt-workbench"]
+      }
+    },
+    {
+      "name": "@capyclaw/port-sidebar",
+      "version": "1.0.1",
+      "description": "端口管理侧边栏",
+      "path": "./extensions/official/capyclaw-port-sidebar",
+      "tarball": "https://registry.npmjs.org/@capyclaw/port-sidebar/-/port-sidebar-1.0.1.tgz",
+      "category": "tool",
+      "platform": "desktop"
+    },
+    {
+      "name": "@capyclaw/llm-tempkey",
+      "version": "1.0.0",
+      "description": "临时 API Key 管理",
+      "path": "./extensions/official/capyclaw-llm-tempkey",
+      "tarball": "https://registry.npmjs.org/@capyclaw/llm-tempkey/-/llm-tempkey-1.0.0.tgz",
+      "category": "tool",
+      "platform": "both"
+    },
+    {
+      "name": "@capyclaw/scrapling",
+      "version": "1.0.0",
+      "description": "网页抓取工具",
+      "path": "./extensions/official/capyclaw-scrapling",
+      "tarball": "https://registry.npmjs.org/@capyclaw/scrapling/-/scrapling-1.0.0.tgz",
+      "category": "tool",
+      "platform": "both"
+    }
+  ],
+  "services": [
+    {
+      "name": "ppt-workbench",
+      "description": "PPT 编辑器后端服务",
+      "cmd": ["node", "./extensions/bridges/ppt-bridge/plugin/dsh-ppt-workbench/server/relay.mjs"],
+      "port": 39311,
+      "requiredBy": ["@capyclaw/ppt-suite"]
+    }
+  ],
+  "metadata": {
+    "generatedAt": "2024-11-04T09:00:00.000Z",
+    "generatedBy": "npm run gen-registry"
+  }
+}

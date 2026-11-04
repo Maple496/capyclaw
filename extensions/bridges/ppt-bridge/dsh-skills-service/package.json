@@ -1,0 +1,12 @@
+{
+  "name": "@capyclaw/skills-service",
+  "version": "0.1.0",
+  "description": "DSH 独立技能服务：聚合 dsh-ppt-skill-* 的 SKILL.md 内容，HTTP 面暴露（GET /healthz、/skills、/skills/:name）。服务解耦标准形态：技能内容不再进程内注册，dsh 侧经 broker 的 skills 瘦客户端访问。",
+  "type": "module",
+  "main": "./server.mjs",
+  "files": [
+    "server.mjs",
+    "README.md"
+  ],
+  "license": "MIT"
+}

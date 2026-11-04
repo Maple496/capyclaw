@@ -1,0 +1,6 @@
+[
+  { "name": "founder（当前默认 tick=30s margin=60s prop=60s）", "genome": { "tickMs": 30000, "refreshMarginSeconds": 60, "propagationMs": 60000, "upstreamTimeoutMs": 120000, "issueBackoffBaseMs": 2000, "ttlSeconds": 300 } },
+  { "name": "快 tick（10s）", "genome": { "tickMs": 10000, "refreshMarginSeconds": 60, "propagationMs": 60000, "upstreamTimeoutMs": 120000, "issueBackoffBaseMs": 2000, "ttlSeconds": 300 } },
+  { "name": "长 TTL（900s）+ 大 margin（120s）", "genome": { "tickMs": 30000, "refreshMarginSeconds": 120, "propagationMs": 60000, "upstreamTimeoutMs": 120000, "issueBackoffBaseMs": 2000, "ttlSeconds": 900 } },
+  { "name": "短传播宽限（15s）", "genome": { "tickMs": 30000, "refreshMarginSeconds": 60, "propagationMs": 15000, "upstreamTimeoutMs": 120000, "issueBackoffBaseMs": 2000, "ttlSeconds": 300 } }
+]

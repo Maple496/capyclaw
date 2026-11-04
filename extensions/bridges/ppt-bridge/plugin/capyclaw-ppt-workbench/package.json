@@ -1,0 +1,53 @@
+{
+  "name": "@capyclaw/ppt-workbench",
+  "version": "2.4.1",
+  "description": "PPT 工作台运行时：27 个 ppt_* MCP 工具（导入/导出 PPTX + 图表/表格/公式/形状/线条/备注 + 契约探测）+ 本机实时 PPTist 编辑器。",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "capabilities": {
+      "source": "server/tools/capabilities",
+      "manifest": "capabilities.json"
+    }
+  },
+  "meta": {
+    "title": "PPT 工作台运行时",
+    "description": "AI 生成/编辑 PPT：27 个 ppt_* 工具 + 浏览器实时编辑器（http://127.0.0.1:39311/）"
+  },
+  "files": [
+    "lib/",
+    "server/",
+    "core/",
+    "!server/.relay-instance.lock",
+    "editor/",
+    "contract/",
+    "cordis.patch.yml",
+    "README.md",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "pptxgenjs": "^3.12.0",
+    "@capyclaw/document-workbench": "^0.1.0"
+  },
+  "author": {
+    "name": "CapyClaw",
+    "url": "https://github.com/capyclaw",
+    "email": "support@capyclaw.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capyclaw/dsh-plugins"
+  },
+  "bugs": {
+    "url": "https://github.com/capyclaw/dsh-plugins/issues"
+  },
+  "homepage": "https://github.com/capyclaw/dsh-plugins"
+}

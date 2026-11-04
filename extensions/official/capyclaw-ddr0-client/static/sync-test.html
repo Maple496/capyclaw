@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Session Sync Test</title>
+</head>
+<body>
+    <h1>Session Token 同步测试</h1>
+    <div id="status">检查中...</div>
+    <button onclick="syncNow()">立即同步</button>
+    
+    <script>
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+    
+    function syncSession() {
+        const sessionid = getCookie('sessionid');
+        const status = document.getElementById('status');
+        
+        if (sessionid) {
+            status.textContent = '找到 sessionid，正在同步...';
+            
+            fetch('/api/sync-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionid })
+            })
+            .then(res => res.json())
+            .then(data => {
+                status.textContent = '✓ Session 同步成功！sessionid: ' + sessionid.substring(0, 20) + '...';
+                status.style.color = 'green';
+            })
+            .catch(err => {
+                status.textContent = '✗ 同步失败: ' + err.message;
+                status.style.color = 'red';
+            });
+        } else {
+            status.textContent = '✗ 未找到 sessionid Cookie，请先登录';
+            status.style.color = 'orange';
+        }
+    }
+    
+    function syncNow() {
+        syncSession();
+    }
+    
+    // 页面加载时立即同步
+    syncSession();
+    
+    // 每 30 秒自动同步一次
+    setInterval(syncSession, 30000);
+    
+    console.log('[Session Sync] 已启动自动同步');
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# dsh-service-broker：唯一中间件插件。
+# 服务解耦标准见 docs/SERVICE_STANDARD.md——业务/端口服务一律不 insert 进
+# dsh 进程，由本插件按清单以独立进程拉起；跨端口组织只经过中间件。
+- insert:
+    - id: service-broker
+      name: "dsh-service-broker"

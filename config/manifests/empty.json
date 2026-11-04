@@ -1,0 +1,5 @@
+{
+  "name": "empty",
+  "description": "空清单 - 所有插件禁用",
+  "plugins": {}
+}

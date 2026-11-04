@@ -1,0 +1,4 @@
+# dsh-ppt-skill-authoring bundle patch：只注册 pptist-authoring 一个 skill provider。
+- insert:
+    - id: ppt-skill-authoring
+      name: dsh-ppt-skill-authoring

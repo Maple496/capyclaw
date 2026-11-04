@@ -1,0 +1,91 @@
+{
+  "generatedAt": "2026-10-30T18:33:44.575Z",
+  "node": "v25.2.1",
+  "platform": "win32",
+  "rssMbBefore": 55.2,
+  "modules": {
+    "dsh-service-host": {
+      "ok": true,
+      "metrics": {
+        "requests": 300,
+        "p50Ms": 0.33,
+        "p95Ms": 0.8,
+        "rps": 2324,
+        "concurrent100Ms": 36
+      },
+      "elapsedMs": 208
+    },
+    "dsh-tool-host": {
+      "ok": true,
+      "metrics": {
+        "registryStartupMs": 0.1,
+        "toolCount": 19,
+        "validateOpsPerSec": 8085382,
+        "capabilityCallsPerSec": 788
+      },
+      "elapsedMs": 654
+    },
+    "dsh-state-service": {
+      "ok": true,
+      "metrics": {
+        "writeOpsPerSec": 92,
+        "readOpsPerSec": 38795,
+        "stateBytes": 32
+      },
+      "elapsedMs": 5428
+    },
+    "dsh-asset-service": {
+      "ok": true,
+      "metrics": {
+        "writeMbPerSec": 217.3,
+        "readMbPerSec": 862.3,
+        "writeMs": 138,
+        "readMs": 35
+      },
+      "elapsedMs": 206
+    },
+    "dsh-editor-host": {
+      "ok": true,
+      "metrics": {
+        "appJsP50Ms": 0.47,
+        "appJsP95Ms": 0.99,
+        "appJsRps": 1818
+      },
+      "elapsedMs": 117
+    },
+    "dsh-ppt-workbench": {
+      "ok": true,
+      "metrics": {
+        "p95StatusMs": 0.29,
+        "pushP95Ms": 5.98,
+        "watchLatencyMs": 31.11,
+        "watchWakeupsPerSec": 13,
+        "stabilityFailures": 0,
+        "responseBytes": 181
+      },
+      "elapsedMs": 1880
+    },
+    "dsh-ppt-skills": {
+      "ok": true,
+      "metrics": {
+        "skills": 8,
+        "listOpsPerSec": 7530120,
+        "getOpsPerSec": 7451,
+        "avgSkillBytes": 76
+      },
+      "elapsedMs": 29
+    },
+    "dsh-ppt-suite": {
+      "ok": true,
+      "metrics": {
+        "packages": 8,
+        "rows": 8,
+        "loadOpsPerSec": 709,
+        "validateOpsPerSec": 3554,
+        "composeOpsPerSec": 6046
+      },
+      "elapsedMs": 185
+    }
+  },
+  "rssMbAfter": 87.9
+}

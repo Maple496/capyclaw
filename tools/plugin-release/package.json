@@ -1,0 +1,19 @@
+{
+  "name": "plugin-release",
+  "version": "0.1.0",
+  "description": "DSH 插件发布工具：规范闸 + 打包 zip + 生成源索引（index.json）+ 打整源包。",
+  "type": "module",
+  "main": "./lib/index.mjs",
+  "bin": {
+    "dsh-release": "./bin/cli.mjs"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/release.test.mjs"
+  },
+  "private": true
+}

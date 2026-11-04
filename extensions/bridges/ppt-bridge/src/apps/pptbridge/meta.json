@@ -1,0 +1,6 @@
+{
+  "name": "Keynote 导演台",
+  "icon": "🎬",
+  "tags": "系统",
+  "view": { "kind": "engine", "engine": "pptbridge" }
+}

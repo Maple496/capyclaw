@@ -1,0 +1,132 @@
+{
+  "$schema": "https://raw.githubusercontent.com/deepseek-ai/dsh-plugins/main/registry.schema.json",
+  "plugins": [
+    {
+      "id": "ddr0-client",
+      "name": "@capyclaw/ddr0-client",
+      "version": "1.0.0",
+      "title": "ddr0 客户端",
+      "description": "在 DSH 中访问 ddr0.com - 登录、积分、社区等功能 by CapyClaw",
+      "category": "service",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "directory": "extensions/official/capyclaw-ddr0-client",
+      "bundle": true,
+      "client": false,
+      "suite": false
+    },
+    {
+      "id": "launch-engine",
+      "name": "@capyclaw/launch-engine",
+      "version": "0.1.0",
+      "title": "按需激活引擎",
+      "description": "容器注入的组合根：capability 注册表声明「要求 → bundle/entry/服务」，引擎解析依赖闭包、逐波激活并按 fiberPhase=active 口径验证；不自己实现任何开关，进程生命周期仍归 dshd。",
+      "category": "tool",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "directory": "extensions/official/capyclaw-launch-engine",
+      "bundle": true,
+      "client": false,
+      "suite": false
+    },
+    {
+      "id": "launchpad",
+      "name": "@capyclaw/launchpad",
+      "version": "1.1.0",
+      "title": "启动清单管理器",
+      "description": "用 dsh-stack DSL 管理启动模式：管理界面点击启动/停止、编辑校验 DSL、经 dshd 拉起 broker + dsh + 服务，并在 DSH 侧边栏提供入口。",
+      "category": "tool",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "directory": "extensions/official/capyclaw-launchpad",
+      "bundle": true,
+      "client": true,
+      "suite": false
+    },
+    {
+      "id": "llm-tempkey",
+      "name": "@capyclaw/llm-tempkey",
+      "version": "1.0.0",
+      "title": "LLM 临时Key客户端",
+      "description": "登录校验 + 千帆临时 Key 自动签发/轮换 + 积分计费，经 pi-ai 路由注入 dsh。",
+      "category": "service",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "directory": "extensions/official/capyclaw-llm-tempkey",
+      "bundle": true,
+      "client": false,
+      "suite": false
+    },
+    {
+      "id": "plugin-sync",
+      "name": "@capyclaw/plugin-sync",
+      "version": "0.1.0",
+      "title": "插件同步",
+      "description": "读取外部清单（本地 JSON；HTTP 源预留），与当前 profile 的插件集合比对，输出差异报告；可按清单启用/停用 bundle 与插件行。开关能力全部复用 dsh 原生 pluginManager，不自己实现。",
+      "category": "tool",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "directory": "extensions/official/capyclaw-plugin-sync",
+      "bundle": true,
+      "client": false,
+      "suite": false
+    },
+    {
+      "id": "port-sidebar",
+      "name": "@capyclaw/port-sidebar",
+      "version": "1.0.1",
+      "title": "端口侧边栏",
+      "description": "右侧边栏常驻展示指定服务（服务解耦标准：config.service 走中间件 discovery，端口不写死）的界面，切换会话/话题不消失。",
+      "category": "ui",
+      "platform": "web",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "directory": "extensions/official/capyclaw-port-sidebar",
+      "bundle": true,
+      "client": true,
+      "suite": false
+    },
+    {
+      "id": "scrapling",
+      "name": "@capyclaw/scrapling",
+      "version": "1.0.0",
+      "title": "Scrapling 网页抓取",
+      "description": "强大的网页抓取工具：支持快速 HTTP 请求、隐身浏览器模式、JavaScript 渲染、Cloudflare 自动绕过、CSS/XPath 选择器、并发爬虫、代理轮换和多格式数据导出(JSON/CSV/XML)。",
+      "category": "tool",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "directory": "extensions/official/capyclaw-scrapling",
+      "bundle": true,
+      "client": true,
+      "suite": false
+    }
+  ],
+  "categories": {
+    "services": 2,
+    "tools": 4,
+    "ui": 1
+  },
+  "author": {
+    "name": "CapyClaw Team",
+    "url": "https://github.com/capyclaw",
+    "email": "support@capyclaw.dev",
+    "social": {
+      "github": "https://github.com/capyclaw",
+      "twitter": "https://twitter.com/capyclaw"
+    }
+  },
+  "support": {
+    "docs": "https://capyclaw.dev/docs",
+    "issues": "https://github.com/capyclaw/dsh-plugins/issues",
+    "discord": "https://discord.gg/capyclaw",
+    "email": "support@capyclaw.dev"
+  },
+  "generatedAt": "2026-11-04T13:27:35.240Z",
+  "generatedBy": "scripts/gen-registry.mjs"
+}

@@ -1,0 +1,31 @@
+{
+  "_comment": "本仓库自包含开机清单：${PACKAGE_DIR} = 本文件所在目录，因此全部路径相对清单自身，整仓搬家不断。",
+  "services": [
+    {
+      "id": "ppt-workbench",
+      "cmd": [
+        "node",
+        "${PACKAGE_DIR}/../../extensions/bridges/ppt-bridge/plugin/dsh-ppt-workbench/server/relay.mjs",
+        "--port",
+        "${PORT}",
+        "--dir",
+        "${PACKAGE_DIR}/.dshd/ppt-host"
+      ],
+      "ports": { "main": 39311 },
+      "url": "http://127.0.0.1:${PORT}/",
+      "keepAlive": true
+    },
+    {
+      "id": "dsh-skills",
+      "cmd": [
+        "node",
+        "${PACKAGE_DIR}/../../extensions/bridges/ppt-bridge/dsh-skills-service/server.mjs",
+        "--port",
+        "${PORT}"
+      ],
+      "ports": { "main": 39321 },
+      "url": "http://127.0.0.1:${PORT}",
+      "keepAlive": true
+    }
+  ]
+}

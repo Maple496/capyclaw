@@ -1,0 +1,4 @@
+# 由 dsh-asset-service 提供；功能插件通过 inject: ['assets'] 或 ctx.get('assets') 使用。
+- insert:
+    - id: asset-service
+      name: "dsh-asset-service"

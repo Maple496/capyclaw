@@ -1,0 +1,15 @@
+{
+  "_comment": "dshd 实际配置（本机当前布局）。harnessDir 指向同级 dsh-runtime 里的 dsh 宿主。注意：配置文件字段优先于环境变量 DSH_HARNESS_DIR；想让 env 生效就把这一行删掉。",
+  "name": "dsh",
+  "harnessDir": "../../../dsh-runtime/apps/harness/deepseek-harness",
+  "brokerDir": "../../packages/dsh-service-broker",
+  "stateDir": ".dshd",
+  "dshHome": "./.dshd/home",
+  "profile": "web",
+  "workspace": "../../../dsh-runtime/apps/harness/deepseek-harness/workspace",
+  "manifest": "./local-services.json",
+  "dshProxyPort": "auto",
+  "dshUpPort": "auto",
+  "brokerPort": "auto",
+  "open": false
+}

@@ -1,0 +1,16 @@
+{
+  "name": "dsh-runtime-kit",
+  "version": "0.1.0",
+  "description": "DSH runtime 共享基础库：纯对象仓库、Workspace 中间层、文件锁。",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./store": "./src/store/blob-store.mjs",
+    "./workspace": "./src/workspace/manager.mjs",
+    "./fs-lock": "./src/util/fs-lock.mjs",
+    "./package.json": "./package.json"
+  },
+  "private": true,
+  "license": "MIT"
+}

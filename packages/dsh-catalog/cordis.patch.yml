@@ -1,0 +1,3 @@
+- insert:
+    - id: workspace-catalog
+      name: "dsh-catalog"

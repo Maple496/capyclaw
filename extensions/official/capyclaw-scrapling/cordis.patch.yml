@@ -1,0 +1,9 @@
+# dsh-scrapling bundle patch
+# Scrapling 网页抓取插件配置
+
+- insert:
+    - id: scrapling-host
+      name: "@capyclaw/scrapling"
+      config:
+        # Scrapling 配置选项
+        enabled: true

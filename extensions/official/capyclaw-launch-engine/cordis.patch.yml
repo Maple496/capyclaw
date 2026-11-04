@@ -1,0 +1,23 @@
+# @capyclaw/launch-engine bundle patch
+#
+# 按需激活引擎：把「要求 → 关联插件」做成 capability 注册表驱动的注入。
+# 开关全部转发 plugin-sync（其内部转发 dsh 原生 pluginManager），
+# 服务全部转发 serviceBroker；激活证据只认 fiberPhase === 'active'。
+#
+# 配置（也可用环境变量，见 README）：
+#   registryKind      inline | local | http   DSH_LE_REGISTRY   默认 inline
+#   registryPath      local 注册表 JSON 路径    DSH_LE_PATH
+#   registryUrl       HTTP 源（预留）            DSH_LE_URL
+#   capabilities      inline 注册表对象（结构化，不走 env）
+#   enableHttp        是否挂 HTTP 路由           DSH_LE_HTTP      默认 true
+#   engineToken       写操作 token               DSH_LE_TOKEN     空=仅校验回环
+#   verifyTimeoutMs   每波激活验证超时           DSH_LE_VERIFY_TIMEOUT 60000
+#
+# 注册表建议由启动器（stack.plugins.configs）注入，不要写死在这里。
+- insert:
+    - id: launch-engine-host
+      name: "@capyclaw/launch-engine"
+      config:
+        registryKind: inline
+        capabilities: {}
+        enableHttp: true

@@ -1,0 +1,27 @@
+{
+  "$schema": "../dsh-suite-kit/suite.schema.json",
+  "name": "dsh-workspace-service-suite",
+  "version": "0.1.0",
+  "title": "Workspace Service",
+  "description": "在 DSH runtime 内提供通用 ctx.workspace 服务；与具体插件能力无关。",
+  "packages": {
+    "dsh-workspace-service": {
+      "role": "provider",
+      "version": "^0.1.0",
+      "path": ".",
+      "provides": {
+        "services": ["workspace"],
+        "capabilities": {
+          "workspace.runtime": "1.0.0"
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "workspace-service",
+      "name": "dsh-workspace-service"
+    }
+  ],
+  "checks": []
+}

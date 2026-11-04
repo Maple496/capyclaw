@@ -1,0 +1,37 @@
+# dsh-llm-tempkey bundle patch：① LLM 路由声明 ② 本插件宿主行（默认关闭）
+#
+# 安全说明：这里**不放任何密钥**。路由通过凭据引用 apiKeyEnv: DEEPSEEK_API_KEY
+# 在请求时解析（dsh-llm-pi-ai 的 credential-ref 机制）；环境变量缺失时该路由
+# 会以 MISSING_CREDENTIAL 失败，而不是静默用错 key。
+#
+# 可调项（插件内 resolveConfig：ctx config → 环境变量 → 默认值）：
+#
+#   serverBase   签发/查询服务基址     DSH_TEMPKEY_SERVER_BASE    默认 https://ddr0.com/apps/port/8217
+#   relayPort    本地中转端口          DSH_TEMPKEY_RELAY_PORT     默认 39610
+#   upstreamBase 上游 LLM 基址         DSH_TEMPKEY_UPSTREAM_BASE  默认 https://qianfan.baidubce.com/v2
+#   tokenEnv     会话 token 环境变量名  DSH_TEMPKEY_TOKEN_ENV      默认 DDR0_SESSION_TOKEN
+#
+# 需要不同值时优先由启动器（stack.plugins.configs）注入，而不是改这个文件。
+- insert:
+    - id: llm-pi-ai
+      name: '@deepseek-ai/dsh-llm-pi-ai'
+      config:
+        providers:
+          ddr0-tempkey:
+            api: openai-completions
+            baseURL: 'https://api.deepseek.com/v1'
+            # 凭据引用，不写明文 key。需在启动 dsh 的环境里设置 DEEPSEEK_API_KEY。
+            apiKeyEnv: DEEPSEEK_API_KEY
+            models:
+              - id: deepseek-chat
+                name: DeepSeek Chat
+                input: [text]
+              - id: deepseek-reasoner
+                name: DeepSeek Reasoner (R1)
+                input: [text]
+
+    # 插件宿主默认关闭：当前部署直接用 DeepSeek API，不经过本地中转。
+    # 需要「签发 → 续期 → 本地中转」时取消下面两行注释，
+    # 并把上面路由的 baseURL 改到本地中转地址。
+    # - id: llm-tempkey-host
+    #   name: "@capyclaw/llm-tempkey"

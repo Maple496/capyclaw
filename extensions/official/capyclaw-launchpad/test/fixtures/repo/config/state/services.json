@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-02T00:00:00.000Z",
+  "services": {
+    "alpha": {
+      "id": "alpha",
+      "state": "running",
+      "url": "http://127.0.0.1:41001",
+      "healthPath": "/healthz",
+      "pid": 999999,
+      "ports": { "main": 41001 },
+      "keepAlive": true,
+      "startedAt": "2026-11-02T00:00:00.000Z"
+    },
+    "beta": {
+      "id": "beta",
+      "state": "stopped",
+      "url": "http://127.0.0.1:41001",
+      "healthPath": "/healthz",
+      "pid": null,
+      "ports": { "main": 41001 },
+      "keepAlive": true
+    },
+    "launchpad": {
+      "id": "launchpad",
+      "state": "error",
+      "url": "http://127.0.0.1:39700",
+      "healthPath": "/healthz",
+      "pid": 999999,
+      "ports": { "main": 39700 }
+    }
+  }
+}

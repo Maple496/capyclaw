@@ -1,0 +1,33 @@
+{
+  "name": "@capyclaw/asset-service",
+  "version": "0.1.0",
+  "description": "DSH 公共资产插件：sha256 对象仓库、/assets 路由、base64 上传与 content-type，向插件提供 ctx.assets。",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./src": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "suite": "./dsh-suite.json",
+    "apiVersion": "1.0.0"
+  },
+  "files": [
+    "lib/",
+    "src/",
+    "cordis.patch.yml",
+    "dsh-suite.json",
+    "README.md"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test test/unit.test.mjs"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "name": "@capyclaw/launchpad",
+  "version": "1.1.1",
+  "description": "启动清单管理器 / 启动器：DSL 描述启动模式，管理界面点击启动、编辑、校验，经 dshd 拉起对应 dsh 模式。",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./api": "./lib/index.mjs",
+    "./client": "./client/client.js",
+    "./server": "./server.mjs",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "launchpad": "./bin/launchpad.mjs"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    },
+    "category": "tool",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "启动清单管理器",
+    "description": "用 dsh-stack DSL 管理启动模式：管理界面点击启动/停止、编辑校验 DSL、经 dshd 拉起 broker + dsh + 服务，并在 DSH 侧边栏提供入口。"
+  },
+  "files": [
+    "lib/",
+    "bin/",
+    "client/",
+    "ui/",
+    "server.mjs",
+    "services.example.json",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/scan.test.mjs test/parse.test.mjs test/analyze.test.mjs test/status.test.mjs test/broker.test.mjs test/server.test.mjs test/stack.test.mjs test/dsl.test.mjs test/launchpads.test.mjs test/plugin.test.mjs"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "CapyClaw",
+    "url": "https://github.com/capyclaw",
+    "email": "support@capyclaw.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capyclaw/dsh-plugins",
+    "directory": "extensions/official/capyclaw-launchpad"
+  },
+  "bugs": {
+    "url": "https://github.com/capyclaw/dsh-plugins/issues"
+  },
+  "homepage": "https://github.com/capyclaw/dsh-plugins",
+  "publishConfig": {
+    "access": "public"
+  }
+}

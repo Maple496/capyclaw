@@ -1,0 +1,21 @@
+# dsh-port-sidebar bundle patch：把宿主半挂进 Harness。
+#
+# 宿主半（lib/host.mjs）不做 HTTP 服务，只做一件事：订阅 webserver/index-inject，
+# 把目标地址作为 global 行（__DSH_PORT_SIDEBAR__）注入 web 页面开机数据，
+# 浏览器半（client/client.js）读取它并负责侧边栏 tab。
+#
+# 目标地址解析顺序（lib/url.mjs 的 resolveTarget）：
+#   1. ctx config.url            （由启动器 stack.plugins.configs 注入）
+#   2. DSH_PORT_SIDEBAR_URL
+#   3. ctx config.service  → 在 ~/.dsh/services.json 里按服务 id 查
+#   4. ctx config.port / DSH_PORT_SIDEBAR_PORT / host / path 拼出来（默认 39600）
+#
+# 这里用「按服务 id 查 discovery」，因此不写死端口：workbench 端口变了也不用改。
+- insert:
+    - id: port-sidebar-host
+      name: "@capyclaw/port-sidebar"
+      config:
+        # 同 DSH mcp-ppt 使用同一 workbench 实例；healthz 守卫拒绝非 ppt-workbench
+        service: ppt-workbench
+        requireBridge: ppt-workbench
+        restoreOnBoot: true

@@ -1,0 +1,25 @@
+%%%WORKS-META%%%
+{
+  "name": "Demo Deployment",
+  "brief": "fixture deployment",
+  "tags": "fixture,demo",
+  "emoji": "🚀",
+  "view": { "kind": "deployment" },
+  "capabilities": ["deployment.domain"],
+  "schema_version": "1.0.0"
+}
+
+%%%WORKS-CODE%%%
+{
+  "deployment": {
+    "type": "domain",
+    "source": "../domains/demo",
+    "autoStart": true
+  },
+  "runtime": {
+    "driver": "node",
+    "ports": {
+      "content": { "preferred": 41001, "range": 100 }
+    }
+  }
+}

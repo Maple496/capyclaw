@@ -1,0 +1,19 @@
+# dsh-plugin-sync bundle patch
+#
+# 把「清单 ↔ 实际插件集合」的比对与开关挂进 dsh。开关全部转发给 dsh 原生
+# pluginManager（setBundleEnabled / setPluginEnabled），不自己实现。
+#
+# 配置（也可用环境变量，见 README）：
+#   sourceKind  local | http           DSH_SYNC_SOURCE   默认 local
+#   sourcePath  本地清单 JSON 路径       DSH_SYNC_PATH
+#   sourceUrl   HTTP 清单地址（预留）     DSH_SYNC_URL
+#   enableHttp  是否挂 HTTP 路由         DSH_SYNC_HTTP     默认 true
+#   syncToken   写操作 token             DSH_SYNC_TOKEN    空=仅校验回环
+- insert:
+    - id: plugin-sync-host
+      name: "@capyclaw/plugin-sync"
+      config:
+        sourceKind: local
+        # 清单路径建议由启动器（stack.plugins.configs）注入，不要写死在这里
+        sourcePath: ''
+        enableHttp: true

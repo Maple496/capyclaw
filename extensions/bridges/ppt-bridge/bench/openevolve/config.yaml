@@ -1,0 +1,52 @@
+# OpenEvolve：PPT workbench watch/push 调优参数进化
+max_iterations: 12
+checkpoint_interval: 4
+random_seed: 2026
+log_level: "INFO"
+
+llm:
+  api_base: "https://api.deepseek.com/v1"
+  api_key: ${DEEPSEEK_API_KEY}
+  models:
+    - name: "deepseek-chat"
+      weight: 1.0
+      timeout: 300
+      max_tokens: 1024
+      temperature: 0.5
+      top_p: 0.9
+  temperature: 0.5
+  top_p: 0.9
+  max_tokens: 1024
+  timeout: 300
+  retries: 1
+  retry_delay: 2
+
+prompt:
+  system_message: >-
+    You are optimizing the runtime tuning dictionary of a local PPT workbench.
+    The file contains a Python dict named TUNING inside EVOLVE-BLOCK markers.
+    Only change numeric values inside that block. Keep every key and the dict
+    syntax intact. Objectives (all minimized): editor watch latency, idle watch
+    wakeups per second, push p95, status p95, and stability failures. Prefer
+    safe values: body_limit_mb must stay between 4 and 16, watch_poll_ms
+    between 25 and 250. Do not add imports, functions, comments, or code
+    outside the EVOLVE-BLOCK.
+  num_top_programs: 1
+  num_diverse_programs: 0
+  include_artifacts: false
+
+database:
+  population_size: 12
+  archive_size: 6
+  num_islands: 1
+  elite_selection_ratio: 0.25
+  exploitation_ratio: 0.7
+
+evaluator:
+  timeout: 120
+  parallel_evaluations: 1
+
+diff_based_evolution: false
+max_code_length: 3000
+early_stopping_patience: 4
+convergence_threshold: 0.05

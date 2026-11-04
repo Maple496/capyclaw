@@ -1,0 +1,6 @@
+{
+  "name": "Keynote 一体工作台",
+  "icon": "🎬",
+  "tags": "系统",
+  "view": { "kind": "engine", "engine": "keystudio" }
+}

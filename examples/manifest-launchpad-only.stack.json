@@ -1,0 +1,45 @@
+{
+  "name": "launch-1793781842160",
+  "home": ".temp\\dsh-1793781842160",
+  "profile": "web",
+  "workspace": "..",
+  "stateDir": ".temp\\dsh-1793781842161-state",
+  "ports": {
+    "broker": "auto",
+    "proxy": "auto",
+    "upstream": "auto"
+  },
+  "plugins": {
+    "bundles": [
+      "@deepseek-ai/dsh-base",
+      "@deepseek-ai/dsh-web-app",
+      {
+        "name": "@capyclaw/plugin-sync",
+        "path": "..\\extensions\\official\\capyclaw-plugin-sync"
+      },
+      {
+        "name": "@capyclaw/launchpad",
+        "path": "..\\extensions\\official\\capyclaw-launchpad"
+      },
+      {
+        "name": "@capyclaw/ppt-suite",
+        "path": "..\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite"
+      }
+    ],
+    "dependencies": {
+      "dsh-plugin-kit": {
+        "path": "..\\packages\\dsh-plugin-kit"
+      }
+    },
+    "configs": [
+      {
+        "name": "@capyclaw/plugin-sync",
+        "config": {
+          "sourcePath": "..\\examples\\manifest-launchpad-only.json"
+        }
+      }
+    ],
+    "install": true
+  },
+  "services": []
+}

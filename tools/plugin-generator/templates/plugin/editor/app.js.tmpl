@@ -1,0 +1,44 @@
+const output = document.getElementById('output')
+const toolsEl = document.getElementById('tools')
+const input = document.getElementById('text')
+
+async function rpc(body) {
+  const res = await fetch('/mcp', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  return res.json()
+}
+
+async function loadInfo() {
+  try {
+    const info = await fetch('/api/info').then((res) => res.json())
+    for (const tool of info.tools || []) {
+      const span = document.createElement('span')
+      span.className = 'tool'
+      span.textContent = tool.name
+      span.title = tool.description || ''
+      toolsEl.appendChild(span)
+    }
+  } catch {
+    toolsEl.textContent = '服务信息暂不可用'
+  }
+}
+
+document.getElementById('send').addEventListener('click', async () => {
+  output.textContent = '调用中…'
+  try {
+    const response = await rpc({
+      jsonrpc: '2.0',
+      id: Date.now(),
+      method: 'tools/call',
+      params: { name: '{{TOOL_PREFIX}}_echo', arguments: { text: input.value } },
+    })
+    output.textContent = JSON.stringify(response.result || response.error, null, 2)
+  } catch (error) {
+    output.textContent = String(error)
+  }
+})
+
+loadInfo()

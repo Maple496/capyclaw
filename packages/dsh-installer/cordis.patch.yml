@@ -1,0 +1,3 @@
+- insert:
+    - id: installer
+      name: "dsh-installer"

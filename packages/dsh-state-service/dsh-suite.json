@@ -1,0 +1,27 @@
+{
+  "$schema": "../dsh-suite-kit/suite.schema.json",
+  "name": "dsh-state-service-suite",
+  "version": "0.1.0",
+  "title": "State Service",
+  "description": "通用状态：原子状态、journal、checkpoint、恢复。",
+  "packages": {
+    "dsh-state-service": {
+      "role": "provider",
+      "version": "^0.1.0",
+      "path": ".",
+      "provides": {
+        "services": ["state"],
+        "capabilities": {
+          "state.persistence": "1.0.0"
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "state-service",
+      "name": "dsh-state-service"
+    }
+  ],
+  "checks": []
+}

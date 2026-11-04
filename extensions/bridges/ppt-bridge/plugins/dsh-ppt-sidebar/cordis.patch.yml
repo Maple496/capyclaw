@@ -1,0 +1,16 @@
+# PPT 工作台插件配置
+
+- insert:
+    - id: ppt-sidebar-host
+      name: dsh-ppt-sidebar
+      config:
+        port: 39311
+
+    - id: mcp-ppt
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: ppt
+        transport: streamable-http
+        url: 'http://127.0.0.1:39311/mcp'
+        failOnStartupError: false
+        toolCallTimeoutMs: 120000

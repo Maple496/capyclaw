@@ -1,0 +1,29 @@
+{
+  "name": "dsh-workspace-service",
+  "version": "0.1.0",
+  "description": "DSH workspace 中间层插件：向同进程插件提供 ctx.workspace，统一 Work 声明、对象仓库和生命周期。",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "suite": "./dsh-suite.json"
+  },
+  "files": [
+    "lib/",
+    "server/",
+    "cordis.patch.yml",
+    "dsh-suite.json",
+    "README.md"
+  ],
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test test/e2e.test.mjs test/bundle.e2e.test.mjs"
+  }
+}

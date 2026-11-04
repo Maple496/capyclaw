@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+    body { margin: 0; padding: 32px; max-width: 880px; margin-inline: auto; }
+    h1 { font-size: 22px; margin: 0 0 8px; }
+    p { color: #667085; margin: 0 0 24px; }
+    .card { border: 1px solid #e4e7ec; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+    label { display: block; font-size: 13px; margin-bottom: 8px; color: #475467; }
+    input { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #d0d5dd; border-radius: 8px; font: inherit; }
+    button { margin-top: 12px; padding: 10px 16px; border: 0; border-radius: 8px; background: #155eef; color: white; font: inherit; cursor: pointer; }
+    pre { background: #f9fafb; border-radius: 8px; padding: 12px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+    .tools { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tool { font-size: 12px; background: #eef4ff; color: #1849a9; padding: 4px 8px; border-radius: 999px; }
+  </style>
+</head>
+<body>
+  <h1>{{TITLE}}</h1>
+  <p>{{DESCRIPTION}}</p>
+
+  <div class="card">
+    <div class="tools" id="tools"></div>
+  </div>
+
+  <div class="card">
+    <label for="text">测试 {{TOOL_PREFIX}}_echo</label>
+    <input id="text" value="hello" autocomplete="off">
+    <button id="send">调用</button>
+    <pre id="output"></pre>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

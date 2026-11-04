@@ -1,0 +1,21 @@
+{
+  "name": "dsh-profile-web",
+  "private": true,
+  "dependencies": {
+    "dsh-demo": "^1.0.0"
+  },
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app",
+        "dsh-demo",
+        "dsh-missing"
+      ]
+    }
+  },
+  "dshSuiteKit": {
+    "version": 1,
+    "suites": ["dsh-demo-suite"]
+  }
+}

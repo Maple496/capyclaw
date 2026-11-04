@@ -1,0 +1,31 @@
+{
+  "name": "development",
+  "description": "开发清单 - 启动所有插件",
+  "plugins": {
+    "dsh-llm-config-suite": {
+      "enabled": true,
+      "priority": 1,
+      "autoStart": true
+    },
+    "dsh-flow-engine-suite": {
+      "enabled": true,
+      "priority": 2,
+      "autoStart": true
+    },
+    "capyclaw-ppt-suite": {
+      "enabled": true,
+      "priority": 3,
+      "autoStart": true
+    },
+    "demo-suite": {
+      "enabled": true,
+      "priority": 4,
+      "autoStart": true
+    },
+    "dsh-hello-service-suite": {
+      "enabled": true,
+      "priority": 5,
+      "autoStart": true
+    }
+  }
+}

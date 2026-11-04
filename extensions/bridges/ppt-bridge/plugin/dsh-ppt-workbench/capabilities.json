@@ -1,0 +1,658 @@
+{
+  "version": 1,
+  "source": "server/tools/capabilities",
+  "capabilities": [
+    {
+      "id": "contract",
+      "version": "2.4.0",
+      "title": "契约探测",
+      "description": "",
+      "tags": [
+        "meta"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/contract.mjs",
+        "export": "contractCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_capabilities"
+        ],
+        "features": [
+          "deck.contract"
+        ]
+      },
+      "requires": [
+        "status",
+        "contract"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "deck",
+      "version": "2.4.0",
+      "title": "读取演示文稿",
+      "description": "",
+      "tags": [
+        "read"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/deck.mjs",
+        "export": "deckCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_get_deck"
+        ],
+        "features": [
+          "deck.read"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "audit",
+      "version": "2.4.0",
+      "title": "确定性审计",
+      "description": "",
+      "tags": [
+        "read",
+        "quality"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/audit.mjs",
+        "export": "auditCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_audit"
+        ],
+        "features": [
+          "deck.audit"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "task",
+      "version": "2.4.0",
+      "title": "任务恢复",
+      "description": "",
+      "tags": [
+        "state"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/task.mjs",
+        "export": "taskCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_task"
+        ],
+        "features": [
+          "deck.task"
+        ]
+      },
+      "requires": [
+        "deck",
+        "task"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "text",
+      "version": "2.4.0",
+      "title": "文字与槽位",
+      "description": "",
+      "tags": [
+        "write",
+        "content"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/text.mjs",
+        "export": "textCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_text",
+          "ppt_fill"
+        ],
+        "features": [
+          "deck.write"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "style",
+      "version": "2.4.0",
+      "title": "主题与背景",
+      "description": "",
+      "tags": [
+        "write",
+        "style"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/style.mjs",
+        "export": "styleCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_style"
+        ],
+        "features": [
+          "deck.write"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "element",
+      "version": "2.4.0",
+      "title": "元素编辑",
+      "description": "",
+      "tags": [
+        "write",
+        "layout"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/element.mjs",
+        "export": "elementCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_element"
+        ],
+        "features": [
+          "deck.write"
+        ]
+      },
+      "requires": [
+        "deck",
+        "media"
+      ],
+      "dependsOn": [
+        "image"
+      ]
+    },
+    {
+      "id": "slide",
+      "version": "2.4.0",
+      "title": "页面管理",
+      "description": "",
+      "tags": [
+        "write",
+        "structure"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/slide.mjs",
+        "export": "slideCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_slide"
+        ],
+        "features": [
+          "deck.write"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "apply",
+      "version": "2.4.0",
+      "title": "底层指令",
+      "description": "",
+      "tags": [
+        "advanced"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/apply.mjs",
+        "export": "applyCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_apply"
+        ],
+        "features": [
+          "deck.write"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "compose",
+      "version": "2.4.0",
+      "title": "成稿编排",
+      "description": "",
+      "tags": [
+        "recipe",
+        "layout"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/compose.mjs",
+        "export": "composeCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_deck",
+          "ppt_page"
+        ],
+        "features": [
+          "deck.compose"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "recolor",
+      "version": "2.4.0",
+      "title": "整体换色",
+      "description": "",
+      "tags": [
+        "recipe",
+        "style"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/recolor.mjs",
+        "export": "recolorCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_recolor"
+        ],
+        "features": [
+          "deck.recolor"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "image",
+      "version": "2.4.0",
+      "title": "图片",
+      "description": "",
+      "tags": [
+        "write",
+        "media"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/image.mjs",
+        "export": "imageCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_image"
+        ],
+        "features": [
+          "deck.image"
+        ]
+      },
+      "requires": [
+        "deck",
+        "assets"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "imagesearch",
+      "version": "2.4.0",
+      "title": "图片检索",
+      "description": "",
+      "tags": [
+        "read"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/imagesearch.mjs",
+        "export": "imagesearchCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_images"
+        ],
+        "features": [
+          "media.search"
+        ]
+      },
+      "requires": [],
+      "dependsOn": []
+    },
+    {
+      "id": "screenshot",
+      "version": "2.4.0",
+      "title": "实时画面",
+      "description": "",
+      "tags": [
+        "read",
+        "visual"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/screenshot.mjs",
+        "export": "screenshotCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_screenshot"
+        ],
+        "features": [
+          "deck.screenshot"
+        ]
+      },
+      "requires": [
+        "editor",
+        "status"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "present",
+      "version": "2.4.0",
+      "title": "放映",
+      "description": "",
+      "tags": [
+        "control"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/present.mjs",
+        "export": "presentCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_present"
+        ],
+        "features": [
+          "deck.present"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "history",
+      "version": "2.4.0",
+      "title": "撤销重做",
+      "description": "",
+      "tags": [
+        "control"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/history.mjs",
+        "export": "historyCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_history"
+        ],
+        "features": [
+          "deck.undo"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "chart",
+      "version": "2.4.0",
+      "title": "图表",
+      "description": "",
+      "tags": [
+        "write",
+        "data"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/chart.mjs",
+        "export": "chartCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_chart"
+        ],
+        "features": [
+          "deck.chart"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "table",
+      "version": "2.4.0",
+      "title": "表格",
+      "description": "",
+      "tags": [
+        "write",
+        "data"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/table.mjs",
+        "export": "tableCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_table",
+          "ppt_table_cells"
+        ],
+        "features": [
+          "deck.table"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "notes",
+      "version": "2.4.0",
+      "title": "演讲备注",
+      "description": "",
+      "tags": [
+        "write",
+        "content"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/notes.mjs",
+        "export": "notesCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_notes"
+        ],
+        "features": [
+          "deck.notes"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "shape",
+      "version": "2.4.0",
+      "title": "形状库",
+      "description": "",
+      "tags": [
+        "write",
+        "layout"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/shape.mjs",
+        "export": "shapeCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_shape"
+        ],
+        "features": [
+          "deck.shape"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "line",
+      "version": "2.4.0",
+      "title": "线条",
+      "description": "",
+      "tags": [
+        "write",
+        "layout"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/line.mjs",
+        "export": "lineCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_line"
+        ],
+        "features": [
+          "deck.line"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "formula",
+      "version": "2.4.0",
+      "title": "数学公式",
+      "description": "",
+      "tags": [
+        "write",
+        "content"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/formula.mjs",
+        "export": "formulaCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_formula"
+        ],
+        "features": [
+          "deck.formula"
+        ]
+      },
+      "requires": [
+        "deck"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "import",
+      "version": "2.4.0",
+      "title": "导入 PPTX",
+      "description": "",
+      "tags": [
+        "write",
+        "file"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/import.mjs",
+        "export": "importCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_import_pptx"
+        ],
+        "features": [
+          "deck.import"
+        ]
+      },
+      "requires": [
+        "deck",
+        "editor",
+        "importer"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "export",
+      "version": "2.4.0",
+      "title": "导出 PPTX",
+      "description": "",
+      "tags": [
+        "write",
+        "file"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/export.mjs",
+        "export": "exportCapability"
+      },
+      "provides": {
+        "tools": [
+          "ppt_export_pptx"
+        ],
+        "features": [
+          "deck.export"
+        ]
+      },
+      "requires": [
+        "deck",
+        "status"
+      ],
+      "dependsOn": []
+    }
+  ]
+}

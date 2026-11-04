@@ -1,0 +1,49 @@
+{
+  "$schema": "../deployment.schema.json",
+  "name": "ppt-dev",
+  "version": "1.0.0",
+  "title": "PPT 工作台 - 开发环境",
+  "description": "开发测试用 PPT 部署：前台运行，详细日志",
+  
+  "deployment": {
+    "type": "domain",
+    "source": "../../../extensions/bridges/ppt-bridge/domains/ppt",
+    "autoStart": true,
+    "autoRestart": true
+  },
+
+  "runtime": {
+    "driver": "node",
+    "workId": "dev",
+    "ports": {
+      "harness": 3082,
+      "content": 39312
+    },
+    "model": {
+      "id": "llm-deepseek",
+      "plugin": "@deepseek-ai/dsh-llm-deepseek-api-key",
+      "apiKeyEnv": "DEEPSEEK_API_KEY"
+    },
+    "env": {
+      "NODE_ENV": "development",
+      "DEBUG": "dsh:*"
+    }
+  },
+
+  "launcher": {
+    "mode": "foreground",
+    "logFile": "dev.log",
+    "healthCheck": {
+      "enabled": true,
+      "interval": 10,
+      "timeout": 5,
+      "retries": 1
+    }
+  },
+
+  "metadata": {
+    "environment": "development",
+    "tags": ["ppt", "dev", "debug"],
+    "notes": "开发环境，自动重启，详细日志"
+  }
+}

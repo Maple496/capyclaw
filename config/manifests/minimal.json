@@ -1,0 +1,11 @@
+{
+  "name": "minimal",
+  "description": "最小清单 - 只启动核心插件",
+  "plugins": {
+    "dsh-llm-config-suite": {
+      "enabled": true,
+      "priority": 1,
+      "autoStart": true
+    }
+  }
+}

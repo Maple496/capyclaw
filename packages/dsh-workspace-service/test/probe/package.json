@@ -1,0 +1,11 @@
+{
+  "name": "dsh-workspace-probe",
+  "version": "0.1.0",
+  "description": "E2E probe: verifies ctx.workspace injection and object-store roundtrip.",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": { ".": "./lib/host.mjs" },
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } },
+  "private": true,
+  "license": "MIT"
+}

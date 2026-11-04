@@ -1,0 +1,36 @@
+{
+  "services": [
+    {
+      "id": "ppt-workbench",
+      "portFrom": "content",
+      "dirFrom": "contentState",
+      "cmd": [
+        "node",
+        "${PACKAGE_DIR}/node_modules/dsh-ppt-workbench/server/relay.mjs",
+        "--port",
+        "${PORT}",
+        "--dir",
+        "${PACKAGE_DIR}/.host"
+      ],
+      "ports": {
+        "main": 39311
+      },
+      "url": "http://127.0.0.1:${PORT}/",
+      "keepAlive": true
+    },
+    {
+      "id": "dsh-skills",
+      "cmd": [
+        "node",
+        "${PACKAGE_DIR}/node_modules/dsh-skills-service/server.mjs",
+        "--port",
+        "${PORT}"
+      ],
+      "ports": {
+        "main": 39321
+      },
+      "url": "http://127.0.0.1:${PORT}",
+      "keepAlive": true
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+# dsh-launchpad：dsh 进程内只做启动体检 + 管理界面入口注入。
+#
+# 完整能力在独立服务里（server.mjs：管理界面 + HTTP API + DSL 执行器），
+# 由 broker 按清单以独立进程拉起；本 host 不监听端口、不写文件、不 spawn。
+#
+# roots 为空 = 自动探测仓库根（从当前目录/包目录向上找 workspaces）。
+# strict=true 时，清单有 error 会拒绝启动 dsh；默认只告警。
+# service = discovery 里的服务 id，用于把管理界面 URL 注入页面；
+# 也可以直接写 url 覆盖。
+- insert:
+    - id: launchpad-host
+      name: "@capyclaw/launchpad"
+      config:
+        roots: []
+        includeProfiles: true
+        strict: false
+        service: launchpad
+        # url: 'http://127.0.0.1:13596/'

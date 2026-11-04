@@ -1,0 +1,15 @@
+# 由脚手架生成；端口或 MCP 配置变化时同步修改这里和 dsh-suite.json。
+
+- insert:
+    - id: dsh-hello-service-host
+      name: "dsh-hello-service"
+      config:
+        port: 39500
+    - id: mcp-hello-service
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: hello-service
+        transport: streamable-http
+        url: 'http://127.0.0.1:39500/mcp'
+        failOnStartupError: false
+        toolCallTimeoutMs: 120000

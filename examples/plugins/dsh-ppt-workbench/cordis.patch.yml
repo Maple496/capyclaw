@@ -1,0 +1,23 @@
+# dsh-ppt-workbench bundle patch：本机 PPT 桥宿主 + ppt 工具组。
+#
+# ppt-workbench-host：本包自带的宿主插件。loader 用「双锚点」解析 name，
+# bundle 自己的包名解析到本包安装目录——宿主在进程内拉起桥 relay
+# （桥端点 + MCP streamable-http 端点 + 编辑器静态页，127.0.0.1:39311），
+# 并在插件停用时随 disposer 关闭。
+#
+# mcp-ppt：官方 mcp-client 以 streamable-http 连本机 relay 的 /mcp。
+# 纯静态 URL，无路径、无 !!js——装到任何机器都是同一份 patch。
+# failOnStartupError:false：relay 由宿主插件拉起，毫秒级就绪；即使极端
+# 竞态下连接失败也只降级为工具暂不可用（reconnect 会追上），不阻塞启动。
+- insert:
+    - id: ppt-workbench-host
+      name: dsh-ppt-workbench
+
+    - id: mcp-ppt
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: ppt
+        transport: streamable-http
+        url: 'http://127.0.0.1:39311/mcp'
+        failOnStartupError: false
+        toolCallTimeoutMs: 120000

@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+out/
+dist/
+dist-products/
+dist-launchers/
+release/
+bundles/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Runtime state
+.dshd/
+.temp-*/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Generated files
+component-library.json
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+.cache/
+
+# Agent session state
+.zcode/
+# Python virtualenvs
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Internal ops docs (not for publish)
+SECURITY_AUDIT_REPORT.md
+
+# Editor runtime state
+**/data/last-open.json

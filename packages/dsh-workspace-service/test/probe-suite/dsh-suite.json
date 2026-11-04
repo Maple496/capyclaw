@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../dsh-suite-kit/suite.schema.json",
+  "name": "dsh-workspace-probe-suite",
+  "version": "0.1.0",
+  "title": "Workspace Probe",
+  "description": "E2E probe for ctx.workspace",
+  "packages": {
+    "dsh-workspace-probe": {
+      "role": "runtime",
+      "version": "^0.1.0",
+      "path": "../probe",
+      "provides": {
+        "services": [
+          "workspace-probe"
+        ],
+        "capabilities": {
+          "workspace.probe": "0.1.0"
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "workspace-probe",
+      "name": "dsh-workspace-probe"
+    }
+  ],
+  "checks": [
+    {
+      "id": "probe-health",
+      "type": "http",
+      "url": "http://127.0.0.1:1/healthz",
+      "expectStatus": 200,
+      "timeoutMs": 3000
+    }
+  ]
+}

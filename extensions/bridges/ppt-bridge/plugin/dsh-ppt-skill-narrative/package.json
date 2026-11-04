@@ -1,0 +1,29 @@
+{
+  "name": "dsh-ppt-skill-narrative",
+  "version": "2.2.0",
+  "description": "PPT skill：SCQA、金字塔、一页一观点、deck_brief。",
+  "type": "module",
+  "main": "./lib/index.mjs",
+  "exports": {
+    ".": "./lib/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "meta": {
+    "title": "PPT Skill · PPT 叙事",
+    "description": "SCQA、金字塔、一页一观点、deck_brief。"
+  },
+  "files": [
+    "lib/",
+    "skills/",
+    "contract/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "license": "MIT",
+  "private": true
+}

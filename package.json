@@ -1,0 +1,42 @@
+{
+  "name": "deepseekharness-plugin-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "dsh 插件工程：构建 dsh 插件、以及把插件组合成可运行环境。不含 dsh 宿主部署与产品交付。",
+  "scripts": {
+    "verify-chain": "node scripts/verify-chain.mjs",
+    "validate-plugin": "node tools/plugin-validator/bin/cli.mjs",
+    "create-plugin": "node tools/plugin-generator/bin/cli.mjs",
+    "validate-all": "node scripts/validate-all-plugins.mjs",
+    "test-all": "node scripts/test-all-plugins.mjs",
+    "release-plugin": "node tools/plugin-release/bin/cli.mjs release",
+    "release-all": "node tools/plugin-release/bin/cli.mjs release --all",
+    "release-index": "node tools/plugin-release/bin/cli.mjs index",
+    "release-source": "node tools/plugin-release/bin/cli.mjs bundle",
+    "verify-source": "node tools/plugin-release/bin/cli.mjs verify",
+    "test-release": "node --test tools/plugin-release/test/release.test.mjs tools/plugin-release/test/verify.test.mjs",
+    "verify-ppt-instance": "node scripts/verify-ppt-instance.mjs",
+    "dshd": "node tools/dsh-launcher/bin/dshd.mjs",
+    "test-stack-kit": "node --test packages/dsh-stack-kit/test/stack.test.mjs",
+    "test-launchpad": "npm --prefix extensions/official/capyclaw-launchpad test",
+    "test-stack-chain": "node --test tools/dsh-launcher/test/single-instance.test.mjs tools/dsh-launcher/test/stack-chain.test.mjs tools/dsh-launcher/test/domain-stack.test.mjs",
+    "test-stack:all": "npm run test-stack-kit && npm run test-launchpad && npm run test-stack-chain",
+    "test-perf": "node --expose-gc tests/performance/run-all.mjs",
+    "verify-all": "npm run verify-chain && npm run validate-all && npm run test-all && npm run test-e2e && npm run test-release && npm run test-stack:all && npm run test-perf && npm run check-registry && npm run verify-publishable && npm --prefix packages/dsh-suite-kit test && npm --prefix packages/dsh-assembly-kit test && npm --prefix packages/dsh-workspace-service test",
+    "verify-publishable": "node scripts/verify-publishable.mjs",
+    "gen-registry": "node scripts/gen-registry.mjs",
+    "check-registry": "node scripts/gen-registry.mjs --check",
+    "test-e2e": "node --test tests/e2e/external-dsh.test.mjs",
+    "publish-all": "node tools/publish-all.mjs"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.4"
+  },
+  "workspaces": [
+    "packages/*",
+    "extensions/official/*",
+    "extensions/bridges/*",
+    "tools/*"
+  ]
+}

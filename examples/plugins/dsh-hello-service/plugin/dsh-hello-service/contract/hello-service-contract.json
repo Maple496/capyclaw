@@ -1,0 +1,14 @@
+{
+  "name": "dsh-hello-service",
+  "contractVersion": "1.0.0",
+  "tools": [
+    {
+      "name": "hello_service_echo",
+      "description": "回显输入文本，用于验证服务连通性。"
+    },
+    {
+      "name": "hello_service_capabilities",
+      "description": "返回契约版本、工具清单和能力说明。"
+    }
+  ]
+}

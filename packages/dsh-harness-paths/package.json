@@ -1,0 +1,14 @@
+{
+  "name": "dsh-harness-paths",
+  "version": "1.0.0",
+  "description": "dsh 宿主目录定位的唯一实现（dsh-launcher / dsh-suite-kit / bundle-builder 共享；契约不再靠注释同步）",
+  "type": "module",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

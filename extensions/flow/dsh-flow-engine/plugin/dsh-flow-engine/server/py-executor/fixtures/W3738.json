@@ -1,0 +1,15 @@
+{
+ "work_id": 3738,
+ "version": 1,
+ "meta": {
+  "name": "demo-endpoint",
+  "description": "演示端点",
+  "workflow_executor_url": "http://127.0.0.1:8301",
+  "llm_router_url": "",
+  "workflow_dsl": "version: '2.0'\nnodes:\n  - id: input\n    type: input\n  - id: output\n    type: output\nedges:\n  - from: input\n    to: output",
+  "decorator": "",
+  "enabled": true
+ },
+ "dsl_kind": "yaml",
+ "dsl_raw": "version: '2.0'\nnodes:\n  - id: input\n    type: input\n  - id: output\n    type: output\nedges:\n  - from: input\n    to: output"
+}

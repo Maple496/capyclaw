@@ -1,0 +1,57 @@
+{
+  "name": "dev",
+  "home": "..\\tools\\dsh-launcher\\.dshd\\home",
+  "profile": "web",
+  "workspace": "",
+  "stateDir": "..\\tools\\dsh-launcher\\.dshd\\dev-state",
+  "ports": {
+    "broker": 13593,
+    "proxy": 13594,
+    "upstream": 13595
+  },
+  "plugins": {
+    "bundles": [
+      "@deepseek-ai/dsh-base",
+      "@deepseek-ai/dsh-web-app",
+      {
+        "name": "@capyclaw/launchpad",
+        "path": "..\\extensions\\official\\capyclaw-launchpad"
+      },
+      {
+        "name": "dsh-flow-engine-suite",
+        "path": "..\\extensions\\flow\\dsh-flow-engine\\plugin\\dsh-flow-engine-suite"
+      },
+      {
+        "name": "dsh-flow-engine",
+        "path": "..\\extensions\\flow\\dsh-flow-engine\\plugin\\dsh-flow-engine"
+      }
+    ],
+    "dependencies": {
+      "dsh-plugin-kit": "..\\packages\\dsh-plugin-kit"
+    },
+    "install": true
+  },
+  "services": [
+    {
+      "id": "launchpad",
+      "path": "..\\extensions\\official\\capyclaw-launchpad\\server.mjs",
+      "args": [
+        "--roots",
+        "..",
+        "--dsh-home",
+        "${home}",
+        "--broker-url",
+        "http://127.0.0.1:${ports.broker}",
+        "--launchpads",
+        "..\\launchpads",
+        "--dshd",
+        "..\\tools\\dsh-launcher\\bin\\dshd.mjs"
+      ],
+      "ports": {
+        "main": 13596
+      },
+      "healthPath": "/healthz",
+      "keepAlive": true
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "../dsh-suite-kit/suite.schema.json",
+  "name": "dsh-runtime-control-suite",
+  "version": "0.1.0",
+  "title": "Runtime Control",
+  "description": "控制面插件：管理 worker runtime 生命周期。",
+  "packages": {
+    "dsh-runtime-control": {
+      "role": "provider",
+      "version": "^0.1.0",
+      "path": ".",
+      "provides": {
+        "services": ["runtimeControl"],
+        "capabilities": { "runtime.control": "1.0.0" }
+      }
+    }
+  },
+  "rows": [{ "id": "runtime-control", "name": "dsh-runtime-control" }],
+  "checks": [
+    {
+      "id": "runtime-control-health",
+      "type": "http",
+      "url": "http://127.0.0.1:1/healthz",
+      "expectStatus": 200,
+      "timeoutMs": 3000
+    }
+  ]
+}

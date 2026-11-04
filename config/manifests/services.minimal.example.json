@@ -1,0 +1,11 @@
+{
+  "services": [
+    {
+      "id": "dsh-llm-config-host",
+      "port": 39600,
+      "name": "dsh-llm-config",
+      "url": "http://localhost:39600",
+      "keepAlive": true
+    }
+  ]
+}

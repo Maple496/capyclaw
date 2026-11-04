@@ -1,0 +1,20 @@
+{
+  "$schema": "../dsh-suite-kit/suite.schema.json",
+  "name": "dsh-catalog-suite",
+  "version": "0.1.0",
+  "title": "Workspace Catalog",
+  "description": "作品目录与生命周期查询。",
+  "packages": {
+    "dsh-catalog": {
+      "role": "provider",
+      "version": "^0.1.0",
+      "path": ".",
+      "provides": {
+        "services": ["catalog"],
+        "capabilities": { "catalog.works": "1.0.0" }
+      }
+    }
+  },
+  "rows": [{ "id": "workspace-catalog", "name": "dsh-catalog" }],
+  "checks": []
+}

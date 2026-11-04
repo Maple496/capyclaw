@@ -1,0 +1,9 @@
+# dsh 内嵌执行器依赖（上游 8301 运行面的非平台耦合子集）
+# redis 不列：CACHE_ENABLED=false 缺省路径零依赖（见 ADAPTATIONS.md #2）
+fastapi>=0.110
+uvicorn>=0.29
+PyYAML>=6.0
+structlog>=24.1
+prometheus-client>=0.20
+aiohttp>=3.9
+pydantic>=2.6

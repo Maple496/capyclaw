@@ -1,0 +1,108 @@
+{
+  "suite": "capyclaw-ppt-suite",
+  "suiteVersion": "2.4.1",
+  "packages": {
+    "dsh-asset-service": {
+      "version": "0.1.0",
+      "apiVersion": "1.0.0",
+      "path": "..\\..\\..\\..\\..\\packages\\dsh-asset-service",
+      "sha256": "bfba1fba34a3ebfb81f966e324557614490d7641cb596a05164fd7c84415c042"
+    },
+    "dsh-document-workbench": {
+      "version": "0.1.0",
+      "apiVersion": null,
+      "path": "../../../../../packages/dsh-document-workbench",
+      "sha256": "3757e5626595f550de007674664527c70d01199416bf826873cc2a3982d9824f"
+    },
+    "dsh-editor-host": {
+      "version": "0.1.0",
+      "apiVersion": "1.0.0",
+      "path": "..\\..\\..\\..\\..\\packages\\dsh-editor-host",
+      "sha256": "510fc02d56c970a38a97b40b05fc148eded00c7701d0f8a427ad8d57219a1f89"
+    },
+    "dsh-plugin-kit": {
+      "version": "0.2.0",
+      "apiVersion": null,
+      "path": "../../../../../packages/dsh-plugin-kit",
+      "sha256": "65e224ecef9ff01e521a51921315904468788b8af0364286fedd8f34a2b7066d"
+    },
+    "dsh-ppt-skill-api": {
+      "version": "2.2.0",
+      "apiVersion": null,
+      "path": "../dsh-ppt-skill-api",
+      "sha256": "cc71305324660e7d2ac65c6617336cb579bd02318c71c02e7e71251cb59e4b8f"
+    },
+    "dsh-ppt-skill-authoring": {
+      "version": "2.2.0",
+      "apiVersion": null,
+      "path": "../dsh-ppt-skill-authoring",
+      "sha256": "90adb2540d0606b27578af7fdbc04cee35a089cd5db1d6363113f689e6d1e74d"
+    },
+    "dsh-ppt-skill-design": {
+      "version": "2.2.0",
+      "apiVersion": null,
+      "path": "../dsh-ppt-skill-design",
+      "sha256": "922d081b35ac7053a479bf327f4309d208e09bd5c7f8982a92deecd7b97767a1"
+    },
+    "dsh-ppt-skill-editing": {
+      "version": "2.2.0",
+      "apiVersion": null,
+      "path": "../dsh-ppt-skill-editing",
+      "sha256": "15e3f7ea5247553b763992d80fce3b7b3f544400ee3284fc2b65f11b1862e36f"
+    },
+    "dsh-ppt-skill-narrative": {
+      "version": "2.2.0",
+      "apiVersion": null,
+      "path": "../dsh-ppt-skill-narrative",
+      "sha256": "e52c7988f9862876e1009030443307bef29656399ff2a4e215ec15892e984e76"
+    },
+    "dsh-ppt-skill-ppt": {
+      "version": "2.2.0",
+      "apiVersion": null,
+      "path": "../dsh-ppt-skill-ppt",
+      "sha256": "981e93c969e620ca6b3f0012cd4500d20acb8242d3bf5596ef1fe75145877f60"
+    },
+    "dsh-ppt-skill-research": {
+      "version": "2.2.0",
+      "apiVersion": null,
+      "path": "../dsh-ppt-skill-research",
+      "sha256": "636281492b1c9368b9d546c1043a2bc2d5e925ed49e704a3d35e42cd14e61f11"
+    },
+    "dsh-ppt-skill-visual-check": {
+      "version": "2.2.0",
+      "apiVersion": null,
+      "path": "../dsh-ppt-skill-visual-check",
+      "sha256": "2f2a264fb1356b3441a5ef5ac750d85ee998e13b73601063b8e6b8b3e7d57742"
+    },
+    "dsh-ppt-workbench": {
+      "version": "2.4.1",
+      "apiVersion": null,
+      "path": "../dsh-ppt-workbench",
+      "sha256": "74557ced68388938429b3057fc849ec59bb23f4c99309d7949b28209187a8d42"
+    },
+    "dsh-service-broker": {
+      "version": "0.1.0",
+      "apiVersion": "1.0.0",
+      "path": "../../../../../packages/dsh-service-broker",
+      "sha256": "74f50a39a270a713ecca4f5959f1bdd570d9cf6ae2160bb5c4778da6afdca6cc"
+    },
+    "dsh-service-host": {
+      "version": "0.1.0",
+      "apiVersion": "1.0.0",
+      "path": "..\\..\\..\\..\\..\\packages\\dsh-service-host",
+      "sha256": "c6be20c45305db69e91cd41a9de920442858e1d496e588d5a86af77a70489378"
+    },
+    "dsh-skills-service": {
+      "version": "0.1.0",
+      "apiVersion": null,
+      "path": "../../dsh-skills-service",
+      "sha256": "f0a922cf10243f5de975b6549dbfe925514f87e2158e72a817e3ce81e673618c"
+    },
+    "dsh-tool-host": {
+      "version": "0.1.0",
+      "apiVersion": "1.0.0",
+      "path": "..\\..\\..\\..\\..\\packages\\dsh-tool-host",
+      "sha256": "33a8bc057f915e8c032609d703daa0a03546b36b103a9a6afb32b6dcb9a3720a"
+    }
+  }
+}

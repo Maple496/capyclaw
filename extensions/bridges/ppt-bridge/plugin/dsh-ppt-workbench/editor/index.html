@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PPTist</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #fff;
+    display: flex; flex-direction: column;
+    font: 13px/1.5 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    color: #1f2937;
+  }
+  .wb-bar {
+    height: 44px; flex: 0 0 44px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 12px; border-bottom: 1px solid #e5e7eb; background: #fff;
+    position: relative; z-index: 10;
+  }
+  .wb-brand { font-weight: 700; letter-spacing: .2px; color: #111827; }
+  .wb-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #22c55e; flex: 0 0 7px;
+  }
+  .wb-dot[data-kind="standby"] { background: #9ca3af; }
+  .wb-dot[data-kind="warn"] { background: #f59e0b; }
+  .wb-dot[data-kind="error"] { background: #ef4444; }
+  .wb-note {
+    min-width: 0; max-width: 44vw; color: #6b7280; font-size: 12px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .wb-spacer { flex: 1 1 auto; }
+  .wb-quick {
+    width: min(360px, 32vw); height: 30px; padding: 0 10px;
+    border: 1px solid #d1d5db; border-radius: 7px; outline: none;
+    font: inherit; background: #f9fafb;
+  }
+  .wb-quick:focus { border-color: #93c5fd; background: #fff; box-shadow: 0 0 0 3px rgba(147,197,253,.2); }
+  .wb-actions { display: flex; align-items: center; gap: 6px; }
+  .wb-actions button {
+    height: 30px; padding: 0 10px; border: 1px solid #d1d5db; border-radius: 7px;
+    background: #fff; color: #374151; font: inherit; cursor: pointer;
+  }
+  .wb-actions button:hover { background: #f3f4f6; }
+  .wb-actions button[data-act="pptx"] { border-color: #2563eb; color: #1d4ed8; }
+  main { flex: 1; min-height: 0; position: relative; }
+  [data-editor] { position: absolute; inset: 0; }
+  [data-veil] {
+    position: absolute; inset: 0; background: #fff;
+    display: grid; place-items: center; text-align: center;
+    color: #666; font-size: 13px; transition: opacity .25s; pointer-events: none;
+  }
+  [data-veil] .hint { color: #999; font-size: 12px; margin-top: 6px; }
+  /* 底部演讲者备注栏不属于 PPTist 编辑画布，隐藏 */
+  .remark { display: none !important; }
+  @media (max-width: 900px) {
+    .wb-note { display: none; }
+    .wb-quick { width: 200px; }
+    .wb-actions button[data-act="json"] { display: none; }
+  }
+</style>
+</head>
+<body>
+<header class="wb-bar">
+  <span class="wb-brand">PPTist</span>
+  <span class="wb-dot" data-badge data-kind="ok" title="编辑器状态"></span>
+  <span class="wb-note" data-note aria-live="polite"></span>
+  <span class="wb-spacer"></span>
+  <input class="wb-quick" data-quick placeholder="⚡ 背景天蓝 / 第2页标题改成…" aria-label="本地快捷指令">
+  <div class="wb-actions">
+    <button data-act="pptx" title="保存回打开时的 pptx（自动备份）；另存请让 agent 用 ppt_export_pptx">保存 PPTX</button>
+    <button data-act="json">保存 JSON</button>
+    <button data-act="present">放映</button>
+  </div>
+</header>
+<main>
+  <div data-editor></div>
+  <div data-veil>
+    <div>
+      <div data-editor-note>正在装载编辑器…</div>
+      <div class="hint">在 DeepSeek Harness 会话里让 AI 做 PPT，改动会实时出现在这里</div>
+    </div>
+  </div>
+</main>
+<script src="./app-v20261103.js"></script>
+</body>
+</html>
