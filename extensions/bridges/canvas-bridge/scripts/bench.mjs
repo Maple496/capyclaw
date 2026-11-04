@@ -199,6 +199,42 @@ try {
   report.mirrorBytes = docBytes
   console.log(`\n镜像大小：${(docBytes / 1024).toFixed(1)} KB`)
 
+  /* 5. 大文档阶段：暴露读放大（summary 拉全量镜像 / 追加读改写全量） */
+  console.log(`\n== 大文档（~600KB 镜像，n=8）==`)
+  const bigBlocks = [{ type: 'heading', level: 1, text: '大文档基准' }]
+  for (let s = 0; s < 12; s++) {
+    bigBlocks.push({ type: 'heading', level: 2, text: `第 ${s} 章` })
+    for (let p = 0; p < 14; p++) {
+      bigBlocks.push({ type: 'paragraph', text: `第 ${s} 章第 ${p} 段：${'长文本内容测试。'.repeat(22)}` })
+    }
+  }
+  report.large = {}
+  const t0 = performance.now()
+  await call('canvas_write_document', { title: 'big', blocks: bigBlocks })
+  report.large.write_ms = Math.round(performance.now() - t0)
+  await sleep(600)
+  const bigDoc = await fetch(`${BRIDGE}/doc`).then((r) => r.text())
+  report.large.mirrorKb = Math.round(bigDoc.length / 1024)
+  console.log(`大文档镜像：${report.large.mirrorKb} KB（写入 ${report.large.write_ms}ms）`)
+
+  const benchLarge = async (name, fn, n = 8) => {
+    const list = []
+    let err = null
+    for (let i = 0; i < n; i++) {
+      const t = performance.now()
+      try { await fn(i) } catch (e) { err = String(e && e.message || e); break }
+      list.push(performance.now() - t)
+      await sleep(20)
+    }
+    report.large[name] = err ? { error: err } : stats(list)
+    console.log(`${name.padEnd(26)} ${err ? 'ERROR ' + err : `p50 ${report.large[name].p50}ms  p95 ${report.large[name].p95}ms  max ${report.large[name].max}ms`}`)
+  }
+  await benchLarge('read_summary', () => call('canvas_read', { mode: 'summary' }))
+  await benchLarge('read_text', () => call('canvas_read', { mode: 'text' }))
+  await benchLarge('append_blocks', (i) => call('canvas_append_blocks', { blocks: [{ type: 'paragraph', text: `大文档追加 ${i}。` }] }))
+  await benchLarge('replace_text', (i) => call('canvas_replace_text', { find: `大文档追加 ${Math.max(0, i - 1)}`, replace: `改 ${i}` }))
+  await benchLarge('insert_table', (i) => call('canvas_insert_table', { headers: ['A', 'B'], rows: [[String(i), 'v']] }), 5)
+
   report.pageErrors = pageErrors.length
   report.pageErrorSample = pageErrors.slice(0, 2)
 } finally {
