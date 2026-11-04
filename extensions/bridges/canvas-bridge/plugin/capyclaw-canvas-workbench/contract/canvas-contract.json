@@ -1,0 +1,1696 @@
+{
+  "contractVersion": "1.0.0",
+  "packageVersion": "0.2.0",
+  "toolCount": 22,
+  "tools": [
+    {
+      "name": "canvas_capabilities",
+      "kind": "read",
+      "since": "1.0.0",
+      "capability": "contract",
+      "description": "返回工作台契约版本、工具清单、能力清单与编辑器地址。skill 加载后先调用一次；工具缺失或 major 版本不一致时停止并提示升级。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_read",
+      "kind": "read",
+      "since": "1.0.0",
+      "capability": "doc",
+      "description": "读取文档：summary（摘要+大纲+预览，默认）/ text（纯文本）/ outline（标题大纲）/ doc（完整元素流）。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "summary",
+              "text",
+              "outline",
+              "doc"
+            ],
+            "description": "读取模式"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_write_document",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "doc",
+      "description": "一次成稿：用块数组整篇替换文档（避免几十次增量往返）。已有内容会被覆盖。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "批次说明（进 undo 历史）"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "heading",
+                    "paragraph",
+                    "bullet",
+                    "number",
+                    "quote",
+                    "code",
+                    "divider",
+                    "pageBreak"
+                  ],
+                  "description": "块类型"
+                },
+                "text": {
+                  "type": "string",
+                  "description": "块文本"
+                },
+                "level": {
+                  "type": "number",
+                  "description": "heading 级别 1-4"
+                },
+                "index": {
+                  "type": "number",
+                  "description": "number 块序号"
+                },
+                "style": {
+                  "type": "object",
+                  "description": "行内样式（bold/italic/color/size/font/highlight/underline）"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            }
+          }
+        },
+        "required": [
+          "blocks"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_append_blocks",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "doc",
+      "description": "末尾续写：把块数组追加到正文末尾（不改已有内容）。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "heading",
+                    "paragraph",
+                    "bullet",
+                    "number",
+                    "quote",
+                    "code",
+                    "divider",
+                    "pageBreak"
+                  ],
+                  "description": "块类型"
+                },
+                "text": {
+                  "type": "string",
+                  "description": "块文本"
+                },
+                "level": {
+                  "type": "number",
+                  "description": "heading 级别 1-4"
+                },
+                "index": {
+                  "type": "number",
+                  "description": "number 块序号"
+                },
+                "style": {
+                  "type": "object",
+                  "description": "行内样式（bold/italic/color/size/font/highlight/underline）"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            }
+          }
+        },
+        "required": [
+          "blocks"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_clear",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "doc",
+      "description": "清空文档（三段全空；undo 可撤销）。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_replace_text",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "text",
+      "description": "全文替换（默认全部）：保留元素样式与表格结构；返回替换次数。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "find": {
+            "type": "string",
+            "description": "查找文本"
+          },
+          "replace": {
+            "type": "string",
+            "description": "替换文本"
+          },
+          "all": {
+            "type": "boolean",
+            "description": "替换全部（默认 true；false 只替换第一处）"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "find",
+          "replace"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_search",
+      "kind": "read",
+      "since": "1.0.0",
+      "capability": "text",
+      "description": "搜索文本：返回命中区域/位置与上下文片段（只读，不改稿）。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "find": {
+            "type": "string",
+            "description": "查找文本"
+          },
+          "limit": {
+            "type": "number",
+            "description": "最多返回条数（默认 50）"
+          }
+        },
+        "required": [
+          "find"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_insert_table",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "element",
+      "description": "插入表格：headers + rows，列宽按内容自适应，表头默认底色。追加到正文末尾。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "headers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "表头（空数组则无表头行）"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {}
+            },
+            "description": "数据行（每行单元格可为字符串/数字）"
+          },
+          "header_background": {
+            "type": "string",
+            "description": "表头底色（默认 #eef1f5）"
+          },
+          "content_width": {
+            "type": "number",
+            "description": "内容区宽度（默认 554）"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "rows"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_insert_image",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "element",
+      "description": "插入图片：value 接受 dataURL / http(s) URL / relay /assets 引用；追加到正文末尾。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "src": {
+            "type": "string",
+            "description": "dataURL 或 URL（推荐 dataURL 或 /assets 引用）"
+          },
+          "width": {
+            "type": "number",
+            "description": "显示宽（默认 480）"
+          },
+          "height": {
+            "type": "number",
+            "description": "显示高（默认 270）"
+          },
+          "caption": {
+            "type": "string",
+            "description": "题注"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "src"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_element",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "element",
+      "description": "结构元素与更新：separator（分割线）/ pageBreak（分页符）/ list（列表项）/ updateById（按 id 改元素属性）。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "separator",
+              "pageBreak",
+              "list",
+              "updateById"
+            ],
+            "description": "操作"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "list：多级列表项（\"1. x\" / \"- x\" 前缀识别）"
+          },
+          "id": {
+            "type": "string",
+            "description": "updateById：元素 id"
+          },
+          "properties": {
+            "type": "object",
+            "description": "updateById：要覆盖的元素属性"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_table",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "table",
+      "description": "表格结构操作（table: 第几个表格，从 0 起）。setCell 改单元格文本/背景；insertRow/deleteRow/insertCol/deleteCol 增删行列；merge 合并区域单元格。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "setCell",
+              "insertRow",
+              "deleteRow",
+              "insertCol",
+              "deleteCol",
+              "merge"
+            ],
+            "description": "操作"
+          },
+          "table": {
+            "type": "number",
+            "description": "表格序号（默认 0）"
+          },
+          "row": {
+            "type": "number",
+            "description": "行号（setCell/insertRow 在该行上方插入/deleteRow 删该行）"
+          },
+          "col": {
+            "type": "number",
+            "description": "列号（insertCol 在该列左侧插入/deleteCol 删该列）"
+          },
+          "text": {
+            "type": "string",
+            "description": "setCell：单元格文本"
+          },
+          "backgroundColor": {
+            "type": "string",
+            "description": "setCell：单元格背景色（可选）"
+          },
+          "toRow": {
+            "type": "number",
+            "description": "merge：结束行"
+          },
+          "toCol": {
+            "type": "number",
+            "description": "merge：结束列"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_style",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "style",
+      "description": "给包含指定文本的元素套样式：find 定位（必填），style 指定要改的属性。可精确匹配（exact）或多处全改（默认）。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "find": {
+            "type": "string",
+            "description": "定位文本（元素 value 包含即命中）"
+          },
+          "exact": {
+            "type": "boolean",
+            "description": "默认 false 包含即命中；true 时元素文本需完全相等"
+          },
+          "style": {
+            "type": "object",
+            "description": "样式属性：bold/italic/underline/strikeout(boolean)、color/highlight/font(string)、size(number)",
+            "properties": {
+              "bold": {
+                "type": "boolean"
+              },
+              "italic": {
+                "type": "boolean"
+              },
+              "underline": {
+                "type": "boolean"
+              },
+              "strikeout": {
+                "type": "boolean"
+              },
+              "color": {
+                "type": "string"
+              },
+              "highlight": {
+                "type": "string"
+              },
+              "font": {
+                "type": "string"
+              },
+              "size": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": false
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "find",
+          "style"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_page_setup",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "page",
+      "description": "页面设置：size（A4/A3/A5/B4/B5/Letter/Legal）、direction（vertical/horizontal）、margins([上,右,下,左])、columns（分栏数）。只传要改的字段。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "string",
+            "enum": [
+              "A4",
+              "A3",
+              "A5",
+              "B4",
+              "B5",
+              "Letter",
+              "Legal"
+            ],
+            "description": "纸张大小"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "vertical",
+              "horizontal"
+            ],
+            "description": "纸张方向"
+          },
+          "margins": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "页边距 [上,右,下,左]（pt）"
+          },
+          "columns": {
+            "type": "number",
+            "description": "分栏数（1-4）"
+          },
+          "column_gap": {
+            "type": "number",
+            "description": "栏间距（默认 16）"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_screenshot",
+      "kind": "read",
+      "since": "1.0.0",
+      "capability": "view",
+      "description": "编辑器渲染截图（所有页拼图，JPEG）：排版自检用。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_view",
+      "kind": "control",
+      "since": "1.0.0",
+      "capability": "view",
+      "description": "页面级视图命令：pageMode(paging/continuous)/pageScale(0.5-3)/缩放/编辑模式/标尺/修订/打印/定位目录。不改文档内容。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "cmd": {
+            "type": "string",
+            "enum": [
+              "pageMode",
+              "pageScale",
+              "pageScaleAdd",
+              "pageScaleMinus",
+              "pageScaleRecovery",
+              "mode",
+              "toggleRuler",
+              "toggleTrace",
+              "print",
+              "locationCatalog"
+            ],
+            "description": "视图命令"
+          },
+          "value": {
+            "type": "string",
+            "description": "命令参数（pageMode: paging|continuous；pageScale: 数字；mode: edit|clean）"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "cmd"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_history",
+      "kind": "control",
+      "since": "1.0.0",
+      "capability": "history",
+      "description": "撤销/重做（编辑器 undo 栈；一次 setValue 是一条记录）。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "undo",
+              "redo"
+            ]
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_audit",
+      "kind": "read",
+      "since": "1.0.0",
+      "capability": "audit",
+      "description": "审计当前文档：返回 blocking（必须处理）与 warn（提示）发现列表。只读，不改稿。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_task",
+      "kind": "read",
+      "since": "1.0.0",
+      "capability": "task",
+      "description": "任务状态与检查点列表：seq/applied_seq/编辑器连接 + 已有检查点名。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_checkpoint",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "task",
+      "description": "检查点操作：save（当前文档存为命名检查点）/ restore（恢复到检查点）/ read（读检查点内容）。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "save",
+              "restore",
+              "read"
+            ],
+            "description": "操作"
+          },
+          "name": {
+            "type": "string",
+            "description": "检查点名（save 默认 auto）"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_exec",
+      "kind": "write",
+      "since": "1.0.0",
+      "capability": "exec",
+      "description": "执行编辑器原生命令（白名单 108 条，分组见 canvas_capabilities）。cmds 是 {cmd,args} 数组；顺序执行、整批一条 undo 记录。示例：[{cmd:\"insertTitle\",args:[1]},{cmd:\"bold\",args:[true]}]。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "cmds": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cmd": {
+                  "type": "string",
+                  "description": "命令名（如 insertTable / bold / setRange / paperSize）"
+                },
+                "args": {
+                  "type": "array",
+                  "description": "命令参数数组"
+                }
+              },
+              "required": [
+                "cmd"
+              ]
+            },
+            "description": "命令数组"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "cmds"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_commands",
+      "kind": "read",
+      "since": "1.0.0",
+      "capability": "exec",
+      "description": "列出全部可用命令（分组 + 说明）：写 canvas_exec 前先看这里。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "group": {
+            "type": "string",
+            "description": "只看某组：doc/table/text/search/page/control/area/history/image/view"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "canvas_export",
+      "kind": "read",
+      "since": "1.0.0",
+      "capability": "export",
+      "description": "导出 HTML：name 为文件名（默认 export）。返回文件路径与下载 URL。浏览器打开 URL 可另存/打印成 PDF。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "文件名（不含扩展名，默认 export）"
+          },
+          "title": {
+            "type": "string",
+            "description": "HTML 标题（默认取文档首个标题）"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  ],
+  "features": [
+    "canvas.contract",
+    "doc.read",
+    "doc.write",
+    "text.replace",
+    "text.search",
+    "element.insert",
+    "table.edit",
+    "style.inline",
+    "page.setup",
+    "view.screenshot",
+    "view.control",
+    "doc.undo",
+    "doc.audit",
+    "task.checkpoint",
+    "exec.passthrough",
+    "export.html"
+  ],
+  "capabilities": [
+    {
+      "id": "contract",
+      "title": "契约探测",
+      "description": "",
+      "tags": [
+        "meta"
+      ],
+      "requires": [
+        "status",
+        "contract"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "canvas.contract"
+      ],
+      "tools": [
+        {
+          "name": "canvas_capabilities",
+          "description": "返回工作台契约版本、工具清单、能力清单与编辑器地址。skill 加载后先调用一次；工具缺失或 major 版本不一致时停止并提示升级。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "kind": "read",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "doc",
+      "title": "文档读写",
+      "description": "块级写作模型：heading/paragraph/bullet/number/quote/code/divider → 元素流。",
+      "tags": [
+        "content"
+      ],
+      "requires": [
+        "doc",
+        "editor"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "doc.read",
+        "doc.write"
+      ],
+      "tools": [
+        {
+          "name": "canvas_read",
+          "description": "读取文档：summary（摘要+大纲+预览，默认）/ text（纯文本）/ outline（标题大纲）/ doc（完整元素流）。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "summary",
+                  "text",
+                  "outline",
+                  "doc"
+                ],
+                "description": "读取模式"
+              }
+            },
+            "additionalProperties": false
+          },
+          "kind": "read",
+          "since": "1.0.0"
+        },
+        {
+          "name": "canvas_write_document",
+          "description": "一次成稿：用块数组整篇替换文档（避免几十次增量往返）。已有内容会被覆盖。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "批次说明（进 undo 历史）"
+              },
+              "blocks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "heading",
+                        "paragraph",
+                        "bullet",
+                        "number",
+                        "quote",
+                        "code",
+                        "divider",
+                        "pageBreak"
+                      ],
+                      "description": "块类型"
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "块文本"
+                    },
+                    "level": {
+                      "type": "number",
+                      "description": "heading 级别 1-4"
+                    },
+                    "index": {
+                      "type": "number",
+                      "description": "number 块序号"
+                    },
+                    "style": {
+                      "type": "object",
+                      "description": "行内样式（bold/italic/color/size/font/highlight/underline）"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "blocks"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        },
+        {
+          "name": "canvas_append_blocks",
+          "description": "末尾续写：把块数组追加到正文末尾（不改已有内容）。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "blocks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "heading",
+                        "paragraph",
+                        "bullet",
+                        "number",
+                        "quote",
+                        "code",
+                        "divider",
+                        "pageBreak"
+                      ],
+                      "description": "块类型"
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "块文本"
+                    },
+                    "level": {
+                      "type": "number",
+                      "description": "heading 级别 1-4"
+                    },
+                    "index": {
+                      "type": "number",
+                      "description": "number 块序号"
+                    },
+                    "style": {
+                      "type": "object",
+                      "description": "行内样式（bold/italic/color/size/font/highlight/underline）"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "blocks"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        },
+        {
+          "name": "canvas_clear",
+          "description": "清空文档（三段全空；undo 可撤销）。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "text",
+      "title": "查找替换",
+      "description": "纯文本层操作：保留样式与结构的全文替换、搜索定位。",
+      "tags": [
+        "content"
+      ],
+      "requires": [
+        "doc",
+        "editor"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "text.replace",
+        "text.search"
+      ],
+      "tools": [
+        {
+          "name": "canvas_replace_text",
+          "description": "全文替换（默认全部）：保留元素样式与表格结构；返回替换次数。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "find": {
+                "type": "string",
+                "description": "查找文本"
+              },
+              "replace": {
+                "type": "string",
+                "description": "替换文本"
+              },
+              "all": {
+                "type": "boolean",
+                "description": "替换全部（默认 true；false 只替换第一处）"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "find",
+              "replace"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        },
+        {
+          "name": "canvas_search",
+          "description": "搜索文本：返回命中区域/位置与上下文片段（只读，不改稿）。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "find": {
+                "type": "string",
+                "description": "查找文本"
+              },
+              "limit": {
+                "type": "number",
+                "description": "最多返回条数（默认 50）"
+              }
+            },
+            "required": [
+              "find"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "read",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "element",
+      "title": "元素插入",
+      "description": "向正文末尾插入结构化元素：表格（自动列宽）、图片（dataURL/URL/assets 引用）、分隔线、分页符、列表、超链接。",
+      "tags": [
+        "content"
+      ],
+      "requires": [
+        "doc",
+        "editor"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "element.insert"
+      ],
+      "tools": [
+        {
+          "name": "canvas_insert_table",
+          "description": "插入表格：headers + rows，列宽按内容自适应，表头默认底色。追加到正文末尾。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "headers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "表头（空数组则无表头行）"
+              },
+              "rows": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {}
+                },
+                "description": "数据行（每行单元格可为字符串/数字）"
+              },
+              "header_background": {
+                "type": "string",
+                "description": "表头底色（默认 #eef1f5）"
+              },
+              "content_width": {
+                "type": "number",
+                "description": "内容区宽度（默认 554）"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "rows"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        },
+        {
+          "name": "canvas_insert_image",
+          "description": "插入图片：value 接受 dataURL / http(s) URL / relay /assets 引用；追加到正文末尾。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "src": {
+                "type": "string",
+                "description": "dataURL 或 URL（推荐 dataURL 或 /assets 引用）"
+              },
+              "width": {
+                "type": "number",
+                "description": "显示宽（默认 480）"
+              },
+              "height": {
+                "type": "number",
+                "description": "显示高（默认 270）"
+              },
+              "caption": {
+                "type": "string",
+                "description": "题注"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "src"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        },
+        {
+          "name": "canvas_element",
+          "description": "结构元素与更新：separator（分割线）/ pageBreak（分页符）/ list（列表项）/ updateById（按 id 改元素属性）。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "enum": [
+                  "separator",
+                  "pageBreak",
+                  "list",
+                  "updateById"
+                ],
+                "description": "操作"
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "list：多级列表项（\"1. x\" / \"- x\" 前缀识别）"
+              },
+              "id": {
+                "type": "string",
+                "description": "updateById：元素 id"
+              },
+              "properties": {
+                "type": "object",
+                "description": "updateById：要覆盖的元素属性"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "table",
+      "title": "表格编辑",
+      "description": "镜像层表格结构操作：单元格文本/样式、行列增删、合并拆分；确定性结果，无需编辑器选区。",
+      "tags": [
+        "content"
+      ],
+      "requires": [
+        "doc",
+        "editor"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "table.edit"
+      ],
+      "tools": [
+        {
+          "name": "canvas_table",
+          "description": "表格结构操作（table: 第几个表格，从 0 起）。setCell 改单元格文本/背景；insertRow/deleteRow/insertCol/deleteCol 增删行列；merge 合并区域单元格。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "enum": [
+                  "setCell",
+                  "insertRow",
+                  "deleteRow",
+                  "insertCol",
+                  "deleteCol",
+                  "merge"
+                ],
+                "description": "操作"
+              },
+              "table": {
+                "type": "number",
+                "description": "表格序号（默认 0）"
+              },
+              "row": {
+                "type": "number",
+                "description": "行号（setCell/insertRow 在该行上方插入/deleteRow 删该行）"
+              },
+              "col": {
+                "type": "number",
+                "description": "列号（insertCol 在该列左侧插入/deleteCol 删该列）"
+              },
+              "text": {
+                "type": "string",
+                "description": "setCell：单元格文本"
+              },
+              "backgroundColor": {
+                "type": "string",
+                "description": "setCell：单元格背景色（可选）"
+              },
+              "toRow": {
+                "type": "number",
+                "description": "merge：结束行"
+              },
+              "toCol": {
+                "type": "number",
+                "description": "merge：结束列"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "style",
+      "title": "行内样式",
+      "description": "对包含指定文本的元素套行内样式：加粗/斜体/下划线/删除线/颜色/字号/字体/高亮。定位方式是文本匹配，不需要编辑器选区。",
+      "tags": [
+        "style"
+      ],
+      "requires": [
+        "doc",
+        "editor"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "style.inline"
+      ],
+      "tools": [
+        {
+          "name": "canvas_style",
+          "description": "给包含指定文本的元素套样式：find 定位（必填），style 指定要改的属性。可精确匹配（exact）或多处全改（默认）。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "find": {
+                "type": "string",
+                "description": "定位文本（元素 value 包含即命中）"
+              },
+              "exact": {
+                "type": "boolean",
+                "description": "默认 false 包含即命中；true 时元素文本需完全相等"
+              },
+              "style": {
+                "type": "object",
+                "description": "样式属性：bold/italic/underline/strikeout(boolean)、color/highlight/font(string)、size(number)",
+                "properties": {
+                  "bold": {
+                    "type": "boolean"
+                  },
+                  "italic": {
+                    "type": "boolean"
+                  },
+                  "underline": {
+                    "type": "boolean"
+                  },
+                  "strikeout": {
+                    "type": "boolean"
+                  },
+                  "color": {
+                    "type": "string"
+                  },
+                  "highlight": {
+                    "type": "string"
+                  },
+                  "font": {
+                    "type": "string"
+                  },
+                  "size": {
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "find",
+              "style"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "page",
+      "title": "页面设置",
+      "description": "纸张大小/方向/页边距/分栏：透传 CanvasApp 的 paperSize/paperDirection/setPaperMargin/setColumns 命令。",
+      "tags": [
+        "layout"
+      ],
+      "requires": [
+        "editor"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "page.setup"
+      ],
+      "tools": [
+        {
+          "name": "canvas_page_setup",
+          "description": "页面设置：size（A4/A3/A5/B4/B5/Letter/Legal）、direction（vertical/horizontal）、margins([上,右,下,左])、columns（分栏数）。只传要改的字段。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "size": {
+                "type": "string",
+                "enum": [
+                  "A4",
+                  "A3",
+                  "A5",
+                  "B4",
+                  "B5",
+                  "Letter",
+                  "Legal"
+                ],
+                "description": "纸张大小"
+              },
+              "direction": {
+                "type": "string",
+                "enum": [
+                  "vertical",
+                  "horizontal"
+                ],
+                "description": "纸张方向"
+              },
+              "margins": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "description": "页边距 [上,右,下,左]（pt）"
+              },
+              "columns": {
+                "type": "number",
+                "description": "分栏数（1-4）"
+              },
+              "column_gap": {
+                "type": "number",
+                "description": "栏间距（默认 16）"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "view",
+      "title": "视图与截图",
+      "description": "canvas_screenshot 由编辑器 canvas 元素直接出图（非 DOM 截图）；视图命令只改编辑器显示，不改文档。",
+      "tags": [
+        "view"
+      ],
+      "requires": [
+        "editor"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "view.screenshot",
+        "view.control"
+      ],
+      "tools": [
+        {
+          "name": "canvas_screenshot",
+          "description": "编辑器渲染截图（所有页拼图，JPEG）：排版自检用。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "kind": "read",
+          "since": "1.0.0"
+        },
+        {
+          "name": "canvas_view",
+          "description": "页面级视图命令：pageMode(paging/continuous)/pageScale(0.5-3)/缩放/编辑模式/标尺/修订/打印/定位目录。不改文档内容。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "cmd": {
+                "type": "string",
+                "enum": [
+                  "pageMode",
+                  "pageScale",
+                  "pageScaleAdd",
+                  "pageScaleMinus",
+                  "pageScaleRecovery",
+                  "mode",
+                  "toggleRuler",
+                  "toggleTrace",
+                  "print",
+                  "locationCatalog"
+                ],
+                "description": "视图命令"
+              },
+              "value": {
+                "type": "string",
+                "description": "命令参数（pageMode: paging|continuous；pageScale: 数字；mode: edit|clean）"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "cmd"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "control",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "撤销重做",
+      "description": "",
+      "tags": [
+        "control"
+      ],
+      "requires": [
+        "editor"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "doc.undo"
+      ],
+      "tools": [
+        {
+          "name": "canvas_history",
+          "description": "撤销/重做（编辑器 undo 栈；一次 setValue 是一条记录）。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "enum": [
+                  "undo",
+                  "redo"
+                ]
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "control",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "audit",
+      "title": "文档审计",
+      "description": "只读审计：空文档/缺标题/超长段落/表格结构/图片引用。产出 blocking / warn 两级发现。",
+      "tags": [
+        "quality"
+      ],
+      "requires": [
+        "doc"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "doc.audit"
+      ],
+      "tools": [
+        {
+          "name": "canvas_audit",
+          "description": "审计当前文档：返回 blocking（必须处理）与 warn（提示）发现列表。只读，不改稿。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "kind": "read",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "task",
+      "title": "任务检查点",
+      "description": "批次状态 + 命名检查点：大改前存档、失败后恢复（checkpoint 载荷是完整 doc）。",
+      "tags": [
+        "task"
+      ],
+      "requires": [
+        "doc",
+        "task",
+        "editor"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "task.checkpoint"
+      ],
+      "tools": [
+        {
+          "name": "canvas_task",
+          "description": "任务状态与检查点列表：seq/applied_seq/编辑器连接 + 已有检查点名。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "kind": "read",
+          "since": "1.0.0"
+        },
+        {
+          "name": "canvas_checkpoint",
+          "description": "检查点操作：save（当前文档存为命名检查点）/ restore（恢复到检查点）/ read（读检查点内容）。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "enum": [
+                  "save",
+                  "restore",
+                  "read"
+                ],
+                "description": "操作"
+              },
+              "name": {
+                "type": "string",
+                "description": "检查点名（save 默认 auto）"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "exec",
+      "title": "命令透传",
+      "description": "把 {cmd,args} 透传给 CanvasApp.exec（白名单 108 条：文档/表格/文字样式/搜索/页面/控件/区域/历史/图片/视图）。工具面没覆盖的组合操作走这里。",
+      "tags": [
+        "power"
+      ],
+      "requires": [
+        "editor"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "exec.passthrough"
+      ],
+      "tools": [
+        {
+          "name": "canvas_exec",
+          "description": "执行编辑器原生命令（白名单 108 条，分组见 canvas_capabilities）。cmds 是 {cmd,args} 数组；顺序执行、整批一条 undo 记录。示例：[{cmd:\"insertTitle\",args:[1]},{cmd:\"bold\",args:[true]}]。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "cmds": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "cmd": {
+                      "type": "string",
+                      "description": "命令名（如 insertTable / bold / setRange / paperSize）"
+                    },
+                    "args": {
+                      "type": "array",
+                      "description": "命令参数数组"
+                    }
+                  },
+                  "required": [
+                    "cmd"
+                  ]
+                },
+                "description": "命令数组"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "cmds"
+            ],
+            "additionalProperties": false
+          },
+          "kind": "write",
+          "since": "1.0.0"
+        },
+        {
+          "name": "canvas_commands",
+          "description": "列出全部可用命令（分组 + 说明）：写 canvas_exec 前先看这里。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "group": {
+                "type": "string",
+                "description": "只看某组：doc/table/text/search/page/control/area/history/image/view"
+              }
+            },
+            "additionalProperties": false
+          },
+          "kind": "read",
+          "since": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "export",
+      "title": "导出",
+      "description": "把当前文档导出为结构化 HTML（标题/段落/表格/图片），写入 relay 导出目录并返回下载地址。",
+      "tags": [
+        "export"
+      ],
+      "requires": [
+        "doc"
+      ],
+      "dependsOn": [],
+      "provides": {},
+      "features": [
+        "export.html"
+      ],
+      "tools": [
+        {
+          "name": "canvas_export",
+          "description": "导出 HTML：name 为文件名（默认 export）。返回文件路径与下载 URL。浏览器打开 URL 可另存/打印成 PDF。",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "文件名（不含扩展名，默认 export）"
+              },
+              "title": {
+                "type": "string",
+                "description": "HTML 标题（默认取文档首个标题）"
+              }
+            },
+            "additionalProperties": false
+          },
+          "kind": "read",
+          "since": "1.0.0"
+        }
+      ]
+    }
+  ]
+}

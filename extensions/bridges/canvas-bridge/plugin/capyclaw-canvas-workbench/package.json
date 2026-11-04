@@ -1,0 +1,62 @@
+{
+  "name": "@capyclaw/canvas-workbench",
+  "version": "0.2.0",
+  "description": "Canvas 文档工作台运行时：22 个 canvas_* MCP 工具（块级写作/表格/样式/页面/检查点/命令透传/审计/导出）+ 本机实时 Canvas 编辑器（编辑器权威桥）。",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "category": "service",
+    "platform": "both",
+    "capabilities": {
+      "source": "server/tools/capabilities",
+      "manifest": "capabilities.json"
+    }
+  },
+  "meta": {
+    "title": "Canvas 文档工作台运行时",
+    "description": "AI 生成/编辑长文档：22 个 canvas_* 工具 + 浏览器实时编辑器（http://127.0.0.1:39313/）"
+  },
+  "files": [
+    "lib/",
+    "server/",
+    "core/",
+    "!server/.relay-instance.lock",
+    "editor/",
+    "contract/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "license": "MIT",
+  "scripts": {},
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0",
+    "@capyclaw/document-workbench": "^0.1.0"
+  },
+  "author": {
+    "name": "CapyClaw",
+    "url": "https://github.com/capyclaw",
+    "email": "support@capyclaw.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capyclaw/dsh-plugins"
+  },
+  "bugs": {
+    "url": "https://github.com/capyclaw/dsh-plugins/issues"
+  },
+  "homepage": "https://github.com/capyclaw/dsh-plugins"
+}

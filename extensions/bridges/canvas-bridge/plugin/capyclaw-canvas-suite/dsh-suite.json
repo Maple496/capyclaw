@@ -1,0 +1,179 @@
+{
+  "$schema": "../../../../../packages/dsh-suite-kit/suite.schema.json",
+  "name": "capyclaw-canvas-suite",
+  "version": "0.2.0",
+  "title": "Canvas 文档工作台套件",
+  "description": "Canvas 编辑器运行时（独立端口服务，编辑器权威桥）+ 4 个独立 skill 包 + 4 个公共基建插件 + 文档工作台框架 + 底层 kit；relay 不 insert 进 dsh 进程，由中间件按清单以独立进程拉起。",
+  "components": [
+    "../../../../../packages/dsh-service-host",
+    "../../../../../packages/dsh-tool-host",
+    "../../../../../packages/dsh-asset-service",
+    "../../../../../packages/dsh-editor-host"
+  ],
+  "packages": {
+    "@capyclaw/plugin-kit": {
+      "role": "support",
+      "version": "^0.2.0",
+      "path": "../../../../../packages/dsh-plugin-kit"
+    },
+    "@capyclaw/document-workbench": {
+      "role": "support",
+      "version": "^0.1.0",
+      "path": "../../../../../packages/dsh-document-workbench"
+    },
+    "@capyclaw/canvas-workbench": {
+      "role": "runtime",
+      "version": "^0.2.0",
+      "path": "../capyclaw-canvas-workbench",
+      "requires": {
+        "capabilities": {
+          "host.http": "^1.0.0",
+          "tools.registry": "^1.0.0",
+          "assets.store": "^1.0.0",
+          "editor.host": "^1.0.0"
+        }
+      },
+      "provides": {
+        "tools": [
+          "canvas_*"
+        ],
+        "services": [
+          "canvas-workbench"
+        ],
+        "ports": [
+          39313
+        ],
+        "capabilities": {
+          "canvas.runtime": "1.0.0",
+          "canvas.tools": "1.0.0"
+        }
+      }
+    },
+    "@capyclaw/canvas-skill-canvas": {
+      "role": "skills",
+      "version": "^0.2.0",
+      "path": "../dsh-canvas-skill-canvas",
+      "requires": {
+        "@capyclaw/canvas-workbench": "^0.2.0",
+        "capabilities": {
+          "canvas.runtime": "^1.0.0"
+        }
+      },
+      "provides": {
+        "skills": [
+          "canvas"
+        ],
+        "capabilities": {
+          "canvas.workflows": "1.0.0"
+        }
+      }
+    },
+    "@capyclaw/canvas-skill-api": {
+      "role": "skills",
+      "version": "^0.2.0",
+      "path": "../dsh-canvas-skill-api",
+      "requires": {
+        "@capyclaw/canvas-workbench": "^0.2.0",
+        "capabilities": {
+          "canvas.runtime": "^1.0.0"
+        }
+      },
+      "provides": {
+        "skills": [
+          "canvasist-api"
+        ],
+        "capabilities": {
+          "canvas.workflows": "1.0.0"
+        }
+      }
+    },
+    "@capyclaw/canvas-skill-authoring": {
+      "role": "skills",
+      "version": "^0.2.0",
+      "path": "../dsh-canvas-skill-authoring",
+      "requires": {
+        "@capyclaw/canvas-workbench": "^0.2.0",
+        "capabilities": {
+          "canvas.runtime": "^1.0.0"
+        }
+      },
+      "provides": {
+        "skills": [
+          "canvasist-authoring"
+        ],
+        "capabilities": {
+          "canvas.workflows": "1.0.0"
+        }
+      }
+    },
+    "@capyclaw/canvas-skill-editing": {
+      "role": "skills",
+      "version": "^0.2.0",
+      "path": "../dsh-canvas-skill-editing",
+      "requires": {
+        "@capyclaw/canvas-workbench": "^0.2.0",
+        "capabilities": {
+          "canvas.runtime": "^1.0.0"
+        }
+      },
+      "provides": {
+        "skills": [
+          "canvasist-editing"
+        ],
+        "capabilities": {
+          "canvas.workflows": "1.0.0"
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "mcp-canvas",
+      "name": "@deepseek-ai/dsh-mcp-client",
+      "config": {
+        "serverName": "canvas",
+        "transport": "streamable-http",
+        "url": "http://127.0.0.1:39313/mcp",
+        "failOnStartupError": false,
+        "toolCallTimeoutMs": 120000
+      }
+    },
+    {
+      "id": "canvas-skill-canvas",
+      "name": "@capyclaw/canvas-skill-canvas"
+    },
+    {
+      "id": "canvas-skill-api",
+      "name": "@capyclaw/canvas-skill-api"
+    },
+    {
+      "id": "canvas-skill-authoring",
+      "name": "@capyclaw/canvas-skill-authoring"
+    },
+    {
+      "id": "canvas-skill-editing",
+      "name": "@capyclaw/canvas-skill-editing"
+    }
+  ],
+  "checks": [
+    {
+      "id": "canvas-health",
+      "type": "http",
+      "url": "http://127.0.0.1:39313/healthz",
+      "expectStatus": 200,
+      "expectBody": {
+        "ok": true,
+        "contractsOk": true
+      },
+      "timeoutMs": 3000
+    },
+    {
+      "id": "canvas-contract",
+      "type": "contract",
+      "url": "http://127.0.0.1:39313/mcp",
+      "tool": "canvas_capabilities",
+      "major": 1,
+      "timeoutMs": 5000
+    }
+  ]
+}

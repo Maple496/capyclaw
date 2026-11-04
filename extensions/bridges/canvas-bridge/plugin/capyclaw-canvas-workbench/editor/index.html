@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canvas 文档</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #f3f4f6;
+    display: flex; flex-direction: column;
+    font: 13px/1.5 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    color: #1f2937;
+  }
+  .wb-bar {
+    height: 44px; flex: 0 0 44px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 12px; border-bottom: 1px solid #e5e7eb; background: #fff;
+    position: relative; z-index: 10;
+  }
+  .wb-brand { font-weight: 700; letter-spacing: .2px; color: #111827; }
+  .wb-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #22c55e; flex: 0 0 7px;
+  }
+  .wb-dot[data-kind="standby"] { background: #9ca3af; }
+  .wb-dot[data-kind="warn"] { background: #f59e0b; }
+  .wb-dot[data-kind="error"] { background: #ef4444; }
+  .wb-note {
+    min-width: 0; max-width: 44vw; color: #6b7280; font-size: 12px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .wb-spacer { flex: 1 1 auto; }
+  .wb-actions { display: flex; align-items: center; gap: 6px; }
+  .wb-actions button {
+    height: 30px; padding: 0 10px; border: 1px solid #d1d5db; border-radius: 7px;
+    background: #fff; color: #374151; font: inherit; cursor: pointer;
+  }
+  .wb-actions button:hover { background: #f3f4f6; }
+  .wb-actions button[data-act="print"] { border-color: #2563eb; color: #1d4ed8; }
+  main {
+    flex: 1; min-height: 0; position: relative; overflow: auto;
+    display: flex; justify-content: center;
+  }
+  [data-editor] {
+    width: 794px; min-height: 100%;
+    background: #fff;
+    box-shadow: 0 1px 8px rgba(0,0,0,.08);
+  }
+  [data-editor-note] {
+    position: absolute; inset: auto 0 16px 0; text-align: center;
+    color: #b91c1c; font-size: 13px; pointer-events: none;
+  }
+  [data-editor-note] button { pointer-events: auto; }
+  [data-veil] {
+    position: fixed; inset: 0; background: #f3f4f6;
+    display: grid; place-items: center; text-align: center;
+    color: #666; font-size: 13px; transition: opacity .25s; pointer-events: none;
+  }
+  [data-veil] .hint { color: #999; font-size: 12px; margin-top: 6px; }
+  @media (max-width: 900px) {
+    .wb-note { display: none; }
+  }
+</style>
+</head>
+<body>
+<header class="wb-bar">
+  <span class="wb-dot" data-badge></span>
+  <span class="wb-brand">Canvas 文档工作台</span>
+  <span class="wb-note" data-note></span>
+  <span class="wb-spacer"></span>
+  <span class="wb-actions">
+    <button data-act="undo" title="撤销">撤销</button>
+    <button data-act="redo" title="重做">重做</button>
+    <button data-act="continuous" title="连续模式">连续</button>
+    <button data-act="paging" title="翻页模式">翻页</button>
+    <button data-act="print" title="打印/导出 PDF">打印</button>
+  </span>
+</header>
+<main>
+  <div data-editor></div>
+  <div data-editor-note></div>
+</main>
+<div data-veil>
+  <div>正在装载 Canvas 编辑器内核…<div class="hint">Agent 指令会实时应用到这里</div></div>
+</div>
+<script src="./canvas-full-app.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>

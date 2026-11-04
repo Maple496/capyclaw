@@ -1,0 +1,40 @@
+{
+  "name": "@capyclaw/canvas-skill-authoring",
+  "version": "0.2.0",
+  "description": "Canvas skill：结构设计 → 块级写作 → 一次成稿 → 精修。",
+  "type": "module",
+  "main": "./lib/index.mjs",
+  "exports": {
+    ".": "./lib/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "category": "skills",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "Canvas Skill · Canvas 成稿",
+    "description": "结构设计 → 块级写作 → 一次成稿 → 精修。"
+  },
+  "files": [
+    "lib/",
+    "skills/",
+    "contract/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  }
+}

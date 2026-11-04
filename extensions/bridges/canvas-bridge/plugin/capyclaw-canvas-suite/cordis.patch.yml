@@ -1,0 +1,22 @@
+# 由 dsh-suite-kit 生成；改 dsh-suite.json 后重跑 compose。
+
+- insert:
+    - id: service-host
+      name: "@capyclaw/service-host"
+    - id: tool-host
+      name: "@capyclaw/tool-host"
+    - id: asset-service
+      name: "@capyclaw/asset-service"
+    - id: editor-host
+      name: "@capyclaw/editor-host"
+    - id: mcp-canvas
+      name: "@deepseek-ai/dsh-mcp-client"
+      config: {"serverName":"canvas","transport":"streamable-http","url":"http://127.0.0.1:39313/mcp","failOnStartupError":false,"toolCallTimeoutMs":120000}
+    - id: canvas-skill-canvas
+      name: "@capyclaw/canvas-skill-canvas"
+    - id: canvas-skill-api
+      name: "@capyclaw/canvas-skill-api"
+    - id: canvas-skill-authoring
+      name: "@capyclaw/canvas-skill-authoring"
+    - id: canvas-skill-editing
+      name: "@capyclaw/canvas-skill-editing"

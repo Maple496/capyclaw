@@ -1,0 +1,11 @@
+{
+  "services": [
+    {
+      "id": "canvas-workbench",
+      "cmd": ["node", "${PACKAGE_DIR}/server/relay.mjs", "--port", "${PORT}"],
+      "ports": { "main": 39313 },
+      "url": "http://127.0.0.1:${PORT}",
+      "healthPath": "/healthz"
+    }
+  ]
+}

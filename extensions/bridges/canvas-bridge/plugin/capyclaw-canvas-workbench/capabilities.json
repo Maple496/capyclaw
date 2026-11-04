@@ -1,0 +1,364 @@
+{
+  "version": 1,
+  "source": "server/tools/capabilities",
+  "capabilities": [
+    {
+      "id": "contract",
+      "version": "0.2.0",
+      "title": "契约探测",
+      "description": "",
+      "tags": [
+        "meta"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/contract.mjs",
+        "export": "contractCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_capabilities"
+        ],
+        "features": [
+          "canvas.contract"
+        ]
+      },
+      "requires": [
+        "status",
+        "contract"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "doc",
+      "version": "0.2.0",
+      "title": "文档读写",
+      "description": "块级写作模型：heading/paragraph/bullet/number/quote/code/divider → 元素流。",
+      "tags": [
+        "content"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/doc.mjs",
+        "export": "docCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_read",
+          "canvas_write_document",
+          "canvas_append_blocks",
+          "canvas_clear"
+        ],
+        "features": [
+          "doc.read",
+          "doc.write"
+        ]
+      },
+      "requires": [
+        "doc",
+        "editor"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "text",
+      "version": "0.2.0",
+      "title": "查找替换",
+      "description": "纯文本层操作：保留样式与结构的全文替换、搜索定位。",
+      "tags": [
+        "content"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/text.mjs",
+        "export": "textCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_replace_text",
+          "canvas_search"
+        ],
+        "features": [
+          "text.replace",
+          "text.search"
+        ]
+      },
+      "requires": [
+        "doc",
+        "editor"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "element",
+      "version": "0.2.0",
+      "title": "元素插入",
+      "description": "向正文末尾插入结构化元素：表格（自动列宽）、图片（dataURL/URL/assets 引用）、分隔线、分页符、列表、超链接。",
+      "tags": [
+        "content"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/element.mjs",
+        "export": "elementCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_insert_table",
+          "canvas_insert_image",
+          "canvas_element"
+        ],
+        "features": [
+          "element.insert"
+        ]
+      },
+      "requires": [
+        "doc",
+        "editor"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "table",
+      "version": "0.2.0",
+      "title": "表格编辑",
+      "description": "镜像层表格结构操作：单元格文本/样式、行列增删、合并拆分；确定性结果，无需编辑器选区。",
+      "tags": [
+        "content"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/table.mjs",
+        "export": "tableCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_table"
+        ],
+        "features": [
+          "table.edit"
+        ]
+      },
+      "requires": [
+        "doc",
+        "editor"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "style",
+      "version": "0.2.0",
+      "title": "行内样式",
+      "description": "对包含指定文本的元素套行内样式：加粗/斜体/下划线/删除线/颜色/字号/字体/高亮。定位方式是文本匹配，不需要编辑器选区。",
+      "tags": [
+        "style"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/style.mjs",
+        "export": "styleCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_style"
+        ],
+        "features": [
+          "style.inline"
+        ]
+      },
+      "requires": [
+        "doc",
+        "editor"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "page",
+      "version": "0.2.0",
+      "title": "页面设置",
+      "description": "纸张大小/方向/页边距/分栏：透传 CanvasApp 的 paperSize/paperDirection/setPaperMargin/setColumns 命令。",
+      "tags": [
+        "layout"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/page.mjs",
+        "export": "pageCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_page_setup"
+        ],
+        "features": [
+          "page.setup"
+        ]
+      },
+      "requires": [
+        "editor"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "view",
+      "version": "0.2.0",
+      "title": "视图与截图",
+      "description": "canvas_screenshot 由编辑器 canvas 元素直接出图（非 DOM 截图）；视图命令只改编辑器显示，不改文档。",
+      "tags": [
+        "view"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/view.mjs",
+        "export": "viewCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_screenshot",
+          "canvas_view"
+        ],
+        "features": [
+          "view.screenshot",
+          "view.control"
+        ]
+      },
+      "requires": [
+        "editor"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "history",
+      "version": "0.2.0",
+      "title": "撤销重做",
+      "description": "",
+      "tags": [
+        "control"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/history.mjs",
+        "export": "historyCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_history"
+        ],
+        "features": [
+          "doc.undo"
+        ]
+      },
+      "requires": [
+        "editor"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "audit",
+      "version": "0.2.0",
+      "title": "文档审计",
+      "description": "只读审计：空文档/缺标题/超长段落/表格结构/图片引用。产出 blocking / warn 两级发现。",
+      "tags": [
+        "quality"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/audit.mjs",
+        "export": "auditCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_audit"
+        ],
+        "features": [
+          "doc.audit"
+        ]
+      },
+      "requires": [
+        "doc"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "task",
+      "version": "0.2.0",
+      "title": "任务检查点",
+      "description": "批次状态 + 命名检查点：大改前存档、失败后恢复（checkpoint 载荷是完整 doc）。",
+      "tags": [
+        "task"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/task.mjs",
+        "export": "taskCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_task",
+          "canvas_checkpoint"
+        ],
+        "features": [
+          "task.checkpoint"
+        ]
+      },
+      "requires": [
+        "doc",
+        "task",
+        "editor"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "exec",
+      "version": "0.2.0",
+      "title": "命令透传",
+      "description": "把 {cmd,args} 透传给 CanvasApp.exec（白名单 108 条：文档/表格/文字样式/搜索/页面/控件/区域/历史/图片/视图）。工具面没覆盖的组合操作走这里。",
+      "tags": [
+        "power"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/exec.mjs",
+        "export": "execCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_exec",
+          "canvas_commands"
+        ],
+        "features": [
+          "exec.passthrough"
+        ]
+      },
+      "requires": [
+        "editor"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "export",
+      "version": "0.2.0",
+      "title": "导出",
+      "description": "把当前文档导出为结构化 HTML（标题/段落/表格/图片），写入 relay 导出目录并返回下载地址。",
+      "tags": [
+        "export"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/export.mjs",
+        "export": "exportCapability"
+      },
+      "provides": {
+        "tools": [
+          "canvas_export"
+        ],
+        "features": [
+          "export.html"
+        ]
+      },
+      "requires": [
+        "doc"
+      ],
+      "dependsOn": []
+    }
+  ]
+}

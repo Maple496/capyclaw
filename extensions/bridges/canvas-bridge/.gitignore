@@ -8,3 +8,8 @@ node_modules/
 *.jpg
 *.png
 *.log
+
+# 构建调试产物与运行时状态
+dist/
+plugin/*/data/
+plugin/*/server/.relay-instance.lock

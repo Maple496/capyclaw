@@ -1,0 +1,680 @@
+{
+  "version": "1.0.0",
+  "staticApi": [
+    "mount",
+    "unmount",
+    "isMounted",
+    "describe",
+    "load",
+    "dump",
+    "getText",
+    "getHTML",
+    "getWordCount",
+    "getCatalog",
+    "exec",
+    "undo",
+    "redo",
+    "canUndo",
+    "canRedo",
+    "setMode",
+    "setPageMode",
+    "setPageScale",
+    "print",
+    "on",
+    "off",
+    "help"
+  ],
+  "propsApi": [
+    "version",
+    "ready"
+  ],
+  "help": "Canvas 文档编辑器（完整版）API：\n\n生命周期：\n  mount(target, options?) → Promise<void>  挂载编辑器\n  unmount()                                  卸载编辑器\n  isMounted() → boolean                     是否已挂载\n  describe() → string                        描述信息\n\n数据操作：\n  load(data)                                加载文档（三形兼容）\n  dump() → {data, options}                  导出文档\n  getText() → string                        纯文本\n  getHTML() → string                        HTML\n  getWordCount() → number                   字数统计\n  getCatalog() → any[]                      目录\n\n命令：\n  exec(name, ...args) → any                 执行命令（透传）\n  undo() / redo()                           撤销/重做\n  canUndo() / canRedo() → boolean           是否可撤销/重做\n\n模式：\n  setMode(mode)                             设置编辑模式\n  setPageMode(mode)                         设置页面模式\n  setPageScale(scale)                       设置缩放\n  print()                                   打印\n\n事件：\n  on(type, handler)                         订阅事件\n  off(type, handler)                        取消订阅\n  类型: ready / change / saved / command / range-style / unmount\n\n其他：\n  version                                   版本号\n  ready → Promise<void>                     就绪 Promise\n  help()                                    显示此帮助",
+  "describe": "Canvas 文档编辑器（edit 模式，[object Promise] 字）",
+  "catalog": [
+    {
+      "id": "7fb97fc6-2104-bc65-0a98-1fc7df974cdf",
+      "name": "主诉：",
+      "level": "first",
+      "pageNo": 0,
+      "subCatalog": []
+    },
+    {
+      "id": "e3266744-278c-c9e9-0371-0a5aefa47b23",
+      "name": "现病史：",
+      "level": "first",
+      "pageNo": 0,
+      "subCatalog": []
+    },
+    {
+      "id": "336a7da5-28d2-6b09-ebd8-6ef4d1fefef5",
+      "name": "既往史：",
+      "level": "first",
+      "pageNo": 0,
+      "subCatalog": []
+    },
+    {
+      "id": "2c6232dc-c5f9-b095-cf78-581eb987b2d6",
+      "name": "流行病史：",
+      "level": "first",
+      "pageNo": 0,
+      "subCatalog": []
+    },
+    {
+      "id": "3612d2fa-e7b0-a8fc-d656-46aff520aa0d",
+      "name": "体格检查：",
+      "level": "first",
+      "pageNo": 0,
+      "subCatalog": []
+    },
+    {
+      "id": "34551281-28c9-2f9c-bb80-0ee190a804e9",
+      "name": "辅助检查：",
+      "level": "first",
+      "pageNo": 0,
+      "subCatalog": []
+    },
+    {
+      "id": "940a1d2a-fdc5-ffaa-85ce-ffac195d4cb5",
+      "name": "门诊诊断：",
+      "level": "first",
+      "pageNo": 0,
+      "subCatalog": []
+    },
+    {
+      "id": "cb432df4-e4dc-684f-b731-d480f2d4aa2e",
+      "name": "处置治疗：",
+      "level": "first",
+      "pageNo": 0,
+      "subCatalog": []
+    },
+    {
+      "id": "60bd85e4-42c9-8158-f65e-2c0a41506d03",
+      "name": "电子签名：",
+      "level": "first",
+      "pageNo": 1,
+      "subCatalog": []
+    },
+    {
+      "id": "90e08766-5b79-50b2-a45f-bcd6246085ab",
+      "name": "其他记录：",
+      "level": "first",
+      "pageNo": 1,
+      "subCatalog": []
+    }
+  ],
+  "execProbe": {
+    "getValue": {
+      "ok": true,
+      "returns": "[object Object]"
+    },
+    "setValue": {
+      "ok": false,
+      "error": "Cannot destructure property 'header' of 'V(...)' as it is undefined."
+    },
+    "setHTML": {
+      "ok": false,
+      "error": "Cannot destructure property 'header' of 'e' as it is undefined."
+    },
+    "insertElementList": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading 'length')"
+    },
+    "insertTable": {
+      "ok": true,
+      "returns": null
+    },
+    "insertTableTopRow": {
+      "ok": true,
+      "returns": null
+    },
+    "insertTableBottomRow": {
+      "ok": true,
+      "returns": null
+    },
+    "insertTableLeftCol": {
+      "ok": true,
+      "returns": null
+    },
+    "insertTableRightCol": {
+      "ok": true,
+      "returns": null
+    },
+    "deleteTableRow": {
+      "ok": true,
+      "returns": null
+    },
+    "deleteTableCol": {
+      "ok": true,
+      "returns": null
+    },
+    "mergeTableCell": {
+      "ok": true,
+      "returns": null
+    },
+    "splitHorizontalTableCell": {
+      "ok": true,
+      "returns": null
+    },
+    "splitVerticalTableCell": {
+      "ok": true,
+      "returns": null
+    },
+    "tableTdVerticalAlign": {
+      "ok": true,
+      "returns": null
+    },
+    "tableTdBorderType": {
+      "ok": true,
+      "returns": null
+    },
+    "tableTdBackgroundColor": {
+      "ok": true,
+      "returns": null
+    },
+    "tableTdSlashType": {
+      "ok": true,
+      "returns": null
+    },
+    "tableBorderType": {
+      "ok": true,
+      "returns": null
+    },
+    "tableBorderColor": {
+      "ok": true,
+      "returns": null
+    },
+    "tableSelectAll": {
+      "ok": true,
+      "returns": null
+    },
+    "tableAutoFitToPage": {
+      "ok": true,
+      "returns": null
+    },
+    "tableAutoFitToContent": {
+      "ok": true,
+      "returns": null
+    },
+    "image": {
+      "ok": true,
+      "returns": "null"
+    },
+    "hyperlink": {
+      "ok": false,
+      "error": "Cannot destructure property 'valueList' of 'e' as it is undefined."
+    },
+    "separator": {
+      "ok": true,
+      "returns": null
+    },
+    "pageBreak": {
+      "ok": true,
+      "returns": null
+    },
+    "list": {
+      "ok": true,
+      "returns": null
+    },
+    "bold": {
+      "ok": true,
+      "returns": null
+    },
+    "italic": {
+      "ok": true,
+      "returns": null
+    },
+    "underline": {
+      "ok": true,
+      "returns": null
+    },
+    "strikeout": {
+      "ok": true,
+      "returns": null
+    },
+    "subscript": {
+      "ok": true,
+      "returns": null
+    },
+    "superscript": {
+      "ok": true,
+      "returns": null
+    },
+    "title": {
+      "ok": true,
+      "returns": null
+    },
+    "size": {
+      "ok": true,
+      "returns": null
+    },
+    "sizeAdd": {
+      "ok": true,
+      "returns": null
+    },
+    "sizeMinus": {
+      "ok": true,
+      "returns": null
+    },
+    "color": {
+      "ok": true,
+      "returns": null
+    },
+    "highlight": {
+      "ok": true,
+      "returns": null
+    },
+    "font": {
+      "ok": true,
+      "returns": null
+    },
+    "rowFlex": {
+      "ok": true,
+      "returns": null
+    },
+    "rowMargin": {
+      "ok": true,
+      "returns": null
+    },
+    "align": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: align"
+    },
+    "insertTitle": {
+      "ok": true,
+      "returns": null
+    },
+    "updateElementById": {
+      "ok": false,
+      "error": "Cannot destructure property 'id' of 'e' as it is undefined."
+    },
+    "deleteElement": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: deleteElement"
+    },
+    "search": {
+      "ok": true,
+      "returns": null
+    },
+    "replace": {
+      "ok": true,
+      "returns": null
+    },
+    "replaceRange": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading 'startIndex')"
+    },
+    "searchNavigateNext": {
+      "ok": true,
+      "returns": null
+    },
+    "searchNavigatePre": {
+      "ok": true,
+      "returns": null
+    },
+    "selectAll": {
+      "ok": true,
+      "returns": null
+    },
+    "setRange": {
+      "ok": true,
+      "returns": null
+    },
+    "getRange": {
+      "ok": true,
+      "returns": "[object Object]"
+    },
+    "removeRange": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: removeRange"
+    },
+    "undo": {
+      "ok": true,
+      "returns": null
+    },
+    "redo": {
+      "ok": true,
+      "returns": null
+    },
+    "print": {
+      "ok": true,
+      "returns": null
+    },
+    "pageMode": {
+      "ok": true,
+      "returns": null
+    },
+    "pageScale": {
+      "ok": true,
+      "returns": null
+    },
+    "mode": {
+      "ok": true,
+      "returns": null
+    },
+    "paperSize": {
+      "ok": true,
+      "returns": null
+    },
+    "paperDirection": {
+      "ok": true,
+      "returns": null
+    },
+    "setPaperMargin": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading '1')"
+    },
+    "setColumns": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading '1')"
+    },
+    "setZone": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading '1')"
+    },
+    "setGroup": {
+      "ok": true,
+      "returns": "null"
+    },
+    "locationCatalog": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading '1')"
+    },
+    "locationControl": {
+      "ok": true,
+      "returns": null
+    },
+    "locationArea": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading '1')"
+    },
+    "locationGroup": {
+      "ok": true,
+      "returns": null
+    },
+    "insertControl": {
+      "ok": false,
+      "error": "Cannot convert undefined or null to object"
+    },
+    "setControlValue": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading 'groupId')"
+    },
+    "setControlExtension": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading 'groupId')"
+    },
+    "setControlHighlight": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading '1')"
+    },
+    "setControlProperties": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading 'groupId')"
+    },
+    "removeControl": {
+      "ok": true,
+      "returns": null
+    },
+    "jumpControl": {
+      "ok": true,
+      "returns": null
+    },
+    "insertArea": {
+      "ok": false,
+      "error": "Cannot destructure property 'id' of 'e' as it is undefined."
+    },
+    "setAreaValue": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading 'id')"
+    },
+    "setAreaProperties": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading 'id')"
+    },
+    "setAreaBadge": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading 'forEach')"
+    },
+    "setMainBadge": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading '1')"
+    },
+    "setLocale": {
+      "ok": true,
+      "returns": null
+    },
+    "setPageScale": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: setPageScale"
+    },
+    "pageScaleAdd": {
+      "ok": true,
+      "returns": null
+    },
+    "pageScaleMinus": {
+      "ok": true,
+      "returns": null
+    },
+    "pageScaleRecovery": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading '1')"
+    },
+    "toggleRuler": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading '1')"
+    },
+    "toggleTrace": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading '1')"
+    },
+    "insertImage": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: insertImage"
+    },
+    "insertImageBase64": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: insertImageBase64"
+    },
+    "replaceImageElement": {
+      "ok": true,
+      "returns": null
+    },
+    "setImageCrop": {
+      "ok": true,
+      "returns": null
+    },
+    "setImageCaption": {
+      "ok": true,
+      "returns": null
+    },
+    "saveAsImageElement": {
+      "ok": true,
+      "returns": null
+    },
+    "setSpellcheckRangeList": {
+      "ok": true,
+      "returns": null
+    },
+    "setPositionContext": {
+      "ok": false,
+      "error": "Cannot destructure property 'tableId' of 'e' as it is undefined."
+    },
+    "painter": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading 'isDblclick')"
+    },
+    "copy": {
+      "ok": false,
+      "error": "Failed to read the 'localStorage' property from 'Window': Access is denied for this document."
+    },
+    "paste": {
+      "ok": true,
+      "returns": null
+    },
+    "cut": {
+      "ok": false,
+      "error": "Failed to read the 'localStorage' property from 'Window': Access is denied for this document."
+    },
+    "translate": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading 'split')"
+    },
+    "wordTool": {
+      "ok": true,
+      "returns": null
+    },
+    "validate": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading '1')"
+    },
+    "updateOptions": {
+      "ok": false,
+      "error": "Cannot read properties of undefined (reading 'length')"
+    },
+    "insertBreak": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: insertBreak"
+    },
+    "format": {
+      "ok": true,
+      "returns": null
+    },
+    "moveCursor": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: moveCursor"
+    },
+    "getSelection": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: getSelection"
+    },
+    "setSelection": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: setSelection"
+    },
+    "insertText": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: insertText"
+    },
+    "insertTextBlock": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: insertTextBlock"
+    },
+    "getGroupIds": {
+      "ok": true,
+      "returns": "1"
+    },
+    "forceRender": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: forceRender"
+    },
+    "getImageCache": {
+      "ok": false,
+      "error": "[canvas-full] 未知命令: getImageCache"
+    }
+  },
+  "registeredCommands": [
+    "bold",
+    "color",
+    "copy",
+    "cut",
+    "deleteTableCol",
+    "deleteTableRow",
+    "font",
+    "format",
+    "getGroupIds",
+    "getRange",
+    "getValue",
+    "highlight",
+    "hyperlink",
+    "image",
+    "insertArea",
+    "insertControl",
+    "insertElementList",
+    "insertTable",
+    "insertTableBottomRow",
+    "insertTableLeftCol",
+    "insertTableRightCol",
+    "insertTableTopRow",
+    "insertTitle",
+    "italic",
+    "jumpControl",
+    "list",
+    "locationArea",
+    "locationCatalog",
+    "locationControl",
+    "locationGroup",
+    "mergeTableCell",
+    "mode",
+    "pageBreak",
+    "pageMode",
+    "pageScale",
+    "pageScaleAdd",
+    "pageScaleMinus",
+    "pageScaleRecovery",
+    "painter",
+    "paperDirection",
+    "paperSize",
+    "paste",
+    "print",
+    "redo",
+    "removeControl",
+    "replace",
+    "replaceImageElement",
+    "replaceRange",
+    "rowFlex",
+    "rowMargin",
+    "saveAsImageElement",
+    "search",
+    "searchNavigateNext",
+    "searchNavigatePre",
+    "selectAll",
+    "separator",
+    "setAreaBadge",
+    "setAreaProperties",
+    "setAreaValue",
+    "setColumns",
+    "setControlExtension",
+    "setControlHighlight",
+    "setControlProperties",
+    "setControlValue",
+    "setGroup",
+    "setHTML",
+    "setImageCaption",
+    "setImageCrop",
+    "setLocale",
+    "setMainBadge",
+    "setPaperMargin",
+    "setPositionContext",
+    "setRange",
+    "setSpellcheckRangeList",
+    "setValue",
+    "setZone",
+    "size",
+    "sizeAdd",
+    "sizeMinus",
+    "splitHorizontalTableCell",
+    "splitVerticalTableCell",
+    "strikeout",
+    "subscript",
+    "superscript",
+    "tableAutoFitToContent",
+    "tableAutoFitToPage",
+    "tableBorderColor",
+    "tableBorderType",
+    "tableSelectAll",
+    "tableTdBackgroundColor",
+    "tableTdBorderType",
+    "tableTdSlashType",
+    "tableTdVerticalAlign",
+    "title",
+    "toggleRuler",
+    "toggleTrace",
+    "translate",
+    "underline",
+    "undo",
+    "updateElementById",
+    "updateOptions",
+    "validate",
+    "wordTool"
+  ]
+}

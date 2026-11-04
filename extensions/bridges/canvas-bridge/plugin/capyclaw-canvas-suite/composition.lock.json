@@ -1,0 +1,72 @@
+{
+  "suite": "capyclaw-canvas-suite",
+  "suiteVersion": "0.2.0",
+  "packages": {
+    "@capyclaw/asset-service": {
+      "version": "0.1.1",
+      "apiVersion": "1.0.0",
+      "path": "..\\..\\..\\..\\..\\packages\\dsh-asset-service",
+      "sha256": "0024e703fb4e328876457919a8904801eb3bb7b8896036beec8eb4ed780730b6"
+    },
+    "@capyclaw/canvas-skill-api": {
+      "version": "0.2.0",
+      "apiVersion": null,
+      "path": "../dsh-canvas-skill-api",
+      "sha256": "6639da0c3a9fda700658bb8417c841eedaa9b42c931dc97ade69aeb25fa4d7e2"
+    },
+    "@capyclaw/canvas-skill-authoring": {
+      "version": "0.2.0",
+      "apiVersion": null,
+      "path": "../dsh-canvas-skill-authoring",
+      "sha256": "31e7030d097459d688e5f897c5a3d33f7aba88cba32b6d3facfd71e802bcb750"
+    },
+    "@capyclaw/canvas-skill-canvas": {
+      "version": "0.2.0",
+      "apiVersion": null,
+      "path": "../dsh-canvas-skill-canvas",
+      "sha256": "5e9c31e2dc49c6d848d4bb10bb642c298b10a45a18b518afd3be5445e550f893"
+    },
+    "@capyclaw/canvas-skill-editing": {
+      "version": "0.2.0",
+      "apiVersion": null,
+      "path": "../dsh-canvas-skill-editing",
+      "sha256": "809b76b50f7460609b5b5e888774be19fb45316b211d14761e5ffa4a1e427125"
+    },
+    "@capyclaw/canvas-workbench": {
+      "version": "0.2.0",
+      "apiVersion": null,
+      "path": "../capyclaw-canvas-workbench",
+      "sha256": "363b05c6da6720f4c1d1a412a7286d1cfbb361447a5884beee8b0e3a73acd86e"
+    },
+    "@capyclaw/document-workbench": {
+      "version": "0.1.0",
+      "apiVersion": null,
+      "path": "../../../../../packages/dsh-document-workbench",
+      "sha256": "a98c1db695d5eca9156099be73da4098caaf24d9c95db5cf0b999bfcf68ce5fb"
+    },
+    "@capyclaw/editor-host": {
+      "version": "0.1.1",
+      "apiVersion": "1.0.0",
+      "path": "..\\..\\..\\..\\..\\packages\\dsh-editor-host",
+      "sha256": "53f10bd0bb3787ef4b62acd37b95ee5b5ed38a674cca6f103aa5e2c0ecf16256"
+    },
+    "@capyclaw/plugin-kit": {
+      "version": "0.2.0",
+      "apiVersion": null,
+      "path": "../../../../../packages/dsh-plugin-kit",
+      "sha256": "3ac42e1e32ff2d4a4401d93e721ef74457bfe6726c2aae52cd14afe77f83ed7d"
+    },
+    "@capyclaw/service-host": {
+      "version": "0.1.1",
+      "apiVersion": "1.0.0",
+      "path": "..\\..\\..\\..\\..\\packages\\dsh-service-host",
+      "sha256": "8282cffcf7d4c71a125f08bcde9a81faa25b62c6fd07e8a85bfef418ca7575c5"
+    },
+    "@capyclaw/tool-host": {
+      "version": "0.1.1",
+      "apiVersion": "1.0.0",
+      "path": "..\\..\\..\\..\\..\\packages\\dsh-tool-host",
+      "sha256": "db088163b740101e3a67403869f7ce52bb0c947807eeaec2a4706c214c6ea062"
+    }
+  }
+}

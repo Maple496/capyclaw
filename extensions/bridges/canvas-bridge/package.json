@@ -1,12 +1,22 @@
 {
-  "name": "@capyclaw/canvas-plugin",
-  "version": "0.1.0",
-  "description": "Canvas 文档生成插件：独立 MCP 服务器 + Headless 编辑器",
+  "name": "canvas-bridge-middleware",
+  "version": "0.2.0",
+  "private": true,
   "type": "module",
-  "main": "./standalone/server.mjs",
+  "description": "Canvas 文档工作台中间件：桥契约、块级写作核心、MCP 工具服务、插件包构建与 skill 源；standalone 形态保留 headless 调试路径",
   "scripts": {
+    "discover": "node scripts/discover-api.mjs --out contract/canvas-api.json",
+    "build:plugin": "node scripts/build-plugin.mjs",
+    "check:plugin": "node scripts/build-plugin.mjs --check",
+    "lint:skills": "node scripts/lint-skills.mjs",
+    "suite:validate": "node ../../../packages/dsh-suite-kit/bin/dsh-suite.mjs validate plugin/capyclaw-canvas-suite",
+    "start:workbench": "node plugin/capyclaw-canvas-workbench/server/relay.mjs",
     "start": "node standalone/server.mjs",
-    "test": "node standalone/test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "test:e2e": "node scripts/e2e-verify.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.21.5"
   },
   "dependencies": {
     "playwright": "^1.40.0"

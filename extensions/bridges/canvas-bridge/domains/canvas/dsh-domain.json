@@ -1,0 +1,80 @@
+{
+  "$schema": "../../../../../packages/dsh-suite-kit/domain.schema.json",
+  "name": "canvas",
+  "version": "0.2.0",
+  "title": "Canvas 文档工作台领域包",
+  "description": "只加载 Canvas 文档领域所需的运行时、工具与 4 个独立 skill 包；其他领域的插件不会被注册。",
+  "baseBundles": [
+    "@deepseek-ai/dsh-base",
+    "@deepseek-ai/dsh-web-app"
+  ],
+  "components": [
+    "../../../../../packages/dsh-workspace-service",
+    "../../plugin/capyclaw-canvas-suite",
+    "../../../../../extensions/official/capyclaw-launch-engine/plugin/capyclaw-launch-engine-suite"
+  ],
+  "profile": {
+    "name": "domain-canvas",
+    "port": 3081
+  },
+  "runtime": {
+    "driver": "node",
+    "workId": "main",
+    "env": {
+      "CANVAS_BRIDGE_HOME": "${paths.contentState}"
+    },
+    "requires": {
+      "tools": [
+        "canvas_*"
+      ],
+      "capabilities": [
+        "workspace.runtime@^1.0.0",
+        "host.http@^1.0.0",
+        "tools.registry@^1.0.0",
+        "assets.store@^1.0.0",
+        "editor.host@^1.0.0",
+        "canvas.runtime@^1.0.0",
+        "canvas.tools@^1.0.0",
+        "canvas.workflows@^1.0.0"
+      ],
+      "services": [
+        "workspace",
+        "serviceHost",
+        "toolHost",
+        "assets",
+        "editorHost",
+        "canvas-workbench"
+      ]
+    },
+    "scope": {
+      "workspace": [
+        "state.json",
+        "journal.jsonl",
+        "checkpoints/**",
+        "exports/**",
+        "assets/**"
+      ]
+    },
+    "ports": {
+      "dsh": {
+        "preferred": 0,
+        "range": 100
+      },
+      "content": {
+        "preferred": 39313,
+        "range": 100
+      }
+    }
+  },
+  "removeRows": [
+    "service-host",
+    "tool-host",
+    "asset-service",
+    "editor-host",
+    "mcp-canvas",
+    "canvas-skill-canvas",
+    "canvas-skill-api",
+    "canvas-skill-authoring",
+    "canvas-skill-editing"
+  ]
+}

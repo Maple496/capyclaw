@@ -1,0 +1,66 @@
+{
+  "name": "@capyclaw/canvas-suite",
+  "version": "0.2.0",
+  "description": "Canvas 文档工作台套件：workbench + 4 个独立 skill 包 + 公共基建插件，一键安装、锁定已验证版本。",
+  "type": "module",
+  "main": "./lib/index.mjs",
+  "exports": {
+    ".": "./lib/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0",
+    "@capyclaw/service-host": "^0.1.0",
+    "@capyclaw/tool-host": "^0.1.0",
+    "@capyclaw/asset-service": "^0.1.0",
+    "@capyclaw/editor-host": "^0.1.0",
+    "@capyclaw/canvas-workbench": "^0.2.0",
+    "@capyclaw/canvas-skill-canvas": "^0.2.0",
+    "@capyclaw/canvas-skill-api": "^0.2.0",
+    "@capyclaw/canvas-skill-authoring": "^0.2.0",
+    "@capyclaw/canvas-skill-editing": "^0.2.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "suite": "./dsh-suite.json",
+    "category": "service",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "Canvas 文档工作台套件",
+    "description": "一键安装 Canvas 运行时 + 4 个独立 skill 包 + 公共基建插件"
+  },
+  "files": [
+    "lib/",
+    "contract/",
+    "dsh-suite.json",
+    "composition.lock.json",
+    "cordis.patch.yml",
+    "README.md",
+    "services.json"
+  ],
+  "license": "MIT",
+  "scripts": {},
+  "author": {
+    "name": "CapyClaw",
+    "url": "https://github.com/capyclaw",
+    "email": "support@capyclaw.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capyclaw/dsh-plugins"
+  },
+  "bugs": {
+    "url": "https://github.com/capyclaw/dsh-plugins/issues"
+  },
+  "homepage": "https://github.com/capyclaw/dsh-plugins"
+}

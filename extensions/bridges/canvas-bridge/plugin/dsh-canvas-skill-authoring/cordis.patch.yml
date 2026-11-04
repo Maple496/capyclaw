@@ -1,0 +1,4 @@
+# @capyclaw/canvas-skill-authoring（目录 dsh-canvas-skill-authoring） bundle patch：只注册 canvasist-authoring 一个 skill provider。
+- insert:
+    - id: canvas-skill-authoring
+      name: @capyclaw/canvas-skill-authoring
