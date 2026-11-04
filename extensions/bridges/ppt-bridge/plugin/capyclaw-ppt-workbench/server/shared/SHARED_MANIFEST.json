@@ -2,31 +2,31 @@
   "version": "0.1.0",
   "packages": {
     "service-host": {
-      "package": "dsh-service-host",
+      "package": "@capyclaw/service-host",
       "version": "0.1.1",
       "apiVersion": "1.0.0",
       "sha256": "b5339ad02e6736ccbd2aebcb5db210df2d7a10495ad302eef79538aa6272e5e6"
     },
     "tool-host": {
-      "package": "dsh-tool-host",
+      "package": "@capyclaw/tool-host",
       "version": "0.1.1",
       "apiVersion": "1.0.0",
       "sha256": "35b16fdcd707d3335162b8c8eb234753d84d38afb122868392af8a4d9660dc36"
     },
     "state-service": {
-      "package": "dsh-state-service",
+      "package": "@capyclaw/state-service",
       "version": "0.1.0",
       "apiVersion": "1.0.0",
-      "sha256": "4cafa45a580a3c118f45f4492531548e2adf581450792fa1a0b416e31405a4b0"
+      "sha256": "c77d43e1a994f5f5a0b27b8694dcbd662308f6a6363b42ebaa5a305057a09ea5"
     },
     "asset-service": {
-      "package": "dsh-asset-service",
+      "package": "@capyclaw/asset-service",
       "version": "0.1.1",
       "apiVersion": "1.0.0",
       "sha256": "eb80ee9bb01eaeaa2efbf9763fb4ed005aa4e94d6f3d994998c2a00bbcb834d4"
     },
     "editor-host": {
-      "package": "dsh-editor-host",
+      "package": "@capyclaw/editor-host",
       "version": "0.1.1",
       "apiVersion": "1.0.0",
       "sha256": "57d8818a4dbddb31164b7e99ebee6be1c06ed47f7a5bd96e2aad472d65e1e3a6"
@@ -42,6 +42,6 @@
     "util/fs-lock.mjs": "0eb754f067466ccf90505242e80e4a4de248db5aaa7040e825efa66da386105a"
   },
   "pkgRoot": {
-    "dsh-service-host/tuning.mjs": "51d4145d8a94b0adea989924fd65042fc372e343a47fdceeac97d418e9766347"
+    "capyclaw-service-host/tuning.mjs": "51d4145d8a94b0adea989924fd65042fc372e343a47fdceeac97d418e9766347"
   }
 }

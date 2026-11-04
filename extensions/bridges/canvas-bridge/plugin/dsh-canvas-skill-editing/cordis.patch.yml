@@ -1,4 +1,0 @@
-# @capyclaw/canvas-skill-editing（目录 dsh-canvas-skill-editing） bundle patch：只注册 canvasist-editing 一个 skill provider。
-- insert:
-    - id: canvas-skill-editing
-      name: @capyclaw/canvas-skill-editing

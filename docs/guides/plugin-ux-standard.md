@@ -28,18 +28,18 @@
 | 心跳中断 | 自动重试 + 自动恢复，无提示 |
 | 页面关闭 | 自动释放租约（pagehide/beforeunload），无提示 |
 
-**服务端统一走 `ctx.editorHost`（底层为 `dsh-plugin-kit/editor/lease`）**（旧插件兼容用 `shared/editor-attach.mjs`）：
+**服务端统一走 `ctx.editorHost`（底层为 `@capyclaw/plugin-kit/editor/lease`）**（旧插件兼容用 `shared/editor-attach.mjs`）：
 
 ```js
 // 宿主/服务端
-import { createEditorLease } from 'dsh-plugin-kit/editor/lease'
+import { createEditorLease } from '@capyclaw/plugin-kit/editor/lease'
 const lease = createEditorLease()
 // POST /claim   → lease.claim(body.id, body.force === true)
 // POST /release → lease.release(body.id)
 // 工具调用前   → await lease.wait({ openHint: 'http://127.0.0.1:PORT', panelHint: '右侧「PPT」面板' })
 
 // 编辑器页面
-import { startAutoAttach } from 'dsh-plugin-kit/editor/lease'
+import { startAutoAttach } from '@capyclaw/plugin-kit/editor/lease'
 startAutoAttach({
   clientId,
   claim: (force) => api('/claim', { method: 'POST', body: JSON.stringify({ id: clientId, force }) }).then(r => !!r.ok),
@@ -81,7 +81,7 @@ owner / lease / TTL / active / standby 只存在于代码内部，用于解决�
 
 所有需要"面板 ↔ 宿主"长连接的插件（编辑器、预览器、终端等）：
 
-- 服务端一律使用 `ctx.editorHost`；客户端 lease/auto-attach 仍来自 `dsh-plugin-kit/editor/lease`（旧插件兼容 `shared/editor-attach.mjs`）
+- 服务端一律使用 `ctx.editorHost`；客户端 lease/auto-attach 仍来自 `@capyclaw/plugin-kit/editor/lease`（旧插件兼容 `shared/editor-attach.mjs`）
 - 面板 HTML 不得自带"重连"按钮或状态横幅
 - 心跳、抢占、释放、重试逻辑集中在共享模块里维护
 
@@ -93,7 +93,7 @@ owner / lease / TTL / active / standby 只存在于代码内部，用于解决�
 - [ ] 打开两个面板，后开的那个直接可操作，先开的静默转入后台（无提示）
 - [ ] 关闭面板再打开，自动恢复，无需任何点击
 - [ ] 工具调用在编辑器未打开时，报错信息只包含"下一步做什么"
-- [ ] 所有 claim/心跳/释放代码来自 `ctx.editorHost`（底层 `dsh-plugin-kit/editor/lease`；旧插件兼容 `shared/editor-attach.mjs`），插件内无重复实现
+- [ ] 所有 claim/心跳/释放代码来自 `ctx.editorHost`（底层 `@capyclaw/plugin-kit/editor/lease`；旧插件兼容 `shared/editor-attach.mjs`），插件内无重复实现
 
 ---
 

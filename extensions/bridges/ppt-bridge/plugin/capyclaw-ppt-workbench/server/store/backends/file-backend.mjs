@@ -1,4 +1,4 @@
-/** 文件后端：通用实现来自 dsh-state-service；保留 PPT 的初始文档。 */
+/** 文件后端：通用实现来自 @capyclaw/state-service；保留 PPT 的初始文档。 */
 import { FileStateBackend } from '../../shared/state-service.mjs'
 import { getTuning } from '../../tuning.mjs'
 import { EMPTY_DOC } from '../doc.mjs'

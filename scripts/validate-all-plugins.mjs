@@ -8,7 +8,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
-import { validatePlugin } from '../tools/plugin-validator/lib/index.mjs'
+import { validatePlugin } from '../tools/capyclaw-plugin-validator/lib/index.mjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -37,7 +37,7 @@ function findPluginDirs(root, out = [], depth = 0) {
 }
 
 /** 只把「dsh 插件形态」的包纳入验证：声明了 dsh.bundle / dsh.suite / dsh.client 才算。
- *  bridges 根（如 ppt-bridge-middleware 构建工场）与纯独立包（如 canvas-plugin）不是 dsh 插件，跳过。 */
+ *  bridges 根（如 @capyclaw/ppt-bridge 构建工场）与纯独立包（如 canvas-plugin）不是 dsh 插件，跳过。 */
 function isDshPluginDir(pluginPath) {
   try {
     const pkg = JSON.parse(readFileSync(join(pluginPath, 'package.json'), 'utf8'))

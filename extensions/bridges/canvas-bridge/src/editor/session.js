@@ -1,11 +1,11 @@
 /**
  * Canvas 编辑器会话适配：通用租约/心跳/长轮询/镜像/截图在
- * dsh-document-workbench/client，本文件只提供 CanvasApp adapter。
+ * @capyclaw/document-workbench/client，本文件只提供 CanvasApp adapter。
  *
  * authority: 'editor' —— Canvas 是编辑器权威：服务端只排队，
  * 页面把 {cmd,args} 逐条交给 CanvasApp（exec 透传 / 桥层合成命令拦截）。
  */
-import { createEditorClient } from 'dsh-document-workbench/client'
+import { createEditorClient } from '@capyclaw/document-workbench/client'
 import { renderSheet } from './screenshot.js'
 
 const API_BASE = '/api/desktop/works/canvas-bridge'

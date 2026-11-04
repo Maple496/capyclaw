@@ -1,8 +1,8 @@
 /**
  * PPT 编辑器会话适配：通用租约/心跳/长轮询/镜像/截图在
- * dsh-document-workbench/client，本文件只提供 PPTist adapter 与快捷命令。
+ * @capyclaw/document-workbench/client，本文件只提供 PPTist adapter 与快捷命令。
  */
-import { createEditorClient } from 'dsh-document-workbench/client'
+import { createEditorClient } from '@capyclaw/document-workbench/client'
 import { parseQuick } from '../core/quick.js'
 
 const API_BASE = '/api/desktop/works/ppt-bridge'

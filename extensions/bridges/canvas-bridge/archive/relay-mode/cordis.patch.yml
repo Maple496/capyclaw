@@ -1,4 +1,4 @@
-# dsh-canvas-workbench bundle patch：本机 Canvas MCP relay + canvas 工具组。
+# capyclaw-canvas-workbench bundle patch：本机 Canvas MCP relay + canvas 工具组。
 #
 # canvas-workbench-host：本包自带宿主，进程内拉起 MCP relay（127.0.0.1:39312）。
 # mcp-canvas：官方 mcp-client 以 streamable-http 连本机 relay 的 /mcp。
@@ -7,7 +7,7 @@
 # 桌面未启动时工具会返回明确错误，不阻塞 agent 启动。
 - insert:
     - id: canvas-workbench-host
-      name: dsh-canvas-workbench
+      name: capyclaw-canvas-workbench
 
     - id: mcp-canvas
       name: '@deepseek-ai/dsh-mcp-client'

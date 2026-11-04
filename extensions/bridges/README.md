@@ -20,10 +20,10 @@ Bridges 可以选择以下架构之一：
 ### canvas-bridge
 - 类型：混合模式
 - 包含：Canvas 文档工作台——relay 独立端口服务 + DSH 插件套件
-  （capyclaw-canvas-workbench + 4 个 dsh-canvas-skill-* + capyclaw-canvas-suite + 领域包），
+  （capyclaw-canvas-workbench + 4 个 capyclaw-canvas-skill-* + capyclaw-canvas-suite + 领域包），
   另保留 standalone（headless Playwright）调试形态
 - 架构：编辑器权威桥（document-workbench 标准协议）；22 个 `canvas_*` MCP 工具
-- 复用：dsh-plugin-kit / dsh-document-workbench / dsh-suite-kit / 5 个公共服务插件（与 ppt-bridge 零重复）
+- 复用：@capyclaw/plugin-kit / dsh-document-workbench / @capyclaw/suite-kit / 5 个公共服务插件（与 ppt-bridge 零重复）
 
 ## 验证规则
 

@@ -1,5 +1,5 @@
 /**
- * dsh-canvas-workbench 宿主插件（cordis 入口）。
+ * capyclaw-canvas-workbench 宿主插件（cordis 入口）。
  *
  * apply 里进程内拉起 MCP relay（/mcp），返回 disposer——插件停用时关闭。
  * 零 @deepseek-ai 依赖：只用 node 内置模块。

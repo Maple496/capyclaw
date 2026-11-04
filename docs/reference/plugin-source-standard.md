@@ -150,7 +150,7 @@ zip 根 = 包根
 ### 3.3 依赖
 
 - `dependencies` **禁止** `link:` / `file:`（那是源码树本地路径，分发出去必断）。
-- workspace 内依赖（`dsh-plugin-kit` 等）**必须内置**到 `node_modules/<name>/`，
+- workspace 内依赖（`@capyclaw/plugin-kit` 等）**必须内置**到 `node_modules/<name>/`，
   否则装到独立目录会 `MODULE_NOT_FOUND`。
   发布工具会自动检测并打进去（见 §5.1）。
 - 外部 npm 依赖：标准不要求内置（各消费方运行时自行解析）；若目标环境无 npm，
@@ -169,7 +169,7 @@ zip 根 = 包根
 
 参考实现（可直接抄）：
 - Python：`桌前面前端/backend/works_plugins.py`
-- Node：`deepseekharness_dev/tools/plugin-release/lib/index.mjs`（`readIndex` / `pickEntry` / `readZipEntryBuffer`）
+- Node：`deepseekharness_dev/tools/capyclaw-plugin-release/lib/index.mjs`（`readIndex` / `pickEntry` / `readZipEntryBuffer`）
 
 ### 4.1 注册语义（dsh 侧，三处缺一不生效）
 
@@ -209,7 +209,7 @@ npm run verify-source -- <源目录或URL>        # 按本标准校验任意源
 
 ### 5.1 发布闸（不通过就拒发）
 
-1. **插件规范闸** —— 复用 `tools/plugin-validator`（目录/命名/必填字段/测试）
+1. **插件规范闸** —— 复用 `tools/capyclaw-plugin-validator`（目录/命名/必填字段/测试）
 2. **发布闸** —— 分发必需项：
    - `engines.dsh` 必须声明
    - `dsh.bundle.patch` 必须存在且文件真实存在
@@ -272,7 +272,7 @@ POST /api/desktop/plugins/source
 
 | # | 闸 | 位置 | 证明什么 |
 |---|---|---|---|
-| 1 | 源校验器（28 项负向 + 正向） | `npm run verify-source -- <源>`（`tools/plugin-release`） | 索引形状、sha256、包名/版本一致、patch 存在、engines.dsh、无 link: 依赖、路径安全、HTTP/file 双形态 |
+| 1 | 源校验器（28 项负向 + 正向） | `npm run verify-source -- <源>`（`tools/capyclaw-plugin-release`） | 索引形状、sha256、包名/版本一致、patch 存在、engines.dsh、无 link: 依赖、路径安全、HTTP/file 双形态 |
 | 2 | 发布闸（9 项） | `npm run verify-source` | 发布闸拒收（缺 engines/patch、link 依赖）、zip 内容自足、索引自证、整源打包 |
 | 3 | 消费方标准一致性（31 项） | `python -m unittest test_plugin_source_standard`（消费方 backend） | 合规源可装、不合规源在**换源闸**被拒且旧源不坏、三处注册正确、换源不影响已装、多版本/回滚、源宕机降级 |
 | 4 | 消费方投递面（22 项） | `python -m unittest test_works_plugins` | 源归一、目录合并、sha256 拒收、安装/升级/卸载回路、兼容性判定 |

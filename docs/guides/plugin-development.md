@@ -34,7 +34,7 @@ test/plugin.test.mjs      # 冒烟测试
 |---|---|---|
 | `ctx.serviceHost` | `dsh-service-host` | HTTP、健康、指标、锁、复用、静态 |
 | `ctx.toolHost` | `dsh-tool-host` | 能力 DSL、注册表、校验、契约、MCP |
-| `ctx.state` | `dsh-state-service` | 状态、journal、checkpoint、恢复 |
+| `ctx.state` | `@capyclaw/state-service` | 状态、journal、checkpoint、恢复 |
 | `ctx.assets` | `dsh-asset-service` | sha256 对象资产、`/assets` |
 | `ctx.editorHost` | `dsh-editor-host` | 编辑器托管、租约、心跳 |
 
@@ -88,7 +88,7 @@ node create-plugin.mjs \
 
 ## 4. 工具与 MCP 契约
 
-每个工具必须有稳定的 `name`、`inputSchema` 和返回形状。所有调用在 `dsh-plugin-kit` 的 `createMcpHandler` 里先经过 `validateToolArguments`。
+每个工具必须有稳定的 `name`、`inputSchema` 和返回形状。所有调用在 `@capyclaw/plugin-kit` 的 `createMcpHandler` 里先经过 `validateToolArguments`。
 
 推荐每个服务暴露一个只读探测工具：
 
@@ -158,22 +158,22 @@ import { createEditorHost } from './shared/editor-host.mjs'
 安装 suite 到 profile：
 
 ```bash
-node packages/dsh-suite-kit/bin/dsh-suite.mjs install \
+node packages/capyclaw-suite-kit/bin/dsh-suite.mjs install \
   ./my-plugins/my-service/plugin/my-service-suite --profile web
 ```
 
 安装 domain：
 
 ```bash
-node packages/dsh-suite-kit/bin/dsh-domain.mjs install \
+node packages/capyclaw-suite-kit/bin/dsh-domain.mjs install \
   ./my-plugins/my-service/domains/my-service --profile domain-my-service
 ```
 
 校验：
 
 ```bash
-node packages/dsh-suite-kit/bin/dsh-suite.mjs validate <suite-dir>
-node packages/dsh-suite-kit/bin/dsh-domain.mjs validate <domain-dir>
+node packages/capyclaw-suite-kit/bin/dsh-suite.mjs validate <suite-dir>
+node packages/capyclaw-suite-kit/bin/dsh-domain.mjs validate <domain-dir>
 ```
 
 ## 8. 测试
@@ -210,7 +210,7 @@ dsh plugin --profile web add /path/to/plugin
 suite：
 
 ```bash
-node packages/dsh-suite-kit/bin/dsh-suite.mjs install /path/to/suite --profile web
+node packages/capyclaw-suite-kit/bin/dsh-suite.mjs install /path/to/suite --profile web
 ```
 
 安装后 profile 的 `dsh.profile.bundles` 会出现 suite 名；MCP 工具以 `mcp__<serverName>__<tool>` 出现在模型工具列表。

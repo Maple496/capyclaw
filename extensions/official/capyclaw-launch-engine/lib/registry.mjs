@@ -158,7 +158,7 @@ export function createProfileRegistry({ home, profile, file } = {}) {
       const abs = resolveFile()
       if (!existsSync(abs)) {
         throw new RegistryError(
-          `profile 注册表不存在: ${abs}（由 dsh-suite-kit installSuites/installDomain 生成；stack 型 profile 请改用 inline/local 源）`,
+          `profile 注册表不存在: ${abs}（由 @capyclaw/suite-kit installSuites/installDomain 生成；stack 型 profile 请改用 inline/local 源）`,
           'REGISTRY_NOT_FOUND',
         )
       }

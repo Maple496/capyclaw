@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * 公共插件源码同步：把 dsh-service-host / dsh-tool-host / dsh-state-service /
- * dsh-asset-service / dsh-editor-host 及其依赖的 dsh-plugin-kit 片段同步到
+ * 公共插件源码同步：把 @capyclaw/service-host / tool-host / state-service /
+ * asset-service / editor-host 及其依赖的 @capyclaw/plugin-kit 片段同步到
  * 目标插件的 server/shared/。
  *
  * 用法：
@@ -16,12 +16,13 @@ import { fileURLToPath } from 'node:url'
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(HERE, '..')
 
+/** [快照文件名, packages/ 下的源目录名]。目录名 = 包名去 scope（capyclaw-<base>）。 */
 export const PUBLIC_SHARED = [
-  ['service-host', 'dsh-service-host'],
-  ['tool-host', 'dsh-tool-host'],
-  ['state-service', 'dsh-state-service'],
-  ['asset-service', 'dsh-asset-service'],
-  ['editor-host', 'dsh-editor-host'],
+  ['service-host', 'capyclaw-service-host'],
+  ['tool-host', 'capyclaw-tool-host'],
+  ['state-service', 'capyclaw-state-service'],
+  ['asset-service', 'capyclaw-asset-service'],
+  ['editor-host', 'capyclaw-editor-host'],
 ]
 
 export const SHARED_KIT_FILES = [
@@ -37,19 +38,14 @@ export const SHARED_KIT_FILES = [
 /* 公共插件自带的包根级调优文件（src/tuning.mjs → shared 根），供其 src/index.mjs 的
  * `./tuning.mjs` 相对引用解析。kit 文件的 '../tuning.mjs' 解析到 kit/tuning.mjs，互不冲突。 */
 export const PUBLIC_PKG_ROOT_FILES = [
-  ['dsh-service-host', 'tuning.mjs'],
+  ['capyclaw-service-host', 'tuning.mjs'],
 ]
 
+/* 快照原样保留源码里的 `@capyclaw/plugin-kit/...` 包名导入：快照落在 workbench 包内，
+ * 由 workbench 的 node_modules 解析（workbench 依赖 plugin-kit）。历史上有过把包名导入
+ * 改写成 ./kit/ 相对路径的重写规则，自源码统一走包名导入后即为空操作，已删除。 */
 export function rewriteSharedImports(text) {
   return String(text)
-    .replaceAll('../../dsh-plugin-kit/src/', './kit/')
-    .replaceAll("'dsh-plugin-kit/service/api'", "'./kit/service/api.mjs'")
-    .replaceAll("'dsh-plugin-kit/service/http'", "'./kit/service/http.mjs'")
-    .replaceAll("'dsh-plugin-kit/service/mcp-http'", "'./kit/service/mcp-http.mjs'")
-    .replaceAll("'dsh-plugin-kit/tools/validate'", "'./kit/tools/validate.mjs'")
-    .replaceAll("'dsh-plugin-kit/editor/lease'", "'./kit/editor/lease.mjs'")
-    .replaceAll("'dsh-plugin-kit/editor/transport'", "'./kit/editor/transport.js'")
-    .replaceAll("'dsh-plugin-kit/util/fs-lock'", "'./kit/util/fs-lock.mjs'")
 }
 
 function sha256(text) {
@@ -83,7 +79,7 @@ export function syncSharedDir(outDir, { force = false, check = false, root = ROO
     write(`${short}.mjs`, rewriteSharedImports(fs.readFileSync(src, 'utf8')))
   }
   for (const rel of SHARED_KIT_FILES) {
-    const src = path.join(root, 'packages', 'dsh-plugin-kit', 'src', rel)
+    const src = path.join(root, 'packages', 'capyclaw-plugin-kit', 'src', rel)
     if (!fs.existsSync(src)) throw new Error(`缺少 kit 源码: ${src}`)
     write(path.join('kit', rel), fs.readFileSync(src, 'utf8'))
   }
@@ -99,14 +95,14 @@ export function syncSharedDir(outDir, { force = false, check = false, root = ROO
       const manifest = JSON.parse(fs.readFileSync(path.join(root, 'packages', pkg, 'package.json'), 'utf8'))
       const text = fs.readFileSync(path.join(root, 'packages', pkg, 'src', 'index.mjs'), 'utf8')
       return [short, {
-        package: pkg,
+        package: manifest.name,
         version: manifest.version,
         apiVersion: manifest.dsh?.apiVersion || '1.0.0',
         sha256: sha256(rewriteSharedImports(text)),
       }]
     })),
     kit: Object.fromEntries(SHARED_KIT_FILES.map((rel) => {
-      const text = fs.readFileSync(path.join(root, 'packages', 'dsh-plugin-kit', 'src', rel), 'utf8')
+      const text = fs.readFileSync(path.join(root, 'packages', 'capyclaw-plugin-kit', 'src', rel), 'utf8')
       return [rel, sha256(text)]
     })),
     pkgRoot: Object.fromEntries(PUBLIC_PKG_ROOT_FILES.map(([pkg, rel]) => {

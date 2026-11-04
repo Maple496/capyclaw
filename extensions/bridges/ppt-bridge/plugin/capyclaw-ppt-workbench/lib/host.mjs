@@ -10,7 +10,7 @@
  * cordis.patch.yml 注释）。本文件仅为过渡期兼容保留，勿再 insert。
  */
 /**
- * dsh-ppt-workbench 宿主插件（cordis 入口，loader 经包名加载本模块）。
+ * capyclaw-ppt-workbench 宿主插件（cordis 入口，loader 经包名加载本模块）。
  *
  * apply 里进程内拉起桥 relay（桥端点 + /mcp + 编辑器静态页），返回
  * disposer——插件停用时关闭 relay（官方 remote-access 等同款生命周期）。

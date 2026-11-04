@@ -60,8 +60,8 @@ scripts/     ──────────────► packages/ + tools/
 **约束**：
 
 1. `packages/` 不得依赖 `extensions/`。
-2. `dsh-suite-kit` 与 `dsh-plugin-kit` 保持同级落位（相对路径互相引用）。
-3. `tools/plugin-release` 以相对路径直连 `packages/dsh-suite-kit/src/{manifest,domain}.mjs`。
+2. `@capyclaw/suite-kit` 与 `@capyclaw/plugin-kit` 保持同级落位（相对路径互相引用）。
+3. `tools/capyclaw-plugin-release` 以相对路径直连 `packages/capyclaw-suite-kit/src/{manifest,domain}.mjs`。
 4. `ppt-bridge/scripts/build-plugin.mjs` 以 `../../../../scripts/` 引用仓库级构建脚本
    （check-suite-drift、lib/shared-sync），ppt-bridge 不能脱离仓库独立构建。
 
@@ -76,7 +76,7 @@ npm run build:plugin
       3. 生成契约快照 contract/ppt-contract.json、capabilities.json
       4. esbuild 打包编辑器；拷贝 PPTist 资产
       5. 生成 8 个 skill 包（package.json/cordis.patch.yml/lib/skills 全部脚本生成）
-      6. 生成 composition.lock.json（suite 解析结果 + sha256，由 dsh-suite-kit 支撑）
+      6. 生成 composition.lock.json（suite 解析结果 + sha256，由 @capyclaw/suite-kit 支撑）
   → 产物提交进仓：extensions/bridges/ppt-bridge/plugin/**（10 个包）
 ```
 

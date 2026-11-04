@@ -49,8 +49,8 @@ npm run validate-plugin -- extensions/official/my-plugin
 ```
 packages/     构建库与基建插件
   ├─ 构建库（不加载进 dsh）
-  │    dsh-plugin-kit     插件 SDK：HTTP/MCP、校验、打包（pack/zip）、技能 provider
-  │    dsh-suite-kit      suite/domain 清单校验与组合（validate/compose/profile）
+  │    @capyclaw/plugin-kit     插件 SDK：HTTP/MCP、校验、打包（pack/zip）、技能 provider
+  │    @capyclaw/suite-kit      suite/domain 清单校验与组合（validate/compose/profile）
   └─ 基建级插件（发布产品）
        service-host / tool-host / asset-service / editor-host / service-broker
        （@capyclaw/*，均在 registry）
@@ -100,7 +100,7 @@ export function apply(ctx, config) {
 
 ## 发布
 
-发布对象由 `tools/plugin-release` 的 `discoverPlugins()` 收敛（过得了发布闸的包），
+发布对象由 `tools/capyclaw-plugin-release` 的 `discoverPlugins()` 收敛（过得了发布闸的包），
 清单与 `capyclaw-registry.json` 一致（由 `npm run gen-registry` 生成，不要手改）。
 
 ```bash

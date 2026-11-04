@@ -1,5 +1,5 @@
 {
-  "name": "canvas-bridge-middleware",
+  "name": "@capyclaw/canvas-bridge",
   "version": "0.2.0",
   "private": true,
   "type": "module",
@@ -9,7 +9,7 @@
     "build:plugin": "node scripts/build-plugin.mjs",
     "check:plugin": "node scripts/build-plugin.mjs --check",
     "lint:skills": "node scripts/lint-skills.mjs",
-    "suite:validate": "node ../../../packages/dsh-suite-kit/bin/dsh-suite.mjs validate plugin/capyclaw-canvas-suite",
+    "suite:validate": "node ../../../packages/capyclaw-suite-kit/bin/dsh-suite.mjs validate plugin/capyclaw-canvas-suite",
     "start:workbench": "node plugin/capyclaw-canvas-workbench/server/relay.mjs",
     "start": "node standalone/server.mjs",
     "test": "node --test test/*.test.mjs",

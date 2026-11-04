@@ -21,7 +21,7 @@
 
 - **`profile`（domain 型 profile 推荐）**：读 suite-kit 安装期生成的
   `<DSH_HOME>/profiles/<DSH_PROFILE>/launch-engine.registry.json`——
-  它由 `dsh-suite-kit` 的 `installSuites`/`installDomain` 从 `dsh-suite.json`
+  它由 `@capyclaw/suite-kit` 的 `installSuites`/`installDomain` 从 `dsh-suite.json`
   组合结果**自动编译**（`dsh-suite registry` / `dsh-domain registry` 可预览），
   注册表不再手写，`dsh-suite.json` 是唯一事实来源；
 - `local`（registryPath 指向文件）/ `inline`（config.capabilities 直接给）：手写或工具注入；

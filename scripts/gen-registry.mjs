@@ -10,7 +10,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { discoverPlugins } from '../tools/plugin-release/lib/index.mjs'
+import { discoverPlugins } from '../tools/capyclaw-plugin-release/lib/index.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const OUT = path.join(ROOT, 'capyclaw-registry.json')

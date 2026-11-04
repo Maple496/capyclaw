@@ -5,14 +5,19 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import net from 'node:net'
-import { createMemoryBackend } from 'dsh-document-workbench/testing'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import { createMemoryBackend } from '@capyclaw/document-workbench/testing'
 import { setTimeout as sleep } from 'node:timers/promises'
 
 const { startRelay } = await import('../plugin/capyclaw-canvas-workbench/server/relay.mjs')
 
 async function withRelay(fn, { editor = true } = {}) {
+  /* 独立临时 hostDir：并行测试不抢默认 ~/.dsh-canvas-bridge 的实例锁。 */
+  const hostDir = fs.mkdtempSync(path.join(os.tmpdir(), 'canvas-stab-'))
   const relay = await startRelay({
-    port: 0, hostDir: undefined, backend: createMemoryBackend({}),
+    port: 0, hostDir, backend: createMemoryBackend({}),
     allowReuse: false, strictPort: true,
   })
   const base = `http://127.0.0.1:${relay.port}`
@@ -60,6 +65,7 @@ async function withRelay(fn, { editor = true } = {}) {
     if (prevEnv === undefined) delete process.env.CANVAS_BRIDGE_URL
     else process.env.CANVAS_BRIDGE_URL = prevEnv
     await relay.stop()
+    fs.rmSync(hostDir, { recursive: true, force: true })
   }
 }
 

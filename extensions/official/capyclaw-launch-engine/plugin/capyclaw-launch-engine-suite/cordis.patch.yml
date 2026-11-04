@@ -1,4 +1,4 @@
-# 由 dsh-suite-kit 生成；改 dsh-suite.json 后重跑 compose。
+# 由 @capyclaw/suite-kit 生成；改 dsh-suite.json 后重跑 compose。
 
 - insert:
     - id: plugin-sync-host

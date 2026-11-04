@@ -29,7 +29,7 @@
       "entry": {
         "role": "support",
         "version": "^0.1.0",
-        "path": "../../../../../packages/dsh-document-workbench"
+        "path": "../../../../../packages/capyclaw-document-workbench"
       },
       "suite": "capyclaw-ppt-suite",
       "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
@@ -59,7 +59,7 @@
       "entry": {
         "role": "support",
         "version": "^0.2.0",
-        "path": "../../../../../packages/dsh-plugin-kit"
+        "path": "../../../../../packages/capyclaw-plugin-kit"
       },
       "suite": "capyclaw-ppt-suite",
       "dir": "C:\\Users\\Administrator\\Desktop\\workplace\\deepseekharness_dev\\extensions\\bridges\\ppt-bridge\\plugin\\capyclaw-ppt-suite",
@@ -70,7 +70,7 @@
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
-        "path": "../dsh-ppt-skill-api",
+        "path": "../capyclaw-ppt-skill-api",
         "requires": {
           "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
@@ -95,7 +95,7 @@
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
-        "path": "../dsh-ppt-skill-authoring",
+        "path": "../capyclaw-ppt-skill-authoring",
         "requires": {
           "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
@@ -120,7 +120,7 @@
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
-        "path": "../dsh-ppt-skill-design",
+        "path": "../capyclaw-ppt-skill-design",
         "requires": {
           "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
@@ -145,7 +145,7 @@
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
-        "path": "../dsh-ppt-skill-editing",
+        "path": "../capyclaw-ppt-skill-editing",
         "requires": {
           "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
@@ -170,7 +170,7 @@
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
-        "path": "../dsh-ppt-skill-narrative",
+        "path": "../capyclaw-ppt-skill-narrative",
         "requires": {
           "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
@@ -195,7 +195,7 @@
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
-        "path": "../dsh-ppt-skill-ppt",
+        "path": "../capyclaw-ppt-skill-ppt",
         "requires": {
           "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
@@ -220,7 +220,7 @@
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
-        "path": "../dsh-ppt-skill-research",
+        "path": "../capyclaw-ppt-skill-research",
         "requires": {
           "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
@@ -245,7 +245,7 @@
       "entry": {
         "role": "skills",
         "version": "^2.2.0",
-        "path": "../dsh-ppt-skill-visual-check",
+        "path": "../capyclaw-ppt-skill-visual-check",
         "requires": {
           "@capyclaw/ppt-workbench": "^2.2.0",
           "capabilities": {
@@ -304,7 +304,7 @@
       "entry": {
         "role": "runtime",
         "version": "^0.1.0",
-        "path": "../../../../../packages/dsh-service-broker",
+        "path": "../../../../../packages/capyclaw-service-broker",
         "provides": {
           "services": [
             "serviceBroker"
@@ -343,7 +343,7 @@
       "entry": {
         "role": "runtime",
         "version": "^0.1.0",
-        "path": "../../dsh-skills-service",
+        "path": "../../capyclaw-skills-service",
         "provides": {
           "services": [
             "dsh-skills"

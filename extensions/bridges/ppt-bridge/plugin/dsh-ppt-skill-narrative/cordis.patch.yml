@@ -1,4 +1,0 @@
-# @capyclaw/ppt-skill-narrative（目录 dsh-ppt-skill-narrative） bundle patch：只注册 pptmaster-narrative 一个 skill provider。
-- insert:
-    - id: ppt-skill-narrative
-      name: @capyclaw/ppt-skill-narrative

@@ -1,4 +1,4 @@
-# dsh-launchpad
+# @capyclaw/launchpad
 
 **启动清单管理器 + 启动器 + 编辑器**。
 
@@ -49,7 +49,7 @@
   `dsh-ppt-suite` 等），点「添加」即写入 DSL。
 
 插件面板只改 DSL 的 `plugins` 块（保留 `dependencies`/`overrides`/`install`
-和块外注释）；添加本地插件时若包声明了 `dsh-plugin-kit`，会自动补依赖。
+和块外注释）；添加本地插件时若包声明了 `@capyclaw/plugin-kit`，会自动补依赖。
 改动写入 DSL 后：
 
 - 停着的 launchpad：点 Plan / 启动才会物化到 profile；
@@ -78,7 +78,7 @@ stack "example" {
     bundle "@deepseek-ai/dsh-base"
     bundle "@deepseek-ai/dsh-web-app"
     plugin "my-plugin" { path "../extensions/official/my-plugin" }
-    dependency "dsh-plugin-kit" { path "../packages/dsh-plugin-kit" }
+    dependency "@capyclaw/plugin-kit" { path "../packages/capyclaw-plugin-kit" }
     install true
   }
 
@@ -112,7 +112,7 @@ stack "ppt" {
 }
 ```
 
-  domain 型由 dshd 交给 `dsh-suite-kit` runtime（broker + dsh + suite services）；
+  domain 型由 dshd 交给 `@capyclaw/suite-kit` runtime（broker + dsh + suite services）；
   管理界面/状态从 runtime.json + discovery 读，不再依赖 profile 的 state.json。
 - 当前服务所在的栈会在列表里标 `HOST`；停止它会中断本页面，因此禁用。
 - 执行器默认找仓库内 `tools/dsh-launcher/bin/dshd.mjs`；可用
@@ -146,7 +146,7 @@ stack "ppt" {
 - 服务端口是否与生成清单一致。
 
 生成物不要手改；改 stack 后重新 `dshd stack apply`。完整 schema 见
-[`packages/dsh-stack-kit`](../../../packages/dsh-stack-kit/README.md)。
+[`packages/capyclaw-stack-kit`](../../../packages/capyclaw-stack-kit/README.md)。
 
 ## 快速开始
 
@@ -378,7 +378,7 @@ CLI/API 返回 `AMBIGUOUS`（409）。
   这类条目在源码树会报缺失命令路径，装进 bundle 后再扫描即正常。
 - 识别「形状优先、文件名辅助」：先看 JSON 结构，避免把 discovery、suite、
   package-lock 等误判成启动清单。
-- 解析器自包含（不 deep-import `dsh-suite-kit` / `dsh-service-broker` 的
+- 解析器自包含（不 deep-import `@capyclaw/suite-kit` / `dsh-service-broker` 的
   lib 深路径），保证插件可独立分发；深度语义校验仍以
   `dsh-deploy validate` / `dsh-domain validate` 为准。
 
@@ -393,7 +393,7 @@ CLI/API 返回 `AMBIGUOUS`（409）。
 ```bash
 cd extensions/official/dsh-launchpad
 npm test
-node ../../../tools/plugin-validator/bin/cli.mjs .
+node ../../../tools/capyclaw-plugin-validator/bin/cli.mjs .
 ```
 
 测试覆盖：DSL 解析/发射/错误、plugins 块重写、launchpad 管理器 CRUD/校验/

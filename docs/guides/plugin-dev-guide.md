@@ -14,7 +14,7 @@
   （如 `dsh-port-sidebar`——只注入、不拉服务）。
 - 服务发现只读 discovery（`~/.dsh/services.json`），不许写死别人端口。
 - 完整规范：**[docs/SERVICE_STANDARD.md](docs/SERVICE_STANDARD.md)**；
-  中间件用法：**[packages/dsh-service-broker/README.md](packages/dsh-service-broker/README.md)**。
+  中间件用法：**[packages/capyclaw-service-broker/README.md](packages/capyclaw-service-broker/README.md)**。
 
 ## 🚀 快速开始
 
@@ -65,7 +65,7 @@ deepseekharness_dev/
 │   └── experimental/              # 实验性插件
 │
 ├── packages/                      # 基础设施（不要修改）
-│   ├── dsh-plugin-kit/            # 插件开发 SDK
+│   ├── @capyclaw/plugin-kit/            # 插件开发 SDK
 │   ├── dsh-service-host/          # 服务托管
 │   └── ...
 │
@@ -85,26 +85,26 @@ deepseekharness_dev/
 
 ### Tier 0: 纯客户端插件（最简单）
 - **适用**: UI 组件、侧边栏、简单交互
-- **依赖**: 仅 `dsh-plugin-kit`
+- **依赖**: 仅 `@capyclaw/plugin-kit`
 - **示例**: `dsh-port-sidebar`
 
 ```json
 {
   "dependencies": {
-    "dsh-plugin-kit": "^0.2.0"
+    "@capyclaw/plugin-kit": "^0.2.0"
   }
 }
 ```
 
 ### Tier 1: 标准服务插件
 - **适用**: 需要后端能力的插件
-- **依赖**: `dsh-plugin-kit` + `dsh-service-host`
+- **依赖**: `@capyclaw/plugin-kit` + `dsh-service-host`
 - **示例**: 数据处理、API 调用
 
 ```json
 {
   "dependencies": {
-    "dsh-plugin-kit": "^0.2.0",
+    "@capyclaw/plugin-kit": "^0.2.0",
     "dsh-service-host": "^0.1.0"
   }
 }
@@ -118,7 +118,7 @@ deepseekharness_dev/
 ```json
 {
   "dependencies": {
-    "dsh-plugin-kit": "^0.2.0",
+    "@capyclaw/plugin-kit": "^0.2.0",
     "dsh-service-host": "^0.1.0",
     "dsh-tool-host": "^0.1.0",
     "dsh-asset-service": "^0.1.0"
@@ -128,13 +128,13 @@ deepseekharness_dev/
 
 ### Suite: 插件套件
 - **适用**: 打包多个相关插件
-- **依赖**: `dsh-suite-kit` + 子插件
+- **依赖**: `@capyclaw/suite-kit` + 子插件
 - **示例**: `dsh-ppt-suite`
 
 ```json
 {
   "dependencies": {
-    "dsh-suite-kit": "^0.1.0",
+    "@capyclaw/suite-kit": "^0.1.0",
     "my-plugin-a": "^1.0.0",
     "my-plugin-b": "^1.0.0"
   },
@@ -179,7 +179,7 @@ dsh-my-plugin/
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "dsh-plugin-kit": "^0.2.0"       // 必需：至少依赖 plugin-kit
+    "@capyclaw/plugin-kit": "^0.2.0"       // 必需：至少依赖 plugin-kit
   },
   "dsh": {                           // 必需：DSH 配置
     "bundle": {
@@ -214,7 +214,7 @@ dsh-my-plugin/
 - ✅ 版本号符合语义化版本规范
 
 ### 3. 依赖管理
-- ✅ 必须依赖 `dsh-plugin-kit`（suite 除外）
+- ✅ 必须依赖 `@capyclaw/plugin-kit`（suite 除外）
 - ✅ 基础设施包版本在锁定范围内
 
 ### 4. 元数据完整性
@@ -278,13 +278,13 @@ npm run validate-plugin extensions/official/dsh-my-plugin
 
 ## 🚨 常见错误
 
-### 错误 1: 缺少 dsh-plugin-kit 依赖
+### 错误 1: 缺少 @capyclaw/plugin-kit 依赖
 ```
-❌ [PLUGIN_KIT_REQUIRED] 必须依赖 dsh-plugin-kit
+❌ [PLUGIN_KIT_REQUIRED] 必须依赖 @capyclaw/plugin-kit
 ```
 **解决**: 在 `package.json` 的 `dependencies` 中添加：
 ```json
-"dsh-plugin-kit": "^0.2.0"
+"@capyclaw/plugin-kit": "^0.2.0"
 ```
 
 ### 错误 2: 缺少 dsh 配置
@@ -315,8 +315,8 @@ npm run validate-plugin extensions/official/dsh-my-plugin
 ## 📚 参考资源
 
 - [插件结构规范](./PLUGIN_STRUCTURE.md) - 详细的架构说明
-- [验证器源码](./tools/plugin-validator/) - 了解验证规则
-- [生成器源码](./tools/plugin-generator/) - 了解脚手架模板
+- [验证器源码](./tools/capyclaw-plugin-validator/) - 了解验证规则
+- [生成器源码](./tools/capyclaw-plugin-generator/) - 了解脚手架模板
 - [示例插件](./extensions/official/dsh-port-sidebar/) - 参考实现
 
 ---

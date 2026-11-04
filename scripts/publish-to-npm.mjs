@@ -3,7 +3,7 @@
  * 把可发布插件发布到 npm。
  *
  * 设计：
- *   - 复用 tools/plugin-release 的同一套判定（插件校验 + 发布闸 + 包名白名单），
+ *   - 复用 tools/capyclaw-plugin-release 的同一套判定（插件校验 + 发布闸 + 包名白名单），
  *     不再自己维护一份扫描列表，避免两条发布路径的清单不一致。
  *   - 只发布**原始包目录**（依赖交给 npm 从 registry 解析）；
  *     带 vendored 依赖的 staged 副本只用于 zip 分发，不走 npm。
@@ -16,8 +16,8 @@ import { spawnSync } from 'node:child_process'
 import path from 'node:path'
 import fs from 'node:fs'
 
-import { discoverPlugins, publishGateErrors } from '../tools/plugin-release/lib/index.mjs'
-import { validatePlugin } from '../tools/plugin-validator/lib/index.mjs'
+import { discoverPlugins, publishGateErrors } from '../tools/capyclaw-plugin-release/lib/index.mjs'
+import { validatePlugin } from '../tools/capyclaw-plugin-validator/lib/index.mjs'
 
 const args = process.argv.slice(2)
 const hasFlag = (name) => args.includes(name)

@@ -8,7 +8,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-const SKILL_PREFIX = 'dsh-canvas-skill-'
+const SKILL_PREFIX = 'capyclaw-canvas-skill-'
 const SCOPED_SKILL_PREFIX = 'canvas-skill-'
 const CONTRACT_FILE = 'canvas-contract.json'
 const SCOPE_DIR = '@capyclaw'

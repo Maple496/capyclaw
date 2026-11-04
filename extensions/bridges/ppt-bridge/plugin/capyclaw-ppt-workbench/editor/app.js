@@ -3,7 +3,7 @@
   var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
   var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
-  // ../../../packages/dsh-document-workbench/src/ops/index.mjs
+  // ../../../packages/capyclaw-document-workbench/src/ops/index.mjs
   function normalizeDefinition(name, raw2) {
     if (!raw2 || typeof raw2 !== "object") throw new Error(`op "${name}" 定义不合法`);
     const fn = raw2.run || raw2.apply;
@@ -4489,7 +4489,7 @@ endobj
     return el;
   }
 
-  // ../../../packages/dsh-document-workbench/src/client/index.mjs
+  // ../../../packages/capyclaw-document-workbench/src/client/index.mjs
   var DEFAULTS = {
     pollTimeoutSec: 3,
     claimRetryMs: 800,
@@ -5126,7 +5126,7 @@ endobj
     };
   }
 
-  // ../../../packages/dsh-document-workbench/src/client/screenshot.mjs
+  // ../../../packages/capyclaw-document-workbench/src/client/screenshot.mjs
   async function composeContactSheet({
     renderSlides,
     slideCount = 0,

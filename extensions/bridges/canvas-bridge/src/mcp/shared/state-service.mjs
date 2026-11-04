@@ -1,5 +1,5 @@
 /**
- * dsh-state-service —— 插件运行状态标准件。
+ * @capyclaw/state-service —— 插件运行状态标准件。
  *
  * 提供：
  *   - FileStateBackend：原子 JSON 状态 + append-only journal（2MB 轮转）+ 命名 checkpoint

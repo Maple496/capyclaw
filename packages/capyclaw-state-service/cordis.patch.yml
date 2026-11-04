@@ -1,0 +1,4 @@
+# 由 @capyclaw/state-service 提供；功能插件通过 inject: ['state'] 或 ctx.get('state') 使用。
+- insert:
+    - id: state-service
+      name: "@capyclaw/state-service"

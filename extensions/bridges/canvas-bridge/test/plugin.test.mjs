@@ -10,7 +10,7 @@ const PLUGIN = join(HERE, '..', 'plugin')
 
 const WORKBENCH = join(PLUGIN, 'capyclaw-canvas-workbench')
 const SUITE = join(PLUGIN, 'capyclaw-canvas-suite')
-const SKILLS = ['dsh-canvas-skill-canvas', 'dsh-canvas-skill-api', 'dsh-canvas-skill-authoring', 'dsh-canvas-skill-editing']
+const SKILLS = ['capyclaw-canvas-skill-canvas', 'capyclaw-canvas-skill-api', 'capyclaw-canvas-skill-authoring', 'capyclaw-canvas-skill-editing']
 
 test('workbench 包：manifest + dsh 声明 + main 入口', () => {
   const pkg = JSON.parse(readFileSync(join(WORKBENCH, 'package.json'), 'utf8'))
@@ -65,7 +65,7 @@ test('4 个 skill 包：结构一致 + 契约快照同步', () => {
 })
 
 test('canvasist-api 技能带生成的工具契约参考', () => {
-  const ref = join(PLUGIN, 'dsh-canvas-skill-api', 'skills', 'canvasist-api', 'references', 'tool-contract.md')
+  const ref = join(PLUGIN, 'capyclaw-canvas-skill-api', 'skills', 'canvasist-api', 'references', 'tool-contract.md')
   assert.ok(existsSync(ref))
   const md = readFileSync(ref, 'utf8')
   assert.ok(md.includes('canvas_write_document'))

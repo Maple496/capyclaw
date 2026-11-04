@@ -91,7 +91,7 @@ GET  /control/list | /control/doctor?id= | /healthz
 
 ## domain runtime 的落地方式（2026-11-03）
 
-`dsh-suite-kit` 的 domain / `.works` 部署现在也遵守本标准的同一路径：
+`@capyclaw/suite-kit` 的 domain / `.works` 部署现在也遵守本标准的同一路径：
 
 1. suite 根 `services.json` 是服务清单（broker spec 形状，通常由套件维护）；
 2. `createRuntime` 把它物化成 `<runtime>/service-manifest.json`：
@@ -108,8 +108,8 @@ relay standalone 入口从 `DSH_RUNTIME_FILE` 接上当前 runtime 的 workspace
 
 ## 参考实现
 
-- 中间件：`packages/dsh-service-broker`（README 有全部端点与 spec 说明）
-- 服务标准件：`packages/dsh-service-host`（`createServiceApp`：路由/静态/
+- 中间件：`packages/capyclaw-service-broker`（README 有全部端点与 spec 说明）
+- 服务标准件：`packages/capyclaw-service-host`（`createServiceApp`：路由/静态/
   healthz/metrics/单实例锁/优雅关闭）
 - 合规样板：`extensions/official/dsh-port-sidebar`（只注入 URL，不拉服务）
-- 已迁移服务：`bridges/ppt-bridge/plugin/dsh-ppt-workbench`（relay standalone）
+- 已迁移服务：`bridges/ppt-bridge/plugin/capyclaw-ppt-workbench`（relay standalone）

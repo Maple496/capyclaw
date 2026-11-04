@@ -16,20 +16,20 @@ const PPT_SUITE = [
   path.join(ROOT, 'bridges', 'ppt-bridge', 'plugin', 'capyclaw-ppt-suite', 'dsh-suite.json'),
 ].find((candidate) => fs.existsSync(candidate)) || ''
 const PUBLIC_PACKAGES = [
-  'dsh-service-host',
-  'dsh-tool-host',
-  'dsh-state-service',
-  'dsh-asset-service',
-  'dsh-editor-host',
+  'capyclaw-service-host',
+  'capyclaw-tool-host',
+  'capyclaw-state-service',
+  'capyclaw-asset-service',
+  'capyclaw-editor-host',
 ]
 
 /* PPT 套件不消费 ctx.state（journal/checkpoint 由 document-workbench 直接落盘），
- * 因此 dsh-state-service 允许不出现在套件里；其余公共插件必须声明。 */
-const OPTIONAL_PACKAGES = new Set(['dsh-state-service'])
+ * 因此 @capyclaw/state-service 允许不出现在套件里；其余公共插件必须声明。 */
+const OPTIONAL_PACKAGES = new Set(['@capyclaw/state-service'])
 
 const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8'))
-/* suite manifest 的 packages key 统一用 npm 发布名（@capyclaw/*），本地目录名仍是 dsh-* */
-const npmNameOf = (pkg) => '@capyclaw/' + pkg.replace(/^dsh-/, '')
+/* suite manifest 的 packages key 统一用 npm 发布名（@capyclaw/*），本地目录名 = 包名去 scope（capyclaw-*） */
+const npmNameOf = (pkg) => '@capyclaw/' + pkg.replace(/^capyclaw-/, '')
 const pickProvides = (entry) => ({
   services: [...(entry.provides?.services || [])].sort(),
   capabilities: Object.fromEntries(Object.entries(entry.provides?.capabilities || {}).sort()),
@@ -52,7 +52,7 @@ export function checkSuiteDrift({ quiet = false } = {}) {
       || (components.has(path.resolve(ROOT, 'packages', name)) ? ownEntry : null)
     if (!ownEntry) { issues.push(`${name}: 自己的 suite 缺少 package 条目`); continue }
     if (!pptEntry) {
-      if (OPTIONAL_PACKAGES.has(name)) continue
+      if (OPTIONAL_PACKAGES.has(npmNameOf(name))) continue
       issues.push(`${name}: capyclaw-ppt-suite 缺少 package 条目`)
       continue
     }
@@ -75,7 +75,7 @@ export function checkSuiteDrift({ quiet = false } = {}) {
     const locked = ppt.packages?.['@capyclaw/plugin-kit']
     if (!locked) issues.push('capyclaw-ppt-suite 缺少 @capyclaw/plugin-kit support package')
   }
-  const kitVersion = readJson(path.join(ROOT, 'packages', 'dsh-plugin-kit', 'package.json')).version
+  const kitVersion = readJson(path.join(ROOT, 'packages', 'capyclaw-plugin-kit', 'package.json')).version
   const pptKit = ppt.packages?.['@capyclaw/plugin-kit']?.version
   if (pptKit && !pptKit.includes(kitVersion)) {
     issues.push(`@capyclaw/plugin-kit: package.json=${kitVersion} ppt=${pptKit}`)

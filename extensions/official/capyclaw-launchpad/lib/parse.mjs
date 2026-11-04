@@ -1,7 +1,7 @@
 /**
  * 启动清单解析与校验（自包含）。
  *
- * 刻意不 deep-import dsh-suite-kit / dsh-service-broker：
+ * 刻意不 deep-import @capyclaw/suite-kit / dsh-service-broker：
  * 那两个包没有导出 lib/works-parser、lib/row-audit 等深路径，且插件需要可
  * 独立分发。这里实现的是「管理器视角」的轻量校验（结构、路径、冲突、行覆盖），
  * 深度语义校验仍以 dsh-deploy / dsh-domain validate 为准。

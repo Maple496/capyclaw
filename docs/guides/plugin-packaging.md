@@ -47,7 +47,7 @@ node pack-plugin.mjs ./my-plugins/my-service/plugin/dsh-my-service-suite
 domain 包用 `dsh-domain stage`：
 
 ```bash
-node packages/dsh-suite-kit/bin/dsh-domain.mjs stage \
+node packages/capyclaw-suite-kit/bin/dsh-domain.mjs stage \
   ./my-plugins/my-service/domains/my-service \
   --out ./dist/domain-my-service
 ```
@@ -77,7 +77,7 @@ node scripts/build-bundle.mjs \
 
 构建器做什么：
 
-1. 通过 `dsh-suite-kit` 解析 domain → suite → packages；
+1. 通过 `@capyclaw/suite-kit` 解析 domain → suite → packages；
 2. `stageDomain` 生成 `domain/`（组件 + kit + domain.json）；
 3. 复制 Harness shell（`auth-proxy.mjs`、`package.json`、`package-lock.json`、`process-manager.mjs`、`single-instance.mjs`、`node_modules`）；
 4. 生成 `setup.mjs`：调用 `installDomain({ runPnpm: false })`，在 `<bundle>/.dsh/profiles/<profile>` 建链接和 profile；

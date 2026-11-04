@@ -48,14 +48,14 @@ npm run publish:execute
 
 | 包 | 目录 | 被谁依赖 |
 |---|---|---|
-| `@capyclaw/plugin-kit` | `packages/dsh-plugin-kit` | 所有插件的 SDK |
-| `@capyclaw/document-workbench` | `packages/dsh-document-workbench` | `@capyclaw/ppt-workbench` |
-| `@capyclaw/skills-service` | `extensions/bridges/ppt-bridge/dsh-skills-service` | `@capyclaw/ppt-suite` |
+| `@capyclaw/plugin-kit` | `packages/capyclaw-plugin-kit` | 所有插件的 SDK |
+| `@capyclaw/document-workbench` | `packages/capyclaw-document-workbench` | `@capyclaw/ppt-workbench` |
+| `@capyclaw/skills-service` | `extensions/bridges/ppt-bridge/capyclaw-skills-service` | `@capyclaw/ppt-suite` |
 
 ```bash
-npm --prefix packages/dsh-plugin-kit publish --access public
-npm --prefix packages/dsh-document-workbench publish --access public
-npm --prefix extensions/bridges/ppt-bridge/dsh-skills-service publish --access public
+npm --prefix packages/capyclaw-plugin-kit publish --access public
+npm --prefix packages/capyclaw-document-workbench publish --access public
+npm --prefix extensions/bridges/ppt-bridge/capyclaw-skills-service publish --access public
 ```
 
 ## 版本管理

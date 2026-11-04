@@ -159,6 +159,30 @@ try {
   const status1 = await (await fetch(`${BRIDGE}/status`)).json()
   check('bridge status has words', status1.words > 50, `words=${status1.words}`)
 
+  /* 17) 性能预算（宽松上界防回退；精确数据看 scripts/bench.mjs） */
+  {
+    const timing = async (fn) => {
+      const t = performance.now()
+      await fn()
+      return performance.now() - t
+    }
+    const p50 = (list) => [...list].sort((a, b) => a - b)[Math.floor(list.length / 2)]
+    const appends = []
+    for (let i = 0; i < 6; i++) appends.push(await timing(() => call('canvas_append_blocks', { blocks: [{ type: 'paragraph', text: `性能 ${i}` }] })))
+    const reads = []
+    for (let i = 0; i < 6; i++) reads.push(await timing(() => call('canvas_read', { mode: 'summary' })))
+    const shots = []
+    for (let i = 0; i < 2; i++) shots.push(await timing(() => call('canvas_screenshot')))
+    const budgets = [
+      ['append p50', p50(appends), 500],
+      ['read summary p50', p50(reads), 150],
+      ['screenshot p50', p50(shots), 800],
+    ]
+    for (const [name, value, budget] of budgets) {
+      check(`性能预算 ${name} < ${budget}ms`, value < budget, `${Math.round(value)}ms`)
+    }
+  }
+
   /* 错误分类：壳层（app.js）错误 = 失败；内核内部竞态 = 警告（如实记录） */
   const shellErrors = pageErrors.filter((e) => e.includes('app.js'))
   const kernelErrors = pageErrors.filter((e) => !e.includes('app.js'))

@@ -1,5 +1,5 @@
 /** op 组装：按域合并为一张表，交给通用 op registry 分发。 */
-import { createOpDispatcher, createOpRegistry } from 'dsh-document-workbench/ops'
+import { createOpDispatcher, createOpRegistry } from '@capyclaw/document-workbench/ops'
 import { deckOps } from './deck.js'
 import { textOps } from './text.js'
 import { elementOps } from './element.js'

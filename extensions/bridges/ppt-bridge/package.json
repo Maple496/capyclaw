@@ -1,5 +1,5 @@
 {
-  "name": "ppt-bridge-middleware",
+  "name": "@capyclaw/ppt-bridge",
   "version": "2.0.0",
   "private": true,
   "type": "module",
@@ -8,8 +8,8 @@
     "build:plugin": "node scripts/build-plugin.mjs",
     "check:plugin": "node scripts/build-plugin.mjs --check",
     "lint:skills": "node scripts/lint-skills.mjs",
-    "suite:validate": "node ../../../packages/dsh-suite-kit/bin/dsh-suite.mjs validate plugin/capyclaw-ppt-suite",
-    "suite:compose": "node ../../../packages/dsh-suite-kit/bin/dsh-suite.mjs compose plugin/capyclaw-ppt-suite --out dist/suite"
+    "suite:validate": "node ../../../packages/capyclaw-suite-kit/bin/dsh-suite.mjs validate plugin/capyclaw-ppt-suite",
+    "suite:compose": "node ../../../packages/capyclaw-suite-kit/bin/dsh-suite.mjs compose plugin/capyclaw-ppt-suite --out dist/suite"
   },
   "devDependencies": {
     "esbuild": "^0.21.5"

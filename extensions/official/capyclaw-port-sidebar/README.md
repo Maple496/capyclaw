@@ -1,4 +1,4 @@
-# dsh-port-sidebar
+# @capyclaw/port-sidebar
 
 在 DSH 右侧边栏**稳定展示一个本机端口页面**：每个会话的右侧边栏都确保存在一个指向该端口的 Browser tab，**切换会话/换话题不消失**；会话切回来时页面保留（不重载，桌面端为原生 webview + keepMounted）。
 

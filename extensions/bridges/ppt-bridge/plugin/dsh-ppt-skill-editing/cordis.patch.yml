@@ -1,4 +1,0 @@
-# @capyclaw/ppt-skill-editing（目录 dsh-ppt-skill-editing） bundle patch：只注册 pptist-editing 一个 skill provider。
-- insert:
-    - id: ppt-skill-editing
-      name: @capyclaw/ppt-skill-editing

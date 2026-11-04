@@ -4,7 +4,10 @@
  */
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createMemoryBackend } from 'dsh-document-workbench/testing'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import { createMemoryBackend } from '@capyclaw/document-workbench/testing'
 import { setTimeout as sleep } from 'node:timers/promises'
 
 const { startRelay } = await import('../plugin/capyclaw-canvas-workbench/server/relay.mjs')
@@ -12,6 +15,7 @@ const { startRelay } = await import('../plugin/capyclaw-canvas-workbench/server/
 let relay = null
 let base = ''
 let bridge = ''
+let hostDir = ''
 const fakeDoc = { header: [], main: [], footer: [] }
 let stopped = false
 
@@ -61,9 +65,11 @@ async function mcp(name, args = {}) {
 }
 
 test.before(async () => {
+  /* 独立临时 hostDir：并行测试文件不抢默认 ~/.dsh-canvas-bridge 的实例锁。 */
+  hostDir = fs.mkdtempSync(path.join(os.tmpdir(), 'canvas-relay-'))
   relay = await startRelay({
     port: 0,
-    hostDir: undefined,
+    hostDir,
     backend: createMemoryBackend({}),
     allowReuse: false,
     strictPort: true,
@@ -81,6 +87,7 @@ test.before(async () => {
 test.after(async () => {
   stopped = true
   if (relay) await relay.stop()
+  if (hostDir) fs.rmSync(hostDir, { recursive: true, force: true })
 })
 
 test('healthz：契约快照一致 + 基本字段', async () => {

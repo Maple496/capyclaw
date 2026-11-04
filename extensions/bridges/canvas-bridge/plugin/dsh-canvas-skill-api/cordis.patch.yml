@@ -1,4 +1,0 @@
-# @capyclaw/canvas-skill-api（目录 dsh-canvas-skill-api） bundle patch：只注册 canvasist-api 一个 skill provider。
-- insert:
-    - id: canvas-skill-api
-      name: @capyclaw/canvas-skill-api

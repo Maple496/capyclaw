@@ -19,7 +19,7 @@
 - **ppt-bridge/** - PPT 工作台构建工场
   - `src/ assets/ contract/` - 构建输入
   - `plugin/` - 10 个生成包（workbench + suite + 8 个 skill），由 `npm run build:plugin` 生成
-  - `dsh-skills-service/` - @capyclaw/skills-service（ppt-suite 依赖）
+  - `capyclaw-skills-service/` - @capyclaw/skills-service（ppt-suite 依赖）
 - **canvas-bridge/** - Canvas 插件（开发中，未发布）
 
 ## 开发规范

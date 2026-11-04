@@ -1,0 +1,4 @@
+# @capyclaw/ppt-skill-ppt（目录 capyclaw-ppt-skill-ppt） bundle patch：只注册 ppt 一个 skill provider。
+- insert:
+    - id: ppt-skill-ppt
+      name: @capyclaw/ppt-skill-ppt

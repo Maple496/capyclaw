@@ -1,0 +1,29 @@
+{
+  "$schema": "../@capyclaw/suite-kit/suite.schema.json",
+  "name": "dsh-asset-service-suite",
+  "version": "0.1.0",
+  "title": "Asset Service",
+  "description": "通用对象资产：sha256 仓库、/assets 路由、上传。",
+  "packages": {
+    "@capyclaw/asset-service": {
+      "role": "provider",
+      "version": "^0.1.1",
+      "path": ".",
+      "provides": {
+        "services": [
+          "assets"
+        ],
+        "capabilities": {
+          "assets.store": "1.0.0"
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "asset-service",
+      "name": "@capyclaw/asset-service"
+    }
+  ],
+  "checks": []
+}

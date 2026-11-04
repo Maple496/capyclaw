@@ -1,7 +1,7 @@
 /** BridgeStore：编辑器权威会话流转（内存 backend 直测）。 */
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createMemoryBackend } from 'dsh-document-workbench/testing'
+import { createMemoryBackend } from '@capyclaw/document-workbench/testing'
 import { BridgeStore } from '../plugin/capyclaw-canvas-workbench/server/store.mjs'
 
 function newStore() {

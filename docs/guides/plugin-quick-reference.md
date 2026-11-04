@@ -140,12 +140,12 @@ node scripts/sync-shared.mjs \
   --out my-plugins/my-service/plugin/my-service/server/shared --force
 
 # 校验 suite / domain
-node packages/dsh-suite-kit/bin/dsh-suite.mjs validate my-plugins/my-service/plugin/my-service-suite
-node packages/dsh-suite-kit/bin/dsh-domain.mjs validate my-plugins/my-service/domains/my-service
+node packages/capyclaw-suite-kit/bin/dsh-suite.mjs validate my-plugins/my-service/plugin/my-service-suite
+node packages/capyclaw-suite-kit/bin/dsh-domain.mjs validate my-plugins/my-service/domains/my-service
 
 # 安装
 dsh plugin --profile web add /abs/path/to/plugin
-node packages/dsh-suite-kit/bin/dsh-suite.mjs install /abs/path/to/suite --profile web
+node packages/capyclaw-suite-kit/bin/dsh-suite.mjs install /abs/path/to/suite --profile web
 
 # 打包
 node pack-plugin.mjs my-plugins/my-service/plugin/my-service

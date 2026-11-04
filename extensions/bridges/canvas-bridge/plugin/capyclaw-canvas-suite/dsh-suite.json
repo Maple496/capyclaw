@@ -1,25 +1,25 @@
 {
-  "$schema": "../../../../../packages/dsh-suite-kit/suite.schema.json",
+  "$schema": "../../../../../packages/capyclaw-suite-kit/suite.schema.json",
   "name": "capyclaw-canvas-suite",
   "version": "0.2.0",
   "title": "Canvas 文档工作台套件",
   "description": "Canvas 编辑器运行时（独立端口服务，编辑器权威桥）+ 4 个独立 skill 包 + 4 个公共基建插件 + 文档工作台框架 + 底层 kit；relay 不 insert 进 dsh 进程，由中间件按清单以独立进程拉起。",
   "components": [
-    "../../../../../packages/dsh-service-host",
-    "../../../../../packages/dsh-tool-host",
-    "../../../../../packages/dsh-asset-service",
-    "../../../../../packages/dsh-editor-host"
+    "../../../../../packages/capyclaw-service-host",
+    "../../../../../packages/capyclaw-tool-host",
+    "../../../../../packages/capyclaw-asset-service",
+    "../../../../../packages/capyclaw-editor-host"
   ],
   "packages": {
     "@capyclaw/plugin-kit": {
       "role": "support",
       "version": "^0.2.0",
-      "path": "../../../../../packages/dsh-plugin-kit"
+      "path": "../../../../../packages/capyclaw-plugin-kit"
     },
     "@capyclaw/document-workbench": {
       "role": "support",
       "version": "^0.1.0",
-      "path": "../../../../../packages/dsh-document-workbench"
+      "path": "../../../../../packages/capyclaw-document-workbench"
     },
     "@capyclaw/canvas-workbench": {
       "role": "runtime",
@@ -52,7 +52,7 @@
     "@capyclaw/canvas-skill-canvas": {
       "role": "skills",
       "version": "^0.2.0",
-      "path": "../dsh-canvas-skill-canvas",
+      "path": "../capyclaw-canvas-skill-canvas",
       "requires": {
         "@capyclaw/canvas-workbench": "^0.2.0",
         "capabilities": {
@@ -71,7 +71,7 @@
     "@capyclaw/canvas-skill-api": {
       "role": "skills",
       "version": "^0.2.0",
-      "path": "../dsh-canvas-skill-api",
+      "path": "../capyclaw-canvas-skill-api",
       "requires": {
         "@capyclaw/canvas-workbench": "^0.2.0",
         "capabilities": {
@@ -90,7 +90,7 @@
     "@capyclaw/canvas-skill-authoring": {
       "role": "skills",
       "version": "^0.2.0",
-      "path": "../dsh-canvas-skill-authoring",
+      "path": "../capyclaw-canvas-skill-authoring",
       "requires": {
         "@capyclaw/canvas-workbench": "^0.2.0",
         "capabilities": {
@@ -109,7 +109,7 @@
     "@capyclaw/canvas-skill-editing": {
       "role": "skills",
       "version": "^0.2.0",
-      "path": "../dsh-canvas-skill-editing",
+      "path": "../capyclaw-canvas-skill-editing",
       "requires": {
         "@capyclaw/canvas-workbench": "^0.2.0",
         "capabilities": {

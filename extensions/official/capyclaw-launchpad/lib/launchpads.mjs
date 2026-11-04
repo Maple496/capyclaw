@@ -555,7 +555,7 @@ stack "${name}" {
       try {
         const pkg = JSON.parse(readFileSync(pkgFile, 'utf8'))
         if (pkg.dependencies?.['@capyclaw/plugin-kit'] && !dependencies['@capyclaw/plugin-kit']) {
-          dependencies['@capyclaw/plugin-kit'] = path.join(repoRoot, 'packages', '@capyclaw/plugin-kit')
+          dependencies['@capyclaw/plugin-kit'] = path.join(repoRoot, 'packages', 'capyclaw-plugin-kit')
         }
       } catch { /* 坏插件包由 plan 阶段报 */ }
     }

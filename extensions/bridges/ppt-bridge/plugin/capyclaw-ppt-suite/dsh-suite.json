@@ -1,25 +1,25 @@
 {
-  "$schema": "../../../../../packages/dsh-suite-kit/suite.schema.json",
+  "$schema": "../../../../../packages/capyclaw-suite-kit/suite.schema.json",
   "name": "capyclaw-ppt-suite",
   "version": "2.4.3",
   "title": "PPT 工作台套件",
   "description": "PPTist 运行时（独立端口服务）+ 8 个独立 skill 包 + 4 个公共基建插件 + 文档工作台框架 + 底层 kit + 服务中间件（broker）与技能服务；2026-11-01 起按服务解耦标准：relay 不再 insert 进 dsh 进程，由中间件按清单以独立进程拉起。",
   "components": [
-    "../../../../../packages/dsh-service-host",
-    "../../../../../packages/dsh-tool-host",
-    "../../../../../packages/dsh-asset-service",
-    "../../../../../packages/dsh-editor-host"
+    "../../../../../packages/capyclaw-service-host",
+    "../../../../../packages/capyclaw-tool-host",
+    "../../../../../packages/capyclaw-asset-service",
+    "../../../../../packages/capyclaw-editor-host"
   ],
   "packages": {
     "@capyclaw/plugin-kit": {
       "role": "support",
       "version": "^0.2.0",
-      "path": "../../../../../packages/dsh-plugin-kit"
+      "path": "../../../../../packages/capyclaw-plugin-kit"
     },
     "@capyclaw/document-workbench": {
       "role": "support",
       "version": "^0.1.0",
-      "path": "../../../../../packages/dsh-document-workbench"
+      "path": "../../../../../packages/capyclaw-document-workbench"
     },
     "@capyclaw/ppt-workbench": {
       "role": "runtime",
@@ -52,7 +52,7 @@
     "@capyclaw/ppt-skill-ppt": {
       "role": "skills",
       "version": "^2.2.0",
-      "path": "../dsh-ppt-skill-ppt",
+      "path": "../capyclaw-ppt-skill-ppt",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
@@ -71,7 +71,7 @@
     "@capyclaw/ppt-skill-narrative": {
       "role": "skills",
       "version": "^2.2.0",
-      "path": "../dsh-ppt-skill-narrative",
+      "path": "../capyclaw-ppt-skill-narrative",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
@@ -90,7 +90,7 @@
     "@capyclaw/ppt-skill-design": {
       "role": "skills",
       "version": "^2.2.0",
-      "path": "../dsh-ppt-skill-design",
+      "path": "../capyclaw-ppt-skill-design",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
@@ -109,7 +109,7 @@
     "@capyclaw/ppt-skill-api": {
       "role": "skills",
       "version": "^2.2.0",
-      "path": "../dsh-ppt-skill-api",
+      "path": "../capyclaw-ppt-skill-api",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
@@ -128,7 +128,7 @@
     "@capyclaw/ppt-skill-authoring": {
       "role": "skills",
       "version": "^2.2.0",
-      "path": "../dsh-ppt-skill-authoring",
+      "path": "../capyclaw-ppt-skill-authoring",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
@@ -147,7 +147,7 @@
     "@capyclaw/ppt-skill-editing": {
       "role": "skills",
       "version": "^2.2.0",
-      "path": "../dsh-ppt-skill-editing",
+      "path": "../capyclaw-ppt-skill-editing",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
@@ -166,7 +166,7 @@
     "@capyclaw/ppt-skill-visual-check": {
       "role": "skills",
       "version": "^2.2.0",
-      "path": "../dsh-ppt-skill-visual-check",
+      "path": "../capyclaw-ppt-skill-visual-check",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
@@ -185,7 +185,7 @@
     "@capyclaw/ppt-skill-research": {
       "role": "skills",
       "version": "^2.2.0",
-      "path": "../dsh-ppt-skill-research",
+      "path": "../capyclaw-ppt-skill-research",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
         "capabilities": {
@@ -204,7 +204,7 @@
     "@capyclaw/service-broker": {
       "role": "runtime",
       "version": "^0.2.0",
-      "path": "../../../../../packages/dsh-service-broker",
+      "path": "../../../../../packages/capyclaw-service-broker",
       "provides": {
         "services": [
           "serviceBroker"
@@ -218,7 +218,7 @@
     "@capyclaw/skills-service": {
       "role": "runtime",
       "version": "^0.1.0",
-      "path": "../../dsh-skills-service",
+      "path": "../../capyclaw-skills-service",
       "provides": {
         "services": [
           "dsh-skills"

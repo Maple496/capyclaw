@@ -13,11 +13,11 @@
       "patterns": [
         {
           "group": ["**/packages/*/src/**"],
-          "message": "❌ 不要直接引用包的内部 src/ 路径，请使用公开 API（如 'dsh-suite-kit' 而非 '../packages/dsh-suite-kit/src/index.mjs'）"
+          "message": "❌ 不要直接引用包的内部 src/ 路径，请使用公开 API（如 '@capyclaw/suite-kit' 而非 '../packages/capyclaw-suite-kit/src/index.mjs'）"
         },
         {
           "group": ["../../../../packages/**", "../../../packages/**"],
-          "message": "❌ 不要使用深层相对路径引用包，请使用包名（如 'dsh-plugin-kit' 而非 '../../../../packages/dsh-plugin-kit'）"
+          "message": "❌ 不要使用深层相对路径引用包，请使用包名（如 '@capyclaw/plugin-kit' 而非 '../../../../packages/capyclaw-plugin-kit'）"
         },
         {
           "group": ["**/node_modules/**/src/**"],

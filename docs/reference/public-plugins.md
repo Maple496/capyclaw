@@ -13,7 +13,7 @@
         ├─ 同进程：ctx.serviceHost / ctx.toolHost / ctx.state / ctx.assets / ctx.editorHost
         └─ 独立分发：server/shared/* 公共插件源码快照
               │
-              └─ dsh-plugin-kit（底层协议/传输/存储算法）
+              └─ @capyclaw/plugin-kit（底层协议/传输/存储算法）
 ```
 
 ## 公共插件
@@ -22,14 +22,14 @@
 |---|---|---|---|
 | `dsh-service-host` | `ctx.serviceHost` | HTTP 路由、`/healthz`、`/metrics`、静态资源、单实例锁、端口复用、discovery、优雅关闭；standalone/embedded 双模式 | 业务状态、工具、资产 |
 | `dsh-tool-host` | `ctx.toolHost` | `defineTool`/`defineCapability`、能力注册表、参数校验、契约报告、MCP 协议壳、instructions 模板 | HTTP 监听、业务实现 |
-| `dsh-state-service` | `ctx.state` | 原子状态、journal（2MB 轮转）、命名 checkpoint、崩溃恢复 | work 文件归属（属于 workspace） |
+| `@capyclaw/state-service` | `ctx.state` | 原子状态、journal（2MB 轮转）、命名 checkpoint、崩溃恢复 | work 文件归属（属于 workspace） |
 | `dsh-asset-service` | `ctx.assets` | sha256 对象仓库、`/assets/<id>`、base64 上传、content-type | 作品目录、版本 |
 | `dsh-editor-host` | `ctx.editorHost` | 编辑器静态托管、租约仲裁、心跳、连接状态 | 编辑器业务 UI |
 | `dsh-mcp-gateway` | `ctx.mcpGateway` | 聚合多个插件的 MCP 工具面，向外部客户端暴露单一 `/mcp` | 插件业务、鉴权、持久化 |
 
 ## 文档工作台框架
 
-`dsh-document-workbench` 是纯库（无 `ctx.*`、无端口、无 service row），把编辑器类插件反复实现的协议层抽出来：
+`@capyclaw/document-workbench` 是纯库（无 `ctx.*`、无端口、无 service row），把编辑器类插件反复实现的协议层抽出来：
 
 | 子路径 | 职责 |
 |---|---|
@@ -40,7 +40,7 @@
 | `screenshot` | contact sheet 合成 |
 | `testing` | 内存 backend、fake adapter、一致性测试工具 |
 
-PPT 是第一个消费者；`dsh-ppt-workbench` 的 `server/store`、`server/routes/bridge`、`server/runtime/{watch,recovery}`、`core/ops`、`src/editor/session.js` 都已改为调用该框架。其他编辑器插件只需提供 `documentKey`、领域文档、op 实现和浏览器 adapter，不再复制桥协议。
+PPT 是第一个消费者；`capyclaw-ppt-workbench` 的 `server/store`、`server/routes/bridge`、`server/runtime/{watch,recovery}`、`core/ops`、`src/editor/session.js` 都已改为调用该框架。其他编辑器插件只需提供 `documentKey`、领域文档、op 实现和浏览器 adapter，不再复制桥协议。
 
 ## 新插件标准形态
 
@@ -68,7 +68,7 @@ node create-plugin.mjs --name dsh-my-service --type service --port 39500 \
   --out ./my-plugins --domain my-service --yes
 ```
 
-编辑器类插件在公共插件之上再加 `dsh-document-workbench`：不要复制 PPT 的 `server/store`、`server/routes/bridge`、`src/editor/session.js`，只实现领域文档、op、HTTP 投影和浏览器 adapter。
+编辑器类插件在公共插件之上再加 `@capyclaw/document-workbench`：不要复制 PPT 的 `server/store`、`server/routes/bridge`、`src/editor/session.js`，只实现领域文档、op、HTTP 投影和浏览器 adapter。
 
 更新公共插件快照：
 
@@ -92,7 +92,7 @@ ctx.serviceHost = {
 消费者在注入时校验 major：
 
 ```js
-import { assertServiceApi } from 'dsh-plugin-kit/service/api'
+import { assertServiceApi } from '@capyclaw/plugin-kit/service/api'
 assertServiceApi(ctx.serviceHost, { name: 'serviceHost', major: 1 })
 ```
 
@@ -104,11 +104,11 @@ assertServiceApi(ctx.serviceHost, { name: 'serviceHost', major: 1 })
 
 ```json
 "components": [
-  "../../../../packages/dsh-service-host",
-  "../../../../packages/dsh-tool-host",
-  "../../../../packages/dsh-state-service",
-  "../../../../packages/dsh-asset-service",
-  "../../../../packages/dsh-editor-host"
+  "../../../../packages/capyclaw-service-host",
+  "../../../../packages/capyclaw-tool-host",
+  "../../../../packages/capyclaw-state-service",
+  "../../../../packages/capyclaw-asset-service",
+  "../../../../packages/capyclaw-editor-host"
 ]
 ```
 
@@ -123,16 +123,16 @@ assertServiceApi(ctx.serviceHost, { name: 'serviceHost', major: 1 })
 
 ## 版本与依赖
 
-- 公共插件 `package.json` 声明 `dsh-plugin-kit` 依赖，源码使用包名 import。
+- 公共插件 `package.json` 声明 `@capyclaw/plugin-kit` 依赖，源码使用包名 import。
 - 本地开发执行 `node scripts/link-workspace.mjs` 建立仓库根 `node_modules` junction；发布时由 npm 正常安装。
 - `dsh-ppt-suite` 版本 `2.3.0`，`composition.lock.json` 记录实际解析到的包版本和 apiVersion。
 
 ## PPT 的两种运行形态
 
 - **DSH 内（当前套件安装）**：`dsh-ppt-suite` 的 packages/rows 包含 5 个公共插件；
-  `dsh-ppt-workbench` 通过 `ctx.serviceHost` / `ctx.toolHost` / `ctx.state` / `ctx.assets` / `ctx.editorHost` 使用它们。
-- **独立运行/打包**：`dsh-ppt-workbench/server/shared/` 保留公共插件源码快照，无 DSH 时自动回退。
-- 升级公共插件后，运行 `node scripts/sync-shared.mjs --out bridges/ppt-bridge/plugin/dsh-ppt-workbench/server/shared --force`，
+  `capyclaw-ppt-workbench` 通过 `ctx.serviceHost` / `ctx.toolHost` / `ctx.state` / `ctx.assets` / `ctx.editorHost` 使用它们。
+- **独立运行/打包**：`capyclaw-ppt-workbench/server/shared/` 保留公共插件源码快照，无 DSH 时自动回退。
+- 升级公共插件后，运行 `node scripts/sync-shared.mjs --out bridges/ppt-bridge/plugin/capyclaw-ppt-workbench/server/shared --force`，
   再跑 `node bridges/ppt-bridge/scripts/build-plugin.mjs` 和全量测试。
 
 ## PPTist 抽取映射
@@ -144,11 +144,11 @@ assertServiceApi(ctx.serviceHost, { name: 'serviceHost', major: 1 })
 | `server/mcp/handler.mjs`、`dispatch.mjs`、`validate.mjs` | `dsh-tool-host` |
 | `server/tools/kernel/{define,registry}.mjs` | `dsh-tool-host` |
 | `server/contract.mjs` 的报告结构 | `dsh-tool-host` |
-| `server/store/backends/file-backend.mjs`、`runtime/recovery.mjs` | `dsh-state-service`（backend）/ `dsh-document-workbench/session`（recover） |
-| `server/store/{doc,index,sanitize,lease,checkpoints}.mjs` | `dsh-document-workbench/session` |
-| `server/routes/bridge.mjs`、`server/runtime/watch.mjs` | `dsh-document-workbench/bridge` / `session` |
-| `core/ops/*` | `dsh-document-workbench/ops` |
-| `src/editor/session.js`、`src/editor/screenshot.js` | `dsh-document-workbench/client` / `screenshot` |
+| `server/store/backends/file-backend.mjs`、`runtime/recovery.mjs` | `@capyclaw/state-service`（backend）/ `@capyclaw/document-workbench/session`（recover） |
+| `server/store/{doc,index,sanitize,lease,checkpoints}.mjs` | `@capyclaw/document-workbench/session` |
+| `server/routes/bridge.mjs`、`server/runtime/watch.mjs` | `@capyclaw/document-workbench/bridge` / `session` |
+| `core/ops/*` | `@capyclaw/document-workbench/ops` |
+| `src/editor/session.js`、`src/editor/screenshot.js` | `@capyclaw/document-workbench/client` / `screenshot` |
 | `server/routes/assets.mjs`、`lib/host.mjs` 的 assetStore | `dsh-asset-service` |
 | `server/routes/editor.mjs`、编辑器租约 | `dsh-editor-host` |
 | `core/*`、`server/tools/capabilities|domains`、`ppt-shim`、`bridge-client` | 保留（PPT 领域） |
@@ -171,7 +171,7 @@ node scripts/artifact-store.mjs list
 
 # 安装时覆盖某个包的版本
 node bridges/ppt-bridge/scripts/install-plugin-suite.mjs \
-  --profile web --package dsh-state-service@0.1.0
+  --profile web --package @capyclaw/state-service@0.1.0
 
 # 按 profile 的历史组合锁回滚
 node bridges/ppt-bridge/scripts/install-plugin-suite.mjs \
@@ -202,6 +202,6 @@ node scripts/module-probe.mjs all
 
 ## 非目标
 
-- `dsh-suite-kit`、`create-plugin`、`pack-build` 是构建期工具，不做运行时插件。
-- `dsh-plugin-kit` 的纯函数不做插件，保留为库。
-- `dsh-document-workbench` 只抽协议/会话/客户端框架；deck ops、布局、审计、PPTist bundle 仍属 PPT 领域，不因框架抽取而上移。
+- `@capyclaw/suite-kit`、`create-plugin`、`pack-build` 是构建期工具，不做运行时插件。
+- `@capyclaw/plugin-kit` 的纯函数不做插件，保留为库。
+- `@capyclaw/document-workbench` 只抽协议/会话/客户端框架；deck ops、布局、审计、PPTist bundle 仍属 PPT 领域，不因框架抽取而上移。

@@ -1,5 +1,5 @@
 {
-  "$schema": "../../../../../packages/dsh-suite-kit/domain.schema.json",
+  "$schema": "../../../../../packages/capyclaw-suite-kit/domain.schema.json",
   "name": "canvas",
   "version": "0.2.0",
   "title": "Canvas 文档工作台领域包",
@@ -9,7 +9,7 @@
     "@deepseek-ai/dsh-web-app"
   ],
   "components": [
-    "../../../../../packages/dsh-workspace-service",
+    "../../../../../packages/capyclaw-workspace-service",
     "../../plugin/capyclaw-canvas-suite",
     "../../../../../extensions/official/capyclaw-launch-engine/plugin/capyclaw-launch-engine-suite"
   ],

@@ -56,7 +56,7 @@
 校验：
 
 ```bash
-node packages/dsh-suite-kit/bin/dsh-suite.mjs validate <suite-dir>
+node packages/capyclaw-suite-kit/bin/dsh-suite.mjs validate <suite-dir>
 ```
 
 工具会以 `mcp__github__<tool>` 出现在模型工具列表。
@@ -133,7 +133,7 @@ npm run validate-plugin -- .
 ### 5. 安装
 
 ```bash
-node packages/dsh-suite-kit/bin/dsh-suite.mjs install \
+node packages/capyclaw-suite-kit/bin/dsh-suite.mjs install \
   ./my-plugins/my-service/plugin/dsh-my-service-suite --profile web
 ```
 
@@ -150,7 +150,7 @@ node create-plugin.mjs --name dsh-my-ui --type ui --port 39501 \
 
 - 打开即工作，不显示“未连接/待命/重连”；
 - 多窗口后打开者自动抢占，旧窗口静默待命；
-- 使用 `ctx.editorHost` 做静态托管与租约仲裁（底层 `dsh-plugin-kit/editor/lease.mjs`）。
+- 使用 `ctx.editorHost` 做静态托管与租约仲裁（底层 `@capyclaw/plugin-kit/editor/lease.mjs`）。
 
 ---
 

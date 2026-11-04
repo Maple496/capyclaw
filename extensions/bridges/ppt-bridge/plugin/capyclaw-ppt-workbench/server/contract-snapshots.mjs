@@ -4,14 +4,14 @@
  *
  * 开发态（plugin/）和发布态（components/）里 skill 包都是 workbench 的兄弟目录，
  * 因此无需配置文件；只装 workbench 时 checked=0，不拦截。
- * skill 包的磁盘目录名是 dsh-ppt-skill-*（dev 树）；npm 安装态 workbench 的
+ * skill 包的磁盘目录名是 capyclaw-ppt-skill-*（dev 树）；npm 安装态 workbench 的
  * 父目录就是 node_modules/@capyclaw 作用域目录，skill 包以 ppt-skill-* 直接
  * 兄弟的形式出现——两种形态都扫。
  */
 import fs from 'node:fs'
 import path from 'node:path'
 
-const SKILL_PREFIX = 'dsh-ppt-skill-'
+const SKILL_PREFIX = 'capyclaw-ppt-skill-'
 const SCOPED_SKILL_PREFIX = 'ppt-skill-'
 const SCOPE_DIR = '@capyclaw'
 
@@ -24,7 +24,7 @@ export function inspectContractSnapshots(packageDir, contractVersion, { prefix =
   const report = { expected: contractVersion || '', checked: 0, ok: true, mismatched: [] }
   const parent = path.dirname(packageDir)
 
-  /* 候选目录：dev 树 dsh-ppt-skill-*（旧磁盘名）；npm 扁平安装 ppt-skill-*
+  /* 候选目录：dev 树 capyclaw-ppt-skill-*（旧磁盘名）；npm 扁平安装 ppt-skill-*
    * （父目录即 @capyclaw 作用域）；嵌套 @capyclaw/ 下的 ppt-skill-*。 */
   const candidates = []
   let entries

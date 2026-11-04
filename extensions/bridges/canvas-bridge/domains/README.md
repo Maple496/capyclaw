@@ -5,8 +5,8 @@
 插件、skill、MCP 不会注册。
 
 ```bash
-node ../../../../packages/dsh-suite-kit/bin/dsh-domain.mjs install domains/canvas
-node ../../../../packages/dsh-suite-kit/bin/dsh-domain.mjs start domain-canvas
+node ../../../../packages/capyclaw-suite-kit/bin/dsh-domain.mjs install domains/canvas
+node ../../../../packages/capyclaw-suite-kit/bin/dsh-domain.mjs start domain-canvas
 ```
 
 - `runtime.requires` 声明需要 `canvas_*` 工具、`canvas.runtime` 等能力

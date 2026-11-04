@@ -47,10 +47,10 @@ src/mcp/               # MCP 工具服务（agent 侧干净接口）
   validate.mjs         #   inputSchema 参数校验
   audit.mjs            #   兼容 shim → core/audit.js
   deck-layout.mjs      #   兼容 shim → core/deck-layout.js
-src/skills/            # 8 个 PPT 技能源（构建期分别拷入 8 个 dsh-ppt-skill-* 包）
+src/skills/            # 8 个 PPT 技能源（构建期分别拷入 8 个 capyclaw-ppt-skill-* 包）
 plugin/
   README.md            # 三包地图、契约、构建与测试
-  dsh-ppt-workbench/   # 运行时包：relay + editor + 27 个 MCP 工具
+  capyclaw-ppt-workbench/   # 运行时包：relay + editor + 27 个 MCP 工具
     core/              #   构建期复制自 src/core（路径镜像）
     server/
       relay.mjs        #     组合根
@@ -59,10 +59,10 @@ plugin/
       store/           #     sanitize/doc/lease/checkpoints/journal/backend/facade
       mcp/             #     handler/dispatch/instructions
       runtime/         #     recovery/watch/metrics
-  dsh-ppt-skill-*/     # 8 个单 skill provider 包（路由/叙事/审美/工具/成稿/执行/审计/研究）
+  capyclaw-ppt-skill-*/     # 8 个单 skill provider 包（路由/叙事/审美/工具/成稿/执行/审计/研究）
   dsh-ppt-suite/       # 组合包：dsh-suite.json + 生成的 cordis.patch.yml
 domains/ppt/           # 领域包：只选择 PPT 组件，生成独立 profile
-packages/dsh-suite-kit/ # 通用组合标准件（suite + domain + stage/launch）
+packages/capyclaw-suite-kit/ # 通用组合标准件（suite + domain + stage/launch）
 scripts/
   build-works.mjs      # src/apps → *.works 产物（esbuild IIFE；输出目录自动探测，可覆盖）
   install-dsh.mjs      # dsh/ → 运行时（workspace-keynote、首用工作区、profile）
@@ -84,7 +84,7 @@ npm run test:stress       # 并发读/写/非法参数/大参数/截图/UI 命�
 npm run install:dsh       # 同步 dsh 侧资产到运行时
 npm run build:plugin      # 组装三个插件包（workbench/skills/suite，npm run check:plugin 校验）
 npm run lint:skills       # skill frontmatter / 工具名 / 路由对账
-npm run suite:validate    # 用 dsh-suite-kit 校验 dsh-suite.json
+npm run suite:validate    # 用 @capyclaw/suite-kit 校验 dsh-suite.json
 npm run suite:doctor      # 检查运行中的 suite（health + contract + row 去重）
 npm run domain:validate   # 校验领域包 domains/ppt
 npm run domain:stage      # 只打包 PPT 领域需要的组件 → dist/domain-ppt
@@ -167,9 +167,9 @@ ppt_page / ppt_images / ppt_screenshot`。
 推荐的运行方式是通过统一中间层创建 runtime：
 
 ```bash
-node ../../packages/dsh-suite-kit/bin/dsh-runtime.mjs create \
+node ../../packages/capyclaw-suite-kit/bin/dsh-runtime.mjs create \
   --name ppt-a --domain domains/ppt
-node ../../packages/dsh-suite-kit/bin/dsh-runtime.mjs start <runtimeId>
+node ../../packages/capyclaw-suite-kit/bin/dsh-runtime.mjs start <runtimeId>
 ```
 
 `dsh-domain.json` 的 `runtime.requires` 声明需要 `ppt_*` 工具、`ppt.runtime` 等能力，
@@ -183,7 +183,7 @@ node ../../packages/dsh-suite-kit/bin/dsh-runtime.mjs start <runtimeId>
 | 桥服务端 | 桌面网关 `backend/`（Python，kv 存储） | 包内 Node relay（`server/`，JSON 落盘） |
 | MCP | stdio（`src/mcp/index.mjs`，profile 补丁指向本仓路径） | streamable-http（relay `/mcp`，patch 静态 URL） |
 | 编辑器 | 桌面 `.works` 窗口（`build-works.mjs` 产物） | relay 托管的浏览器页（`build-plugin.mjs` 产物） |
-| instructions | `dsh/AGENTS.md`（工具用法以 MCP instructions 为准） | 8 个独立的 `dsh-ppt-skill-*` 包 |
+| instructions | `dsh/AGENTS.md`（工具用法以 MCP instructions 为准） | 8 个独立的 `capyclaw-ppt-skill-*` 包 |
 | 依赖 | 整套桌面系统 | 只要 dsh，装完即用 |
 
 工具定义与 op 实现**两个形态共用同一真源**：`src/mcp/tools/*`（能力 → registry）

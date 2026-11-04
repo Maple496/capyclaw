@@ -5,73 +5,73 @@
     "@capyclaw/asset-service": {
       "version": "0.1.1",
       "apiVersion": "1.0.0",
-      "path": "..\\..\\..\\..\\..\\packages\\dsh-asset-service",
-      "sha256": "0024e703fb4e328876457919a8904801eb3bb7b8896036beec8eb4ed780730b6"
+      "path": "..\\..\\..\\..\\..\\packages\\capyclaw-asset-service",
+      "sha256": "2836882e06776af237820cb55b47b6014a501f103d18b91cb9a4cb18b3b2e78f"
     },
     "@capyclaw/document-workbench": {
       "version": "0.1.0",
       "apiVersion": null,
-      "path": "../../../../../packages/dsh-document-workbench",
+      "path": "../../../../../packages/capyclaw-document-workbench",
       "sha256": "a98c1db695d5eca9156099be73da4098caaf24d9c95db5cf0b999bfcf68ce5fb"
     },
     "@capyclaw/editor-host": {
       "version": "0.1.1",
       "apiVersion": "1.0.0",
-      "path": "..\\..\\..\\..\\..\\packages\\dsh-editor-host",
-      "sha256": "53f10bd0bb3787ef4b62acd37b95ee5b5ed38a674cca6f103aa5e2c0ecf16256"
+      "path": "..\\..\\..\\..\\..\\packages\\capyclaw-editor-host",
+      "sha256": "3e628950917fbf442f88001f50e95226f05e427ee827f7a8a227a63d1673f74b"
     },
     "@capyclaw/plugin-kit": {
       "version": "0.2.0",
       "apiVersion": null,
-      "path": "../../../../../packages/dsh-plugin-kit",
-      "sha256": "3ac42e1e32ff2d4a4401d93e721ef74457bfe6726c2aae52cd14afe77f83ed7d"
+      "path": "../../../../../packages/capyclaw-plugin-kit",
+      "sha256": "4950f15cfe35da21ff60258db1717f4475854836bf26748bb02bba89d72d24ce"
     },
     "@capyclaw/ppt-skill-api": {
       "version": "2.2.1",
       "apiVersion": null,
-      "path": "../dsh-ppt-skill-api",
+      "path": "../capyclaw-ppt-skill-api",
       "sha256": "726aedee5152e5e0b0ff6649905a9c90d4da8e648d41a0a8a72596154ff191d1"
     },
     "@capyclaw/ppt-skill-authoring": {
       "version": "2.2.1",
       "apiVersion": null,
-      "path": "../dsh-ppt-skill-authoring",
+      "path": "../capyclaw-ppt-skill-authoring",
       "sha256": "392dace9605718b6e4d2c4f9369c604d95f1a935312ffbfb3aee4572f88c92e4"
     },
     "@capyclaw/ppt-skill-design": {
       "version": "2.2.1",
       "apiVersion": null,
-      "path": "../dsh-ppt-skill-design",
+      "path": "../capyclaw-ppt-skill-design",
       "sha256": "e359f9c64a687a41086711768b62bc4c4ed73a1e0791e4fb8cd0597d489769a2"
     },
     "@capyclaw/ppt-skill-editing": {
       "version": "2.2.1",
       "apiVersion": null,
-      "path": "../dsh-ppt-skill-editing",
+      "path": "../capyclaw-ppt-skill-editing",
       "sha256": "278fd904c437d01bd781ac53d8153eace9d0ad3eeaf14a25d2b439de4bd51450"
     },
     "@capyclaw/ppt-skill-narrative": {
       "version": "2.2.2",
       "apiVersion": null,
-      "path": "../dsh-ppt-skill-narrative",
+      "path": "../capyclaw-ppt-skill-narrative",
       "sha256": "c6079419323faf5a7c68372f5aeb9c51ed7d6507a671dd333c205565f00397a5"
     },
     "@capyclaw/ppt-skill-ppt": {
       "version": "2.2.1",
       "apiVersion": null,
-      "path": "../dsh-ppt-skill-ppt",
+      "path": "../capyclaw-ppt-skill-ppt",
       "sha256": "74d7ab3220eb9efc3dd3874f1e0a08c7bb3d12ddfa75ded69af687f9b242bc08"
     },
     "@capyclaw/ppt-skill-research": {
       "version": "2.2.1",
       "apiVersion": null,
-      "path": "../dsh-ppt-skill-research",
+      "path": "../capyclaw-ppt-skill-research",
       "sha256": "996d9e357d2aee4b9e833a861be1a759701f219cb0481d084f14798d8a3dd980"
     },
     "@capyclaw/ppt-skill-visual-check": {
       "version": "2.2.1",
       "apiVersion": null,
-      "path": "../dsh-ppt-skill-visual-check",
+      "path": "../capyclaw-ppt-skill-visual-check",
       "sha256": "4127ebc324d0b13dc072da7337f3f3f5ef9acbb376d41b8783c333098bfb36d1"
     },
     "@capyclaw/ppt-workbench": {
@@ -83,26 +83,26 @@
     "@capyclaw/service-broker": {
       "version": "0.2.0",
       "apiVersion": "1.0.0",
-      "path": "../../../../../packages/dsh-service-broker",
-      "sha256": "06ce349e20315c2d90452908fb010684a3936b11d6d181d9328e0718c953651d"
+      "path": "../../../../../packages/capyclaw-service-broker",
+      "sha256": "41ae6ebe9120625b9dbe9a6b0d87dde5df0b374b5943e008f59eb009fb5e563c"
     },
     "@capyclaw/service-host": {
       "version": "0.1.1",
       "apiVersion": "1.0.0",
-      "path": "..\\..\\..\\..\\..\\packages\\dsh-service-host",
-      "sha256": "8282cffcf7d4c71a125f08bcde9a81faa25b62c6fd07e8a85bfef418ca7575c5"
+      "path": "..\\..\\..\\..\\..\\packages\\capyclaw-service-host",
+      "sha256": "a17a2c9624feda6f9f12346091c5b5fb06c6ddb8395c2dd64befcb01276abecb"
     },
     "@capyclaw/skills-service": {
       "version": "0.1.3",
       "apiVersion": null,
-      "path": "../../dsh-skills-service",
+      "path": "../../capyclaw-skills-service",
       "sha256": "25d8d071daa0e9b738cd1530d06f2a7fe3c895818e5daa4e2ba0d17cef93fc36"
     },
     "@capyclaw/tool-host": {
       "version": "0.1.1",
       "apiVersion": "1.0.0",
-      "path": "..\\..\\..\\..\\..\\packages\\dsh-tool-host",
-      "sha256": "db088163b740101e3a67403869f7ce52bb0c947807eeaec2a4706c214c6ea062"
+      "path": "..\\..\\..\\..\\..\\packages\\capyclaw-tool-host",
+      "sha256": "19fe2ec4a5b1ce06514e92fefcb6165def2e4a14c2b3ffb3412d75ea142cda3a"
     }
   }
 }

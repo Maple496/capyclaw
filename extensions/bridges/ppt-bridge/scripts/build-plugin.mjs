@@ -2,7 +2,7 @@
  * 构建：源码 + 资产 → plugin/ 下的 10 个可安装包。
  *
  *   plugin/capyclaw-ppt-workbench/   运行时（relay + editor + MCP 工具）
- *   plugin/dsh-ppt-skill-NAME/       8 个单 skill provider 包
+ *   plugin/capyclaw-ppt-skill-NAME/       8 个单 skill provider 包
  *   plugin/capyclaw-ppt-suite/       组合入口（workbench + 8 个 skill 包）
  *
  * 用法：node scripts/build-plugin.mjs [--check]
@@ -20,7 +20,7 @@ import { createRequire } from 'node:module'
 import { createHash } from 'node:crypto'
 import { syncSharedDir } from '../../../../scripts/lib/shared-sync.mjs'
 import { checkSuiteDrift } from '../../../../scripts/check-suite-drift.mjs'
-import { loadSuiteManifest } from 'dsh-suite-kit'
+import { loadSuiteManifest } from '@capyclaw/suite-kit'
 import {
   cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync,
 } from 'node:fs'
@@ -34,21 +34,21 @@ const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(HERE, '..')
 const PLUGIN_ROOT = join(ROOT, 'plugin')
 /* 仓库已迁到 extensions/bridges/ppt-bridge：比旧布局多一层。 */
-const KIT_ROOT = join(ROOT, '..', '..', '..', 'packages', 'dsh-plugin-kit')
+const KIT_ROOT = join(ROOT, '..', '..', '..', 'packages', 'capyclaw-plugin-kit')
 const WORKBENCH = join(PLUGIN_ROOT, 'capyclaw-ppt-workbench')
 const SUITE_PKG = join(PLUGIN_ROOT, 'capyclaw-ppt-suite')
 /* skill 包：npm 发布名是 @capyclaw/ppt-skill-*（与 dsh-suite.json rows 一致），
- * 磁盘目录保留旧名 dsh-ppt-skill-*（skills-service 的 dev 扫描、suite path 引用不变）。
+ * 磁盘目录名 = 包名去 scope（capyclaw-ppt-skill-*，与 skills-service 的 dev 扫描一致）。
  * version：narrative 的 2.2.1 已被 npm 占用，跳到 2.2.2；其余首发补丁版 2.2.1。 */
 const SKILL_PACKAGES = [
-  { slug: 'ppt', skill: 'ppt', name: '@capyclaw/ppt-skill-ppt', dir: 'dsh-ppt-skill-ppt', version: '2.2.1', title: 'PPT 路由', description: 'PPT 总入口：按意图路由到执行、成稿、审美、审计、研究技能。' },
-  { slug: 'narrative', skill: 'pptmaster-narrative', name: '@capyclaw/ppt-skill-narrative', dir: 'dsh-ppt-skill-narrative', version: '2.2.2', title: 'PPT 叙事', description: 'SCQA、金字塔、一页一观点、deck_brief。' },
-  { slug: 'design', skill: 'pptmaster-design', name: '@capyclaw/ppt-skill-design', dir: 'dsh-ppt-skill-design', version: '2.2.1', title: 'PPT 审美', description: 'design token、版式、反 AI slop；只做视觉决策。' },
-  { slug: 'api', skill: 'pptist-api', name: '@capyclaw/ppt-skill-api', dir: 'dsh-ppt-skill-api', version: '2.2.1', title: 'PPT 工具手册', description: 'PPTist 工具契约、参数、状态、撤销。' },
-  { slug: 'authoring', skill: 'pptist-authoring', name: '@capyclaw/ppt-skill-authoring', dir: 'dsh-ppt-skill-authoring', version: '2.2.1', title: 'PPT 成稿', description: 'deck_brief → clean 简洁版式成稿。' },
-  { slug: 'editing', skill: 'pptist-editing', name: '@capyclaw/ppt-skill-editing', dir: 'dsh-ppt-skill-editing', version: '2.2.1', title: 'PPT 纯执行', description: '指哪打哪的修改执行器：每步落盘、不审美、不审计、不回头验证。' },
-  { slug: 'visual-check', skill: 'pptist-visual-check', name: '@capyclaw/ppt-skill-visual-check', dir: 'dsh-ppt-skill-visual-check', version: '2.2.1', title: 'PPT 审计', description: '只读审计与按需截图，报告 pass/blocking；不改稿。' },
-  { slug: 'research', skill: 'pptist-research', name: '@capyclaw/ppt-skill-research', dir: 'dsh-ppt-skill-research', version: '2.2.1', title: 'PPT 研究', description: '外部资料、数据、配图研究，产出分析卡。' },
+  { slug: 'ppt', skill: 'ppt', name: '@capyclaw/ppt-skill-ppt', dir: 'capyclaw-ppt-skill-ppt', version: '2.2.1', title: 'PPT 路由', description: 'PPT 总入口：按意图路由到执行、成稿、审美、审计、研究技能。' },
+  { slug: 'narrative', skill: 'pptmaster-narrative', name: '@capyclaw/ppt-skill-narrative', dir: 'capyclaw-ppt-skill-narrative', version: '2.2.2', title: 'PPT 叙事', description: 'SCQA、金字塔、一页一观点、deck_brief。' },
+  { slug: 'design', skill: 'pptmaster-design', name: '@capyclaw/ppt-skill-design', dir: 'capyclaw-ppt-skill-design', version: '2.2.1', title: 'PPT 审美', description: 'design token、版式、反 AI slop；只做视觉决策。' },
+  { slug: 'api', skill: 'pptist-api', name: '@capyclaw/ppt-skill-api', dir: 'capyclaw-ppt-skill-api', version: '2.2.1', title: 'PPT 工具手册', description: 'PPTist 工具契约、参数、状态、撤销。' },
+  { slug: 'authoring', skill: 'pptist-authoring', name: '@capyclaw/ppt-skill-authoring', dir: 'capyclaw-ppt-skill-authoring', version: '2.2.1', title: 'PPT 成稿', description: 'deck_brief → clean 简洁版式成稿。' },
+  { slug: 'editing', skill: 'pptist-editing', name: '@capyclaw/ppt-skill-editing', dir: 'capyclaw-ppt-skill-editing', version: '2.2.1', title: 'PPT 纯执行', description: '指哪打哪的修改执行器：每步落盘、不审美、不审计、不回头验证。' },
+  { slug: 'visual-check', skill: 'pptist-visual-check', name: '@capyclaw/ppt-skill-visual-check', dir: 'capyclaw-ppt-skill-visual-check', version: '2.2.1', title: 'PPT 审计', description: '只读审计与按需截图，报告 pass/blocking；不改稿。' },
+  { slug: 'research', skill: 'pptist-research', name: '@capyclaw/ppt-skill-research', dir: 'capyclaw-ppt-skill-research', version: '2.2.1', title: 'PPT 研究', description: '外部资料、数据、配图研究，产出分析卡。' },
 ]
 const ASSET = resolve(process.env.PPT_ASSET || join(ROOT, 'assets', 'ppt-full-app.js'))
 const CHECK_ONLY = process.argv.includes('--check')
@@ -65,7 +65,7 @@ const COPIES = [
   ['src/editor/heartbeat-worker.js', 'editor/heartbeat-worker.js'],
 ]
 
-/* 公共插件源码快照：与 dsh-plugin-kit 的 server/infra 同一机制。
+/* 公共插件源码快照：与 @capyclaw/plugin-kit 的 server/infra 同一机制。
  * 功能插件只 import shared/*，不再手写宿主/工具/状态/资产/编辑器。 */
 
 function fail(msg) {
@@ -441,7 +441,7 @@ for (const dep of ['@capyclaw/ppt-workbench', ...SKILL_PACKAGES.map((entry) => e
   if (!suiteManifest.dependencies?.[dep]) fail(`@capyclaw/ppt-suite 缺少依赖: ${dep}`)
 }
 if (suiteManifest.dsh?.suite !== './dsh-suite.json') fail('@capyclaw/ppt-suite 未声明 dsh.suite')
-const suiteKit = await import('dsh-suite-kit')
+const suiteKit = await import('@capyclaw/suite-kit')
 const loadedSuite = suiteKit.loadSuiteManifest(SUITE_PKG)
 const suiteValidation = suiteKit.validateSuiteManifest(loadedSuite.manifest)
 if (!suiteValidation.ok) fail('dsh-suite.json 校验失败:\n' + suiteValidation.errors.join('\n'))

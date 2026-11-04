@@ -19,8 +19,8 @@ deepseekharness_dev/
 │       └── ...
 │
 ├── packages/                            # 基础设施（不变）
-│   ├── dsh-plugin-kit/                  # 插件开发 SDK
-│   ├── dsh-suite-kit/                   # 套件打包工具
+│   ├── @capyclaw/plugin-kit/                  # 插件开发 SDK
+│   ├── @capyclaw/suite-kit/                   # 套件打包工具
 │   ├── dsh-service-host/                # 服务托管
 │   └── ...
 │
@@ -66,7 +66,7 @@ my-plugin/
   "main": "./lib/index.mjs",             // 强制：主入口
   "exports": { ... },                    // 强制：明确导出
   "dependencies": {
-    "dsh-plugin-kit": "^x.y.z"           // 强制：必须依赖 plugin-kit
+    "@capyclaw/plugin-kit": "^x.y.z"           // 强制：必须依赖 plugin-kit
   },
   "dsh": {                               // 强制：DSH 元数据
     "bundle": { ... },
@@ -89,7 +89,7 @@ my-plugin/
 ```json
 {
   "dependencies": {
-    "dsh-plugin-kit": "^0.2.0"  // 仅此，提供注册辅助和类型
+    "@capyclaw/plugin-kit": "^0.2.0"  // 仅此，提供注册辅助和类型
   }
 }
 ```
@@ -98,7 +98,7 @@ my-plugin/
 ```json
 {
   "dependencies": {
-    "dsh-plugin-kit": "^0.2.0",
+    "@capyclaw/plugin-kit": "^0.2.0",
     "dsh-service-host": "^0.1.0"  // 服务托管
   }
 }
@@ -108,7 +108,7 @@ my-plugin/
 ```json
 {
   "dependencies": {
-    "dsh-plugin-kit": "^0.2.0",
+    "@capyclaw/plugin-kit": "^0.2.0",
     "dsh-service-host": "^0.1.0",
     "dsh-tool-host": "^0.1.0",      // 工具集成
     "dsh-asset-service": "^0.1.0"   // 资产管理
@@ -120,7 +120,7 @@ my-plugin/
 ```json
 {
   "dependencies": {
-    "dsh-suite-kit": "^0.1.0",
+    "@capyclaw/suite-kit": "^0.1.0",
     "my-plugin-a": "^1.0.0",
     "my-plugin-b": "^1.0.0"
   },
@@ -142,7 +142,7 @@ my-plugin/
 
 2. **package.json 验证**
    - ✅ 必需字段完整：name, version, main, dsh, meta
-   - ✅ 依赖检查：必须包含 `dsh-plugin-kit`
+   - ✅ 依赖检查：必须包含 `@capyclaw/plugin-kit`
    - ✅ 版本一致性：基础设施包版本必须在锁定范围内
 
 3. **代码质量验证**

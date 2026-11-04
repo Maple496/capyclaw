@@ -37,10 +37,10 @@
 
 ```javascript
 // ✅ 正确：通过 package.json exports
-import { stagePlugin } from 'dsh-plugin-kit/packaging/pack'
+import { stagePlugin } from '@capyclaw/plugin-kit/packaging/pack'
 
 // ❌ 错误：直接引用内部路径
-import { stagePlugin } from '../../packages/dsh-plugin-kit/src/pack.mjs'
+import { stagePlugin } from '../../packages/capyclaw-plugin-kit/src/pack.mjs'
 ```
 
 ---

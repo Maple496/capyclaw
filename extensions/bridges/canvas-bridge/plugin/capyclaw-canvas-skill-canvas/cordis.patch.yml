@@ -1,0 +1,4 @@
+# @capyclaw/canvas-skill-canvas（目录 capyclaw-canvas-skill-canvas） bundle patch：只注册 canvas 一个 skill provider。
+- insert:
+    - id: canvas-skill-canvas
+      name: @capyclaw/canvas-skill-canvas

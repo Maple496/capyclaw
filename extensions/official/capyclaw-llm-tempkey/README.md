@@ -1,4 +1,4 @@
-# dsh-llm-tempkey
+# @capyclaw/llm-tempkey
 
 把 **ddr0 平台的千帆临时 LLM Key** 接进 dsh：登录态校验 → 运行时签发 → 到期前自动轮换 → 通过凭据缝注入 `dsh-llm-pi-ai` 路由。**模型可用性与 Key 全部来自外部请求，配置里不写死任何 Key。**
 

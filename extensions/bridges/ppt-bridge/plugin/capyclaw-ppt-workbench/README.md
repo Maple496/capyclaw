@@ -1,4 +1,4 @@
-# dsh-ppt-workbench（PPT 工作台运行时）
+# capyclaw-ppt-workbench（PPT 工作台运行时）
 
 DeepSeek Harness 插件：PPTist 运行时 + 工具面。**普通用户请装 `dsh-ppt-suite`**；
 本包是套件里的运行时子包，也可单独安装用于调试。
@@ -14,7 +14,7 @@ DeepSeek Harness 插件：PPTist 运行时 + 工具面。**普通用户请装 `d
 
 前置：本机装有 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（dsh ≥ 0.2）
 与 pnpm（插件安装经 pnpm 拉包）。插件本体**零构建脚本**；运行时依赖只有
-`dsh-document-workbench` 与纯 JS 的 `pptxgenjs`（PPTX 导出），安装不会触发
+`@capyclaw/document-workbench` 与纯 JS 的 `pptxgenjs`（PPTX 导出），安装不会触发
 构建脚本审批。
 
 ```bash
@@ -22,7 +22,7 @@ DeepSeek Harness 插件：PPTist 运行时 + 工具面。**普通用户请装 `d
 dsh plugin --profile <你的profile> install /path/to/dsh-ppt-suite
 
 # 只调试运行时：单独安装本包
-dsh plugin --profile <你的profile> install /path/to/dsh-ppt-workbench
+dsh plugin --profile <你的profile> install /path/to/capyclaw-ppt-workbench
 
 # 也可以走 Web 界面：侧边栏「插件」页 → 安装 → 填本地路径 / git 地址
 ```
@@ -50,7 +50,7 @@ dsh 关闭时自动停止）。
 |----|------|------|
 | 宿主插件 | `lib/host.mjs` | cordis 入口：进程内拉起 relay，disposer 随插件停用关闭 |
 | relay 组合根 | `server/relay.mjs` | 只保留 PPT 业务装配；端口/锁/复用/健康/指标/静态由 `dsh-service-host` 提供 |
-| 公共插件快照 | `server/shared/*` | `dsh-service-host` / `dsh-tool-host` / `dsh-state-service` / `dsh-asset-service` / `dsh-editor-host`；仅独立运行时回退，state 快照只服务 file backend |
+| 公共插件快照 | `server/shared/*` | `dsh-service-host` / `dsh-tool-host` / `@capyclaw/state-service` / `dsh-asset-service` / `dsh-editor-host`；仅独立运行时回退，state 快照只服务 file backend |
 | 路由 | `server/routes/*` | assets / mcp / editor 走公共插件；bridge 是 PPT 专属协议 |
 | 存储 | `server/store/*` | `doc/lease/sanitize` 是 PPT 业务；journal/checkpoint/file backend 使用 vendored 的 state-service 库代码，不依赖 `ctx.state` |
 | MCP 协议 | `server/mcp/*` | 协议壳/分派来自 `dsh-tool-host`；instructions 只放 PPT 文案 |
@@ -64,7 +64,7 @@ dsh 关闭时自动停止）。
 
 配套包：
 
-- `dsh-ppt-skill-*`：8 个单 skill 包，每个独立版本、独立评测；
+- `capyclaw-ppt-skill-*`：8 个单 skill 包，每个独立版本、独立评测；
 - `dsh-ppt-suite`：组合入口，普通用户只装它。
 
 ## 契约（2.2）
@@ -75,7 +75,7 @@ dsh 关闭时自动停止）。
 - `contract/ppt-contract.json` 是构建时快照；工具/能力清单由
   `src/mcp/tools/capabilities/*` 经 registry 派生，`src/mcp/contract.mjs` 只保留版本与报告格式。
 - 工具名/参数/返回结构发生不兼容变化 → contract major +1；8 个 skill 包的 major 必须同步。
-- `dsh-ppt-skill-*` 不 import 本包代码，只通过 `ppt_capabilities` 检查兼容性。
+- `capyclaw-ppt-skill-*` 不 import 本包代码，只通过 `ppt_capabilities` 检查兼容性。
 
 ## 运行时接口
 

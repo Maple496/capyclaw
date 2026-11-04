@@ -1,5 +1,5 @@
 (() => {
-  // ../../../packages/dsh-document-workbench/src/client/index.mjs
+  // ../../../packages/capyclaw-document-workbench/src/client/index.mjs
   var DEFAULTS = {
     pollTimeoutSec: 3,
     claimRetryMs: 800,

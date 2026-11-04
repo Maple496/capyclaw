@@ -2,7 +2,7 @@
  * 构建：源码 + 资产 → plugin/ 下的 6 个可安装包。
  *
  *   plugin/capyclaw-canvas-workbench/    运行时（relay + editor + canvas_* MCP 工具）
- *   plugin/dsh-canvas-skill-NAME/        4 个单 skill provider 包
+ *   plugin/capyclaw-canvas-skill-NAME/        4 个单 skill provider 包
  *   plugin/capyclaw-canvas-suite/        组合入口（workbench + 4 个 skill 包）
  *
  * 用法：node scripts/build-plugin.mjs [--check]
@@ -19,7 +19,7 @@
 import { createRequire } from 'node:module'
 import { createHash } from 'node:crypto'
 import { syncSharedDir } from '../../../../scripts/lib/shared-sync.mjs'
-import { loadSuiteManifest } from 'dsh-suite-kit'
+import { loadSuiteManifest } from '@capyclaw/suite-kit'
 import {
   cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync,
 } from 'node:fs'
@@ -33,16 +33,16 @@ const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(HERE, '..')
 const PLUGIN_ROOT = join(ROOT, 'plugin')
 /* 仓库布局：extensions/bridges/canvas-bridge → 仓库根多三层。 */
-const KIT_ROOT = join(ROOT, '..', '..', '..', 'packages', 'dsh-plugin-kit')
+const KIT_ROOT = join(ROOT, '..', '..', '..', 'packages', 'capyclaw-plugin-kit')
 const WORKBENCH = join(PLUGIN_ROOT, 'capyclaw-canvas-workbench')
 const SUITE_PKG = join(PLUGIN_ROOT, 'capyclaw-canvas-suite')
 /* skill 包：npm 发布名 @capyclaw/canvas-skill-*（与 dsh-suite.json rows 一致），
- * 磁盘目录名 dsh-canvas-skill-*。 */
+ * 磁盘目录名 capyclaw-canvas-skill-*。 */
 const SKILL_PACKAGES = [
-  { slug: 'canvas', skill: 'canvas', name: '@capyclaw/canvas-skill-canvas', dir: 'dsh-canvas-skill-canvas', version: '0.2.0', title: 'Canvas 路由', description: 'Canvas 总入口：按意图路由到成稿、执行、API 手册技能。' },
-  { slug: 'api', skill: 'canvasist-api', name: '@capyclaw/canvas-skill-api', dir: 'dsh-canvas-skill-api', version: '0.2.0', title: 'Canvas 工具手册', description: 'canvas_* 工具契约、参数、命令白名单、撤销与页面命令。' },
-  { slug: 'authoring', skill: 'canvasist-authoring', name: '@capyclaw/canvas-skill-authoring', dir: 'dsh-canvas-skill-authoring', version: '0.2.0', title: 'Canvas 成稿', description: '结构设计 → 块级写作 → 一次成稿 → 精修。' },
-  { slug: 'editing', skill: 'canvasist-editing', name: '@capyclaw/canvas-skill-editing', dir: 'dsh-canvas-skill-editing', version: '0.2.0', title: 'Canvas 纯执行', description: '指哪打哪的修改执行器：每步落盘、不审美、不审计、不回头验证。' },
+  { slug: 'canvas', skill: 'canvas', name: '@capyclaw/canvas-skill-canvas', dir: 'capyclaw-canvas-skill-canvas', version: '0.2.0', title: 'Canvas 路由', description: 'Canvas 总入口：按意图路由到成稿、执行、API 手册技能。' },
+  { slug: 'api', skill: 'canvasist-api', name: '@capyclaw/canvas-skill-api', dir: 'capyclaw-canvas-skill-api', version: '0.2.0', title: 'Canvas 工具手册', description: 'canvas_* 工具契约、参数、命令白名单、撤销与页面命令。' },
+  { slug: 'authoring', skill: 'canvasist-authoring', name: '@capyclaw/canvas-skill-authoring', dir: 'capyclaw-canvas-skill-authoring', version: '0.2.0', title: 'Canvas 成稿', description: '结构设计 → 块级写作 → 一次成稿 → 精修。' },
+  { slug: 'editing', skill: 'canvasist-editing', name: '@capyclaw/canvas-skill-editing', dir: 'capyclaw-canvas-skill-editing', version: '0.2.0', title: 'Canvas 纯执行', description: '指哪打哪的修改执行器：每步落盘、不审美、不审计、不回头验证。' },
 ]
 const ASSET = resolve(process.env.CANVAS_ASSET || join(ROOT, 'runtime', 'canvas-full-app.js'))
 const CHECK_ONLY = process.argv.includes('--check')
@@ -366,7 +366,7 @@ for (const entry of SKILL_PACKAGES) {
 
 /* 7. suite patch 生成（须先于 sanity：首跑时 cordis.patch.yml 由这里产出） */
 {
-  const suiteKit = await import('dsh-suite-kit')
+  const suiteKit = await import('@capyclaw/suite-kit')
   const loadedSuite = suiteKit.loadSuiteManifest(SUITE_PKG)
   const suiteValidation = suiteKit.validateSuiteManifest(loadedSuite.manifest)
   if (!suiteValidation.ok) fail('dsh-suite.json 校验失败:\n' + suiteValidation.errors.join('\n'))

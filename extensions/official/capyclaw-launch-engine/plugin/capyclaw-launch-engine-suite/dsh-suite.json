@@ -1,5 +1,5 @@
 {
-  "$schema": "../../../../../packages/dsh-suite-kit/suite.schema.json",
+  "$schema": "../../../../../packages/capyclaw-suite-kit/suite.schema.json",
   "name": "capyclaw-launch-engine-suite",
   "version": "0.1.0",
   "title": "按需激活引擎套件",

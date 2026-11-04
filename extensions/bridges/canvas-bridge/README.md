@@ -1,8 +1,8 @@
 # Canvas 文档工作台（canvas-bridge）
 
 > 参照 ppt-bridge 插件体系构建的 Canvas 文档工作台：**一个套件 + 一个运行时 + 4 个独立 skill 包**。
-> 面向长文档生成与精修——用户说什么，画布就怎么变。复用 dsh-plugin-kit / dsh-document-workbench /
-> dsh-suite-kit 公共基建，零重复造轮子。
+> 面向长文档生成与精修——用户说什么，画布就怎么变。复用 @capyclaw/plugin-kit / @capyclaw/document-workbench /
+> @capyclaw/suite-kit 公共基建，零重复造轮子。
 
 ## 架构（编辑器权威桥）
 
@@ -22,18 +22,45 @@ MCP client（dsh / 任意 streamable-http 客户端）
   分组见 `canvas_commands`；探测真源 `contract/canvas-api.json`。
 - **复用基建**：会话/桥路由/编辑器客户端来自 `@capyclaw/document-workbench`；
   服务宿主/工具注册表/资产/编辑器托管来自 shared 快照（dsh-service-host 等 5 个公共插件）；
-  skill provider 来自 `dsh-plugin-kit`。
+  skill provider 来自 `@capyclaw/plugin-kit`。
 
 ## 快速开始
 
 ```bash
 npm run build:plugin        # 组装 6 个插件包（workbench + 4 skill + suite）
-npm test                    # 46 项单测（模型/契约/store/relay 集成/包结构）
+npm test                    # 55 项单测（模型/契约/store/relay 集成/稳定性/包结构）
 npm run start:workbench     # 起 relay :39313（编辑器 http://127.0.0.1:39313/）
-node scripts/e2e-verify.mjs # 端到端：真浏览器 + MCP 全链路（19 项检查）
-npm run suite:validate      # dsh-suite-kit 校验套件清单
+node scripts/e2e-verify.mjs # 端到端：真浏览器 + MCP 全链路 + 性能预算（22 项检查）
+node scripts/bench.mjs      # 交互实时性基准（小/大文档/并发/管线，p50/p95/max）
+npm run suite:validate      # @capyclaw/suite-kit 校验套件清单
 node scripts/discover-api.mjs --out contract/canvas-api.json  # 重新探测内核能力面
 ```
+
+## 交互实时性（bench 实测，本机 headless Chromium）
+
+| 指标 | 基线 | 优化后 | 手段 |
+|---|---|---|---|
+| 写工具（write/append/replace/style）p50 | 110ms | **63ms** | statusPollMs 100→50（tuning）；追加族零读直推 |
+| canvas_screenshot p50 | 319ms | **128ms** | 截图轮询接 tuning（300ms→50ms 量化） |
+| 读类（summary/text/audit/capabilities）p50 | 2-4ms | **2-5ms** | /view 轻量投影（relay 侧计算） |
+| 大文档（32KB 镜像）append p50 | 354ms | **323ms** | 零读直推；地板=内核页内 reload（insertElementList 经 exec 在本内核不可用，已探针验证） |
+| **2.7MB 镜像**（内嵌 dataURL 图） | — | append **178ms** / read **130ms** | 零读直推不拉镜像；/view 读缩小 **24,409×**（2.70MB→0.1KB） |
+| 管线地板（push→编辑器应用）p50 | 63ms | **63ms** | document-workbench 长轮询（watchPollMs 75ms 膝点） |
+| 5 路并发追加（整批） | ~~87ms~~ | **533ms** | 旧值是丢批次 bug 的假快；写互斥后串行化（正确性优先，单条 p50 不变） |
+
+关键设计：
+
+- **追加族零读直推**：append_blocks / insert_table / insert_image / element(结构)
+  推单条 `appendElementList` 指令，不读镜像——延迟与文档大小脱钩。
+- **/view 轻量投影**：summary/text/outline 在 relay 侧从镜像计算，读路径只回传
+  小结果；自带 seq/state_seq 新鲜度重试（编辑器先回执后推镜像，不会读陈旧）。
+- **写互斥**：编辑器权威下 cmds 队列会被下一次 push 覆盖，并发 push 丢批次；
+  bridge-client 进程内互斥（推 N+1 前等 N 回执）彻底关闭竞态（stability 回归覆盖）。
+- **getDocOnly 先 status 后 doc**：等镜像追上用廉价 /status，全量 /doc 只拉一次。
+- **版本化静态入口**：`/app-v*.js` + `/open.html` 绕过浏览器强缓存（对齐
+  dsh-editor-host 模式）。
+- 调优参数集中在 `src/mcp/tuning.mjs`（`CANVAS_TUNING_JSON` 可覆盖）。
+
 
 ## 工具（22 个 / 13 能力）
 
@@ -63,7 +90,7 @@ src/editor/      编辑器壳：main/session/transport/ui/screenshot（esbuild �
 src/skills/      4 个技能源（canvas / canvasist-api / canvasist-authoring / canvasist-editing）
 plugin/
   capyclaw-canvas-workbench/   运行时包：relay + 编辑器页 + 22 工具 + 契约快照
-  dsh-canvas-skill-*/          4 个单 skill provider 包
+  capyclaw-canvas-skill-*/          4 个单 skill provider 包
   capyclaw-canvas-suite/       组合包：dsh-suite.json + composition.lock + 生成的 patch
 domains/canvas/  领域包（domain-canvas profile，只加载 Canvas 能力）
 scripts/         build-plugin / lint-skills / discover-api / e2e-verify

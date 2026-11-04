@@ -1,0 +1,4 @@
+# @capyclaw/ppt-skill-visual-check（目录 capyclaw-ppt-skill-visual-check） bundle patch：只注册 pptist-visual-check 一个 skill provider。
+- insert:
+    - id: ppt-skill-visual-check
+      name: @capyclaw/ppt-skill-visual-check

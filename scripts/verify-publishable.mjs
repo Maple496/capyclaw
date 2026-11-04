@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * 发布前可安装性检查：对每个可发布插件
- *   1. 校验 + 发布闸（与 tools/plugin-release 同一套）
+ *   1. 校验 + 发布闸（与 tools/capyclaw-plugin-release 同一套）
  *   2. npm pack --dry-run 取产物清单 → 检查必需文件在列、无绝对路径、无明文密钥
  *   3. 真正 npm pack 出 tarball → 解开扫一遍内容（双保险）
  *   4. 在临时目录 npm install 该 tarball + 依赖，确认无 404
@@ -18,8 +18,8 @@ import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { discoverPlugins, publishGateErrors } from '../tools/plugin-release/lib/index.mjs'
-import { validatePlugin } from '../tools/plugin-validator/lib/index.mjs'
+import { discoverPlugins, publishGateErrors } from '../tools/capyclaw-plugin-release/lib/index.mjs'
+import { validatePlugin } from '../tools/capyclaw-plugin-validator/lib/index.mjs'
 
 const args = process.argv.slice(2)
 const only = args.includes('--only') ? args[args.indexOf('--only') + 1] : undefined
@@ -121,16 +121,16 @@ async function checkOne(dir) {
   }
 
   // 3) 装进干净目录，确认依赖可解析
-  //    注意：dsh-plugin-kit 若尚未发布到 registry，npm 会 404。
+  //    注意：@capyclaw/plugin-kit 若尚未发布到 registry，npm 会 404。
   //    这里把本地 kit 也打成 tarball 一起安装，验证的是「插件自身依赖/文件完整」，
   //    而不是「kit 已在 npm 上」——后者由发布顺序保证（先发 kit 再发插件）。
   const installDir = path.join(tmp, 'consumer')
   fs.mkdirSync(installDir, { recursive: true })
   fs.writeFileSync(path.join(installDir, 'package.json'), `${JSON.stringify({ name: 'consumer', private: true, version: '1.0.0' }, null, 2)}\n`)
   const installArgs = ['install', '--no-audit', '--no-fund']
-  const localKit = path.join(ROOT, 'packages', 'dsh-plugin-kit')
+  const localKit = path.join(ROOT, 'packages', 'capyclaw-plugin-kit')
   const deps = { ...(pkg.dependencies || {}), ...(pkg.peerDependencies || {}) }
-  if (deps['dsh-plugin-kit'] && fs.existsSync(localKit)) {
+  if (deps['@capyclaw/plugin-kit'] && fs.existsSync(localKit)) {
     const kitPack = run('npm', ['pack', '--pack-destination', tmp], { cwd: localKit })
     if (kitPack.status === 0) {
       installArgs.push(path.join(tmp, String(kitPack.stdout).trim().split(/\r?\n/).pop()))
