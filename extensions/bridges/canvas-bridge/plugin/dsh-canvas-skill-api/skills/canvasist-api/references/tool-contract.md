@@ -45,7 +45,7 @@
 - since: `1.0.0`
 - capability: `doc`
 
-读取文档：summary（摘要+大纲+预览，默认）/ text（纯文本）/ outline（标题大纲）/ doc（完整元素流）。
+读取文档：summary（摘要+大纲+预览，默认）/ text（纯文本）/ outline（标题大纲）走 relay 侧轻量投影；doc（完整元素流）拉全量镜像。
 
 ```json
 {
@@ -137,7 +137,7 @@
 - since: `1.0.0`
 - capability: `doc`
 
-末尾续写：把块数组追加到正文末尾（不改已有内容）。
+末尾续写：把块数组追加到正文末尾（不改已有内容）。零读直推，延迟与文档大小无关。
 
 ```json
 {
@@ -281,7 +281,7 @@
 - since: `1.0.0`
 - capability: `element`
 
-插入表格：headers + rows，列宽按内容自适应，表头默认底色。追加到正文末尾。
+插入表格：headers + rows，列宽按内容自适应，表头默认底色。零读直推，追加到正文末尾。
 
 ```json
 {
@@ -327,7 +327,7 @@
 - since: `1.0.0`
 - capability: `element`
 
-插入图片：value 接受 dataURL / http(s) URL / relay /assets 引用；追加到正文末尾。
+插入图片：src 接受 dataURL / http(s) URL / relay /assets 引用；零读直推，追加到正文末尾。
 
 ```json
 {
@@ -366,7 +366,7 @@
 - since: `1.0.0`
 - capability: `element`
 
-结构元素与更新：separator（分割线）/ pageBreak（分页符）/ list（列表项）/ updateById（按 id 改元素属性）。
+结构元素与更新：separator（分割线）/ pageBreak（分页符）/ list（列表项）零读直推；updateById（按 id 改元素属性）走镜像。
 
 ```json
 {

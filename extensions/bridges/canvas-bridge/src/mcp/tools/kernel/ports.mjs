@@ -3,7 +3,7 @@
  * 每个端口对应一类职责，能力按 requires 声明，registry 负责注入。
  */
 import {
-  BASE, get, getDocOnly, getShot, getStatus, post, push, putAsset, requireEditor,
+  baseUrl, get, getDocOnly, getShot, getStatus, getView, post, push, putAsset, requireEditor,
 } from '../../bridge-client.mjs'
 import { summarize, textOf, outlineOf, wordCountOf, findInDoc } from '../../../core/doc.js'
 
@@ -11,6 +11,7 @@ export function createKernelPorts() {
   return {
     doc: {
       read: getDocOnly,
+      view: getView,
       write: push,
       summarize,
       textOf,
@@ -20,7 +21,7 @@ export function createKernelPorts() {
     },
     status: {
       get: getStatus,
-      baseUrl: BASE,
+      baseUrl,
     },
     editor: {
       require: requireEditor,

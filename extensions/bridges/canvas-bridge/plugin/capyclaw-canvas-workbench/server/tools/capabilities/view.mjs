@@ -1,6 +1,7 @@
 /** 视图能力：截图（编辑器 canvas 出图）与页面级视图命令。 */
 import { defineCapability, defineTool } from '../kernel/define.mjs'
-import { okText } from '../../bridge-client.mjs'
+import { okText, sleep } from '../../bridge-client.mjs'
+import { getTuning } from '../../tuning.mjs'
 
 const VIEW_CMDS = new Set(['pageMode', 'pageScale', 'pageScaleAdd', 'pageScaleMinus', 'pageScaleRecovery', 'mode', 'toggleRuler', 'toggleTrace', 'print', 'locationCatalog'])
 
@@ -21,12 +22,13 @@ export const viewCapability = defineCapability({
       handler: async (_args, ctx) => {
         await ctx.editor.require()
         await ctx.editor.requestShot()
+        const pollMs = getTuning().statusPollMs || 50
         const deadline = Date.now() + 30000
         let shot = null
         while (Date.now() < deadline) {
           shot = await ctx.editor.getShot()
           if (shot && shot.data) break
-          await new Promise((r) => setTimeout(r, 300))
+          await sleep(pollMs)
         }
         if (!shot || !shot.data) throw new Error('截图超时：编辑器页面未回传画面')
         const base64 = String(shot.data).split(',')[1] || ''

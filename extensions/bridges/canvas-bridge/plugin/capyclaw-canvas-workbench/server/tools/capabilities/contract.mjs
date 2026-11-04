@@ -16,7 +16,7 @@ export const contractCapability = defineCapability({
       since: '1.0.0',
       handler: async (_args, ctx) => {
         let editorUrl = ''
-        try { editorUrl = new URL(ctx.status.baseUrl).origin + '/' } catch { /* 保持空字符串 */ }
+        try { editorUrl = new URL(ctx.status.baseUrl()).origin + '/' } catch { /* 保持空字符串 */ }
         let runtime = { editorConnected: false, hasDoc: false, words: 0, seq: 0 }
         try {
           const status = await ctx.status.get()

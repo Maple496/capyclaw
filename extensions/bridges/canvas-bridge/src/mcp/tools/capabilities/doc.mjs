@@ -2,7 +2,7 @@
 import { defineCapability, defineTool } from '../kernel/define.mjs'
 import { okText } from '../../bridge-client.mjs'
 import { documentOf, blocksToElements, EMPTY_DOC } from '../../../core/blocks.js'
-import { readMirror, writeMirror, normalizeZones } from '../domains/mirror.mjs'
+import { readMirror, writeMirror } from '../domains/mirror.mjs'
 
 const BLOCK_ITEM = {
   type: 'object',
@@ -26,7 +26,7 @@ export const docCapability = defineCapability({
   tools: [
     defineTool({
       name: 'canvas_read',
-      description: '读取文档：summary（摘要+大纲+预览，默认）/ text（纯文本）/ outline（标题大纲）/ doc（完整元素流）。',
+      description: '读取文档：summary（摘要+大纲+预览，默认）/ text（纯文本）/ outline（标题大纲）走 relay 侧轻量投影；doc（完整元素流）拉全量镜像。',
       inputSchema: {
         type: 'object',
         properties: {
@@ -38,20 +38,21 @@ export const docCapability = defineCapability({
       since: '1.0.0',
       handler: async (args, ctx) => {
         const mode = args.mode || 'summary'
-        const doc = await readMirror(ctx)
+        if (mode === 'doc') {
+          const doc = await readMirror(ctx)
+          return { text: JSON.stringify(doc, null, 2) }
+        }
+        /* 轻量投影：relay 侧计算，读路径不随镜像体积放大 */
+        const view = await ctx.doc.view(mode)
         if (mode === 'text') {
-          const words = ctx.doc.wordCountOf(doc)
-          return { text: `${ctx.doc.textOf(doc)}\n\n[字数 ${words}]` }
+          return { text: `${view.text}\n\n[字数 ${view.words}]` }
         }
         if (mode === 'outline') {
-          const outline = ctx.doc.outlineOf(doc)
+          const outline = view.outline || []
           if (!outline.length) return { text: '（没有可识别的标题）' }
           return { text: outline.map((h) => `${'  '.repeat(h.level - 1)}${'#'.repeat(h.level)} p${h.page} ${h.text}`).join('\n') }
         }
-        if (mode === 'doc') {
-          return { text: JSON.stringify(doc, null, 2) }
-        }
-        return { text: ctx.doc.summarize(doc) }
+        return { text: view.summary }
       },
     }),
     defineTool({
@@ -77,7 +78,7 @@ export const docCapability = defineCapability({
     }),
     defineTool({
       name: 'canvas_append_blocks',
-      description: '末尾续写：把块数组追加到正文末尾（不改已有内容）。',
+      description: '末尾续写：把块数组追加到正文末尾（不改已有内容）。零读直推，延迟与文档大小无关。',
       inputSchema: {
         type: 'object',
         properties: {
@@ -92,9 +93,9 @@ export const docCapability = defineCapability({
       handler: async (args, ctx) => {
         const els = blocksToElements(args.blocks || [])
         if (!els.length) throw new Error('blocks 为空：没有可追加的内容')
-        const doc = normalizeZones(await readMirror(ctx))
-        doc.main = doc.main.concat(els)
-        const r = await writeMirror(ctx, doc, args.title || '追加内容')
+        /* 直推 appendElementList：不读镜像（旧实现读改写全量，大文档 3 倍延迟） */
+        await ctx.editor.require()
+        const r = await ctx.doc.write([{ cmd: 'appendElementList', args: [els] }], args.title || '追加内容')
         return okText(r, `已追加 ${els.length} 个元素`)
       },
     }),

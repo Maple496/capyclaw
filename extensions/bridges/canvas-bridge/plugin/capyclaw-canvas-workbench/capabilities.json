@@ -93,7 +93,7 @@
       "id": "element",
       "version": "0.2.0",
       "title": "元素插入",
-      "description": "向正文末尾插入结构化元素：表格（自动列宽）、图片（dataURL/URL/assets 引用）、分隔线、分页符、列表、超链接。",
+      "description": "向正文末尾插入结构化元素：表格（自动列宽）、图片（dataURL/URL/assets 引用）、分隔线、分页符、列表、按 id 更新。",
       "tags": [
         "content"
       ],

@@ -24,6 +24,7 @@ import { createEditorRoutes } from './routes/editor.mjs'
 import { createMcpRoutes } from './routes/mcp.mjs'
 import { createExportRoutes } from './routes/export.mjs'
 import { createBridgeRoutes } from './routes/bridge.mjs'
+import { createViewRoutes } from './routes/view.mjs'
 import { createServiceApp } from './shared/service-host.mjs'
 import { inspectContractSnapshots, describeMismatch } from './contract-snapshots.mjs'
 import { getTuning } from './tuning.mjs'
@@ -115,6 +116,8 @@ export async function startRelay({
   else if (assetStore) app.use(createAssetRoutes({ assetStore, basePath: BASE_PATH }))
   for (const route of createEditorRoutes({ editorDir, editorHost })) app.use(route)
   for (const route of createExportRoutes({ exportsDir: path.join(hostDir, 'exports'), basePath: BASE_PATH })) app.use(route)
+  /* view 路由先于 bridge：轻量投影走自己的端点，不被桥主端点吞掉。 */
+  for (const route of createViewRoutes({ store, basePath: BASE_PATH })) app.use(route)
   for (const route of createBridgeRoutes({ store })) app.use(route)
 
   const tuning = getTuning()

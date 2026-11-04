@@ -12,8 +12,9 @@ export const DEFAULT_TUNING = Object.freeze({
   watchTimeoutSec: 20,
   watchTimeoutMaxSec: 30,
 
-  /* MCP 客户端等待回执的节奏。 */
-  statusPollMs: 100,
+  /* MCP 客户端等待回执的节奏。statusPollMs=50：本地回环轮询开销可忽略，
+   * 写工具尾延迟从 ~100ms 量化降到 ~50ms（bench 实测见 scripts/bench.mjs）。 */
+  statusPollMs: 50,
   pushBaseDeadlineMs: 12000,
   pushPerOpMs: 50,
 

@@ -1,20 +1,29 @@
-/** 元素插入能力：表格 / 图片 / 分隔线 / 分页符 / 列表 / 超链接。 */
+/** 元素插入能力：表格 / 图片 / 分隔线 / 分页符 / 列表（零读直推）+ 按 id 更新（镜像）。 */
 import { defineCapability, defineTool } from '../kernel/define.mjs'
 import { okText } from '../../bridge-client.mjs'
 import { tableElement, imageElement } from '../../../core/blocks.js'
 import { readMirror, writeMirror, normalizeZones } from '../domains/mirror.mjs'
 
+/** 直推追加：一条 appendElementList 指令，不读镜像（延迟与文档大小无关）。 */
+async function appendElements(ctx, els, title) {
+  await ctx.editor.require()
+  return ctx.doc.write([{ cmd: 'appendElementList', args: [els] }], title)
+}
+
+/** 结构元素通用前后缀：空行 + 元素 + 换行。 */
+const wrap = (el) => [{ value: '' }, el, { value: '\n' }]
+
 export const elementCapability = defineCapability({
   id: 'element',
   title: '元素插入',
-  description: '向正文末尾插入结构化元素：表格（自动列宽）、图片（dataURL/URL/assets 引用）、分隔线、分页符、列表、超链接。',
+  description: '向正文末尾插入结构化元素：表格（自动列宽）、图片（dataURL/URL/assets 引用）、分隔线、分页符、列表、按 id 更新。',
   tags: ['content'],
   requires: ['doc', 'editor'],
   features: ['element.insert'],
   tools: [
     defineTool({
       name: 'canvas_insert_table',
-      description: '插入表格：headers + rows，列宽按内容自适应，表头默认底色。追加到正文末尾。',
+      description: '插入表格：headers + rows，列宽按内容自适应，表头默认底色。零读直推，追加到正文末尾。',
       inputSchema: {
         type: 'object',
         properties: {
@@ -31,15 +40,13 @@ export const elementCapability = defineCapability({
       since: '1.0.0',
       handler: async (args, ctx) => {
         const el = tableElement(args.headers || [], args.rows || [], args)
-        const doc = normalizeZones(await readMirror(ctx))
-        doc.main = doc.main.concat([{ value: '' }, el, { value: '\n' }])
-        const r = await writeMirror(ctx, doc, args.title || '插入表格')
+        const r = await appendElements(ctx, wrap(el), args.title || '插入表格')
         return okText(r, `已插入表格（${(args.rows || []).length} 行 × ${el.colgroup.length} 列）`)
       },
     }),
     defineTool({
       name: 'canvas_insert_image',
-      description: '插入图片：value 接受 dataURL / http(s) URL / relay /assets 引用；追加到正文末尾。',
+      description: '插入图片：src 接受 dataURL / http(s) URL / relay /assets 引用；零读直推，追加到正文末尾。',
       inputSchema: {
         type: 'object',
         properties: {
@@ -59,15 +66,13 @@ export const elementCapability = defineCapability({
           throw new Error('src 必须是 dataURL、http(s) URL 或 /assets 引用')
         }
         const el = imageElement(args.src, args.width, args.height, args.caption)
-        const doc = normalizeZones(await readMirror(ctx))
-        doc.main = doc.main.concat([{ value: '' }, el, { value: '\n' }])
-        const r = await writeMirror(ctx, doc, args.title || '插入图片')
+        const r = await appendElements(ctx, wrap(el), args.title || '插入图片')
         return okText(r, '已插入图片')
       },
     }),
     defineTool({
       name: 'canvas_element',
-      description: '结构元素与更新：separator（分割线）/ pageBreak（分页符）/ list（列表项）/ updateById（按 id 改元素属性）。',
+      description: '结构元素与更新：separator（分割线）/ pageBreak（分页符）/ list（列表项）零读直推；updateById（按 id 改元素属性）走镜像。',
       inputSchema: {
         type: 'object',
         properties: {
@@ -84,23 +89,29 @@ export const elementCapability = defineCapability({
       since: '1.0.0',
       handler: async (args, ctx) => {
         const action = args.action
-        const doc = normalizeZones(await readMirror(ctx))
         if (action === 'separator') {
-          doc.main = doc.main.concat([{ value: '' }, { value: '────────────────────────────' }, { value: '\n' }])
-        } else if (action === 'pageBreak') {
-          doc.main = doc.main.concat([{ type: 'pageBreak', value: '' }])
-        } else if (action === 'list') {
+          const r = await appendElements(ctx, wrap({ value: '────────────────────────────' }), args.title || '分割线')
+          return okText(r, '已完成 separator')
+        }
+        if (action === 'pageBreak') {
+          const r = await appendElements(ctx, [{ type: 'pageBreak', value: '' }], args.title || '分页符')
+          return okText(r, '已完成 pageBreak')
+        }
+        if (action === 'list') {
           const items = (args.items || []).map(String)
           if (!items.length) throw new Error('list 需要 items')
           const els = []
-          items.forEach((item, i) => {
+          items.forEach((item) => {
             const m = item.match(/^(\d+)[.、)]\s*(.*)$/)
             els.push({ value: m ? `${m[1]}. ${m[2]}` : `• ${item.replace(/^[-•]\s*/, '')}` })
             els.push({ value: '\n' })
           })
-          doc.main = doc.main.concat(els)
-        } else if (action === 'updateById') {
+          const r = await appendElements(ctx, els, args.title || '列表')
+          return okText(r, '已完成 list')
+        }
+        if (action === 'updateById') {
           if (!args.id) throw new Error('updateById 需要 id')
+          const doc = normalizeZones(await readMirror(ctx))
           let touched = 0
           const walk = (list) => {
             for (const el of list) {
@@ -114,11 +125,10 @@ export const elementCapability = defineCapability({
           }
           walk(doc.main)
           if (!touched) throw new Error(`没有 id=${args.id} 的元素`)
-        } else {
-          throw new Error(`未知 action：${action}`)
+          const r = await writeMirror(ctx, doc, args.title || `更新 ${args.id}`)
+          return okText(r, `已更新 ${touched} 处`)
         }
-        const r = await writeMirror(ctx, doc, args.title || `元素 ${action}`)
-        return okText(r, `已完成 ${action}`)
+        throw new Error(`未知 action：${action}`)
       },
     }),
   ],
