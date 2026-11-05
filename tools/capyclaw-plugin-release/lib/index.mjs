@@ -67,8 +67,9 @@ export function publishGateErrors(pkg, srcDir) {
 
 /** 插件扫码根目录（仓库内真实存在的插件位置）。
  *  packages/ 里只有基建级插件能过发布闸（纯库无 dsh.bundle/suite/client，private 的被闸拦下），
- *  所以整个目录加进来不会误收 @capyclaw/plugin-kit / @capyclaw/suite-kit 这类库。 */
-const PLUGIN_BASES = ['packages', 'extensions/official', 'extensions/bridges']
+ *  所以整个目录加进来不会误收 @capyclaw/plugin-kit / @capyclaw/suite-kit 这类库。
+ *  bridges 的生成包（workbench/suite/skill）落位在 extensions/bridges/<bridge>/plugin 下。 */
+const PLUGIN_BASES = ['packages', 'extensions/official', 'extensions/bridges', 'extensions/bridges/*/plugin']
 
 /** 可发布的包名形态：dsh-<name> / @org/dsh-<name> / 已发布作用域 @capyclaw/<name>。 */
 const PUBLISHABLE_NAME = /^((@[\w.-]+\/)?dsh-[\w.-]+|@capyclaw\/[\w.-]+)$/
@@ -81,6 +82,30 @@ function dirNameCandidates(name) {
     out.add(`${scope}-${base}`)  // @capyclaw/x → capyclaw-x
   }
   return [...out]
+}
+
+/** 展开查找 base 里的 `*` 段（一层通配，如 extensions/bridges/<bridge>/plugin）。 */
+function expandBase(base, root) {
+  if (!base.includes('*')) return [path.join(root, base)]
+  const parts = base.split('/')
+  const out = [root]
+  for (const part of parts) {
+    const next = []
+    for (const dir of out) {
+      if (part === '*') {
+        let entries = []
+        try { entries = fs.readdirSync(dir, { withFileTypes: true }) } catch { continue }
+        for (const entry of entries) {
+          if (entry.isDirectory()) next.push(path.join(dir, entry.name))
+        }
+      } else {
+        next.push(path.join(dir, part))
+      }
+    }
+    out.length = 0
+    out.push(...next)
+  }
+  return out
 }
 
 /** 目录名/包名 → 插件目录。支持直接给路径，也支持给包名（含 @scope/name）。 */
@@ -97,9 +122,11 @@ export function resolvePluginDir(nameOrPath, { root = REPO_ROOT } = {}) {
   }
   const candidates = dirNameCandidates(nameOrPath)
   for (const base of PLUGIN_BASES) {
-    for (const candidate of candidates) {
-      const dir = path.join(root, base, candidate)
-      if (fs.existsSync(path.join(dir, 'package.json'))) return dir
+    for (const dir of expandBase(base, root)) {
+      for (const candidate of candidates) {
+        const target = path.join(dir, candidate)
+        if (fs.existsSync(path.join(target, 'package.json'))) return target
+      }
     }
   }
   throw new Error(`找不到插件: ${nameOrPath}（已查找 ${PLUGIN_BASES.join(' / ')}，候选目录名 ${candidates.join(' / ')}）`)

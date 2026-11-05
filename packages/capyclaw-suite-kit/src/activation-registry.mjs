@@ -45,8 +45,14 @@ function serviceOwnerPackage(service, packageNames) {
   return null
 }
 
-function toActivationService(service, packageDir) {
-  const cmd = (service.cmd || []).map((part) => String(part).replaceAll('${PACKAGE_DIR}', packageDir))
+/** 展开 services.json 的 ${PACKAGE_DIR}。两种规格：
+ *  - 新代：cmd 形如 ${PACKAGE_DIR}/node_modules/<pkg>/…——${PACKAGE_DIR} 指
+ *    持有 node_modules 的套件根（services.json 所在目录），不是 owner 包自身目录；
+ *  - 旧代：cmd 形如 ${PACKAGE_DIR}/server/relay.mjs——${PACKAGE_DIR} 指 owner 包目录。 */
+function toActivationService(service, { packageDir, suiteDir }) {
+  const joined = (service.cmd || []).join(' ')
+  const base = joined.includes('node_modules/') ? suiteDir : packageDir
+  const cmd = (service.cmd || []).map((part) => String(part).replaceAll('${PACKAGE_DIR}', base))
   const next = { ...service, cmd }
   delete next.portFrom
   delete next.dirFrom
@@ -123,7 +129,10 @@ export function buildActivationRegistry({ suites, composed, requiredCapabilities
       requires,
       bundles: [],
       entries: rows.map((row) => ({ entryId: ENTRY_PREFIX + row.id, enabled: true })),
-      services: services.map(({ service, suiteDir }) => toActivationService(service, packageDirOf(pkg) || suiteDir)),
+      services: services.map(({ service, suiteDir }) => toActivationService(service, {
+        packageDir: packageDirOf(pkg) || suiteDir,
+        suiteDir,
+      })),
     }
   }
 
@@ -140,7 +149,7 @@ export function buildActivationRegistry({ suites, composed, requiredCapabilities
       const owner = serviceOwnerPackage(service, packageNames)
       /* 已在包能力里挂载的服务不重复；只有无主或主人未成能力的才归套件聚合。 */
       if (owner && capabilities[owner]) continue
-      unmatched.push(toActivationService(service, dir))
+      unmatched.push(toActivationService(service, { packageDir: dir, suiteDir: dir }))
     }
 
     const requires = []
