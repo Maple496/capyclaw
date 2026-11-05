@@ -18,6 +18,7 @@
 - **plugin-source-standard.md** - 插件源码标准
 - **plugin-structure.md** - 插件结构规范
 - **public-plugins.md** - 公共插件清单
+- **unification-verification.md** - 统一重构验证报告（e2e 六层矩阵 + 复杂度度量）
 
 ### 顶层文档
 - [../README.md](../README.md) - 流水线总览
