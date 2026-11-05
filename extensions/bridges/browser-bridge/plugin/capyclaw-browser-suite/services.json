@@ -1,0 +1,23 @@
+{
+  "services": [
+    {
+      "id": "browser-workbench",
+      "portFrom": "content",
+      "dirFrom": "contentState",
+      "cmd": [
+        "node",
+        "${PACKAGE_DIR}/node_modules/@capyclaw/browser-workbench/server/relay.mjs",
+        "--port",
+        "${PORT}",
+        "--dir",
+        "${PACKAGE_DIR}/.host"
+      ],
+      "ports": {
+        "main": 39315
+      },
+      "url": "http://127.0.0.1:${PORT}",
+      "keepAlive": true,
+      "healthPath": "/healthz"
+    }
+  ]
+}

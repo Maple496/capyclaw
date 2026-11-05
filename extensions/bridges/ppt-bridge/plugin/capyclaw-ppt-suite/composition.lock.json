@@ -1,6 +1,6 @@
 {
   "suite": "capyclaw-ppt-suite",
-  "suiteVersion": "2.4.3",
+  "suiteVersion": "2.4.8",
   "packages": {
     "@capyclaw/asset-service": {
       "version": "0.1.2",

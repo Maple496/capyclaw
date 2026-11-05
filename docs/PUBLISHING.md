@@ -21,13 +21,14 @@ npm whoami        # 未登录则 npm adduser
 
 ```bash
 npm run release
-# 等价于依次执行：
-#   npm run build            # ppt-bridge + canvas-bridge 全部插件包重建
-#   npm run lint             # 两个 bridge 的 skill lint
+# 由 scripts/release.mjs 编排（分阶段计时、失败即停）：
+#   npm run build            # ppt / canvas / browser 三条 bridge 全部插件包重建
+#   npm run lint             # 三个 bridge 的 skill lint
 #   npm run validate-all     # 结构校验全绿
 #   release-all              # 生成 dist/plugins/*.zip（含 vendored 依赖）
 #   release-index            # 生成 dist/index.json
-#   gen-registry + check     # capyclaw-registry.json 重新生成并校验一致
+#   gen-registry             # capyclaw-registry.json 重新生成（一致性由 check-registry / e2e L1 把关）
+# 只跑部分阶段：node scripts/release.mjs --only build,lint
 ```
 
 ### 第二步：发布预演（dry-run，不真发）
@@ -59,11 +60,23 @@ npm run publish:execute -- --tag next            # 预发布通道（dist-tag=ne
 
 ## 版本管理
 
-- 各包 `version` 手工维护；改版本后跑 `npm run gen-registry` 刷新 registry
-  （`npm run release` 已包含）。
-- PPT skill 包的 version/files/publishConfig 由 `build-plugin.mjs` 生成，不要手改。
-- `@capyclaw/ppt-workbench` 的版本必须与 `src/mcp/contract.mjs` 的 `PACKAGE_VERSION` 一致
-  （构建脚本强校验）。
+用统一 bump 工具（默认 dry-run，`--write` 落盘；取代了旧的手改清单脚本）：
+
+```bash
+node scripts/bump.mjs @capyclaw/ppt-skill-narrative patch --write  # 单包（npm 名或目录名）
+node scripts/bump.mjs --all patch --write                          # 全部可发布包
+node scripts/bump.mjs @capyclaw/ppt-suite --set 2.5.0 --write      # 显式设版本
+node scripts/bump.mjs --sync-refs --write    # 把各 dsh-suite.json 的 ^ 引用收口到本地当前版本
+```
+
+- bump 会同时更新：`package.json`、bridge 构建脚本的 SKILL_PACKAGES 表行、
+  workbench 的 `contract.mjs` `PACKAGE_VERSION`、suite 的 `dsh-suite.json` 顶层 version；
+  **不动引用**（引用跟踪 npm 已发布版本，何时收口用 `--sync-refs`）。
+- bump 落盘后：`npm run build`（重生成 lock/契约快照）→ `npm run gen-registry`。
+- PPT skill 包的 version/files/publishConfig 由 `build-plugin.mjs` 生成，不要手改
+  （版本经 bump 工具改表行，不直接改产物）。
+- `@capyclaw/ppt-workbench` 等三个 workbench 的版本必须与各自 `src/mcp/contract.mjs`
+  的 `PACKAGE_VERSION` 一致（构建脚本强校验，bump 工具会同步更新）。
 
 ## 常见问题
 
@@ -81,7 +94,8 @@ npm run publish:execute -- --tag next            # 预发布通道（dist-tag=ne
 - **暂存版本冲突**：个别包的发布会进 registry staged 区（未立即上架），
   再发同版本报 `409 Cannot publish over previously staged version "x.y.z"`。
   查看/批准需 npm ≥ 11.15 的 `npm stage list|approve`（批准要 2FA），
-  或到 npmjs.com 的 Staged Packages 页操作；无法操作时**升 patch 版本重发**最省事
+  或到 npmjs.com 的 Staged Packages 页操作；无法操作时**升 patch 版本重发**最省事：
+  `node scripts/bump.mjs <pkg> patch --write && npm run build`
   （`ppt-skill-research` 2.2.3 即按此跳到 2.2.4，并连带 suite 2.4.6 更新组合锁）。
 - 发布后 `npm view <pkg> version` 可能短暂滞后（registry 副本），以 `publish:npm` 的
   逐包结果为准，稍后复核。

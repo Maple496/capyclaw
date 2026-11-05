@@ -1,0 +1,29 @@
+{
+  "name": "@capyclaw/browser-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "浏览器操控工作台中间件：Playwright 引擎、ref 快照交互、MCP 工具服务、插件包构建与 skill 源；relay 以独立进程运行，standalone 形态保留 headless 调试路径",
+  "scripts": {
+    "build:plugin": "node scripts/build-plugin.mjs",
+    "check:plugin": "node scripts/build-plugin.mjs --check",
+    "lint:skills": "node scripts/lint-skills.mjs",
+    "suite:validate": "node ../../../packages/capyclaw-suite-kit/bin/dsh-suite.mjs validate plugin/capyclaw-browser-suite",
+    "suite:compose": "node ../../../packages/capyclaw-suite-kit/bin/dsh-suite.mjs compose plugin/capyclaw-browser-suite --out dist/suite",
+    "start:workbench": "node plugin/capyclaw-browser-workbench/server/relay.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.64.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "extensions/bridges/browser-bridge"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/extensions/bridges/browser-bridge#readme"
+}

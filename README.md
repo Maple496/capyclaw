@@ -122,6 +122,7 @@ npm run publish:execute      # 确认无误后执行
 
 <!-- npm-table-start(由 scripts/gen-npm-table.mjs 生成,勿手改) -->
 
+
 ### 构建库(packages/ · registry 外单独发布)
 
 | 包 | 版本 | 说明 |
@@ -171,7 +172,7 @@ npm run publish:execute      # 确认无误后执行
 | [`@capyclaw/ppt-skill-ppt`](https://www.npmjs.com/package/@capyclaw/ppt-skill-ppt) | 2.2.3 | PPT skill：PPT 总入口：按意图路由到执行、成稿、审美、审计、研究技能 |
 | [`@capyclaw/ppt-skill-research`](https://www.npmjs.com/package/@capyclaw/ppt-skill-research) | 2.2.4 | PPT skill：外部资料、数据、配图研究，产出分析卡 |
 | [`@capyclaw/ppt-skill-visual-check`](https://www.npmjs.com/package/@capyclaw/ppt-skill-visual-check) | 2.2.3 | PPT skill：只读审计与按需截图，报告 pass/blocking |
-| [`@capyclaw/ppt-suite`](https://www.npmjs.com/package/@capyclaw/ppt-suite) | 2.4.6 | PPT 工作台套件：workbench + 8 个独立 skill 包 + 4  |
+| [`@capyclaw/ppt-suite`](https://www.npmjs.com/package/@capyclaw/ppt-suite) | 2.4.8 | PPT 工作台套件：workbench + 8 个独立 skill 包 + 4  |
 | [`@capyclaw/ppt-workbench`](https://www.npmjs.com/package/@capyclaw/ppt-workbench) | 2.4.5 | PPT 工作台运行时：27 个 ppt_* MCP 工具（导入/导出 PPTX  |
 
 ### Canvas 桥(extensions/bridges/canvas-bridge/)

@@ -1,6 +1,8 @@
-# dsh-service-broker：唯一中间件插件。
+# service-broker：唯一中间件插件。
 # 服务解耦标准见 docs/SERVICE_STANDARD.md——业务/端口服务一律不 insert 进
 # dsh 进程，由本插件按清单以独立进程拉起；跨端口组织只经过中间件。
+# 注意：name 必须是 npm 包名 @capyclaw/service-broker（裸名 dsh-service-broker
+# 已随改名废弃，写成裸名会在 profile 安装态 ERR_MODULE_NOT_FOUND，宿主永不激活）。
 - insert:
     - id: service-broker
-      name: "dsh-service-broker"
+      name: "@capyclaw/service-broker"

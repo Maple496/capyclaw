@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DSH 浏览器操控工作台</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <h1>DSH 浏览器操控工作台</h1>
+    <div class="badges">
+      <span id="badge-engine" class="badge off">浏览器未启动</span>
+      <span id="badge-mode" class="badge" hidden>有头</span>
+    </div>
+    <div class="actions">
+      <input id="url-input" type="text" placeholder="输入网址，回车打开（如 https://example.com/）">
+      <button id="btn-open">打开</button>
+      <button id="btn-demo" class="ghost" title="内置离线演示页">演示页</button>
+      <button id="btn-snapshot" class="ghost">快照</button>
+      <button id="btn-close" class="danger ghost">关闭浏览器</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-panel" class="panel">
+      <div class="panel-head">
+        <h2>实时画面</h2>
+        <nav id="tabs" class="tabs"></nav>
+      </div>
+      <div id="view" class="view">
+        <div class="placeholder">
+          <p>浏览器尚未启动。</p>
+          <p>在上方输入网址回车，或点「演示页」离线体验。<br>AI 在 DSH 里调用 <code>browser_navigate</code> 等工具时，这里会实时展示。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="log-panel" class="panel">
+      <div class="panel-head"><h2>动作日志</h2><span id="counters" class="muted"></span></div>
+      <ul id="log" class="log"><li class="muted">暂无动作。AI 或人工操作后这里按时间倒序显示。</li></ul>
+    </section>
+
+    <section id="snapshot-panel" class="panel">
+      <div class="panel-head"><h2>元素快照</h2><span class="muted">与 browser_snapshot 同源 · ref 可直接用于工具</span></div>
+      <pre id="snapshot" class="snapshot">点「快照」观察当前页面。</pre>
+    </section>
+  </main>
+
+  <footer>
+    <span>AI 侧工具：<code>mcp__browser__browser_*</code>（15 个）· MCP 端点 <code>/mcp</code> · 服务契约 <code>/healthz</code></span>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -10,9 +10,10 @@
  *                        scrapling，直接抛 NOT_IMPLEMENTED，不会伪造结果。
  *
  * 工作台服务（server/server.mjs）：
- *   - 默认 http://127.0.0.1:39640/ ，浏览器打开即用的可视化爬取界面；
- *   - 依赖注入可选：workbench: false 可只注册 scrapling 服务不起界面；
- *   - 通过 webserver/index-inject 注入 __DSH_SCRAPLING__ 供浏览器半挂面板。
+ *   - 由 service-broker 作为独立进程管理；Cordis 进程不监听业务端口；
+ *   - 依赖注入可选：workbench: false 可只注册进程内 fetch/parse API；
+ *   - 通过 webserver/index-inject 注入 URL（固定端口，注入时机先于 broker.start）；
+ *     浏览器半据此挂右侧边栏面板。
  *
  * 配置（resolveConfig：ctx config → 环境变量 → 默认值）：
  *   enabled      是否注册服务/界面    DSH_SCRAPLING_ENABLED     默认 true
@@ -31,6 +32,14 @@ import { createSelectorDocument } from './selectors.mjs'
 
 export const name = '@capyclaw/scrapling'
 export const DEFAULT_PORT = 39640
+export const inject = ['serviceBroker']
+
+const SERVICE_ID = 'scrapling-workbench'
+
+/* 版本号单一真源：读包内 package.json（createRequire 全 Node 版本稳态）。 */
+import { createRequire } from 'node:module'
+const requireFromHere = createRequire(import.meta.url)
+const { version: PKG_VERSION } = requireFromHere('../package.json')
 
 function notImplemented(feature) {
   const error = new Error(
@@ -53,7 +62,7 @@ export async function apply(ctx, config = {}) {
     },
     fields: {
       enabled: { env: 'ENABLED', type: 'boolean' },
-      port: { env: 'PORT', type: 'port' },
+      port: { env: 'PORT', type: 'string' },
       host: { env: 'HOST' },
       timeoutMs: { env: 'TIMEOUT_MS', type: 'number' },
       userAgent: { env: 'USER_AGENT' },
@@ -61,6 +70,11 @@ export async function apply(ctx, config = {}) {
     },
   })
   for (const issue of issues) ctx.logger?.warn?.(`[dsh-scrapling] 配置: ${issue}`)
+  const port = cfg.port === 'auto' ? 'auto' : Number(cfg.port)
+  if (port !== 'auto' && (!Number.isInteger(port) || port < 1 || port > 65535)) {
+    ctx.logger?.warn?.(`[dsh-scrapling] 非法 port=${cfg.port}，回退为默认 ${DEFAULT_PORT}`)
+  }
+  const servicePort = port === 'auto' || !Number.isInteger(port) || port < 1 || port > 65535 ? DEFAULT_PORT : port
 
   if (!cfg.enabled) {
     ctx.logger?.info?.('[dsh-scrapling] 已按配置禁用，不注册 scrapling 服务')
@@ -97,28 +111,50 @@ export async function apply(ctx, config = {}) {
     crawler,
   })
 
-  /* 工作台界面（默认开启；workbench:false 可关闭） */
-  let instance = null
+  /* 工作台由 broker 独立拉起；Cordis 进程只注册 API 与 sidebar URL。
+   * 时序契约：webserver/index-inject 是 webserver 启动时机的一次性事件，
+   * 注册必须发生在 broker.start 之前，且 URL 必须此刻可知——所以默认固定端口
+   *（port=auto 时 URL 要等 broker 分配，注入会错过时机，只做尽力补注册并告警）。 */
+  let serviceBroker = null
+  let stopServiceOnDispose = false
   if (cfg.workbench) {
-    const { startWorkbenchServer } = await import('../server/server.mjs')
-    try {
-      instance = await startWorkbenchServer({
-        port: cfg.port,
-        host: cfg.host,
-        packageDir,
-        crawler,
-        version: '1.1.0',
-      })
-      ctx.logger?.info?.(`[dsh-scrapling] 爬虫工作台已就绪: ${instance.url}/ （浏览器打开即用）`)
-      /* 与 DSH web 客户端的桥：注入 boot 全局（launchpad/port-sidebar 同款协议） */
-      ctx.on?.('webserver/index-inject', (table) => {
-        table.push({ kind: 'global', name: '__DSH_SCRAPLING__', value: { url: `${instance.url}/`, version: '1.1.0' } })
-      })
-    } catch (error) {
-      ctx.logger?.warn?.(`[dsh-scrapling] 工作台启动失败（scrapling 服务仍可用）: ${error.message}`)
+    const expectedUrl = `http://${cfg.host === '0.0.0.0' ? '127.0.0.1' : cfg.host}:${servicePort}`
+    ctx.on?.('webserver/index-inject', (table) => {
+      table.push({ kind: 'global', name: '__DSH_SCRAPLING__', value: { url: `${expectedUrl}/`, version: PKG_VERSION } })
+    })
+    const broker = ctx.serviceBroker
+    serviceBroker = broker || null
+    if (!broker || typeof broker.start !== 'function') {
+      ctx.logger?.warn?.('[dsh-scrapling] 缺少 ctx.serviceBroker，工作台未启动；fetch/parse API 仍可用')
+    } else {
+      const serviceFile = path.join(packageDir, 'server', 'server.mjs')
+      const spec = {
+        id: SERVICE_ID,
+        cmd: [process.execPath, serviceFile, '--port', '${PORT}', '--host', cfg.host],
+        env: {
+          DSH_SCRAPLING_TIMEOUT_MS: String(cfg.timeoutMs),
+          ...(cfg.userAgent ? { DSH_SCRAPLING_USER_AGENT: String(cfg.userAgent) } : {}),
+        },
+        ports: { main: servicePort },
+        url: 'http://127.0.0.1:${PORT}',
+        healthPath: '/healthz',
+        keepAlive: true,
+      }
+      try {
+        const started = await broker.start(spec)
+        if (!started?.url) throw new Error('serviceBroker.start 未返回服务 url')
+        const serviceUrl = started.url.replace(/\/$/, '')
+        stopServiceOnDispose = true
+        ctx.logger?.info?.(`[dsh-scrapling] broker 工作台已就绪: ${serviceUrl}/`)
+        if (serviceUrl !== expectedUrl) {
+          ctx.logger?.warn?.(`[dsh-scrapling] 实际服务地址 ${serviceUrl} 与注入地址 ${expectedUrl} 不一致（port=auto？），面板可能指向旧地址；建议使用固定端口`)
+        }
+      } catch (error) {
+        ctx.logger?.warn?.(`[dsh-scrapling] broker 工作台启动失败（fetch/parse API 仍可用）: ${error.message}`)
+      }
     }
   } else {
-    ctx.logger?.info?.('[dsh-scrapling] workbench=false，仅注册 scrapling 服务')
+    ctx.logger?.info?.('[dsh-scrapling] workbench=false，仅注册 scrapling API，不投递服务')
   }
 
   ctx.logger?.info?.(
@@ -126,9 +162,9 @@ export async function apply(ctx, config = {}) {
   )
 
   return async () => {
-    if (instance) {
-      await instance.close()
-      ctx.logger?.info?.('[dsh-scrapling] 爬虫工作台已停止')
+    if (stopServiceOnDispose && serviceBroker && typeof serviceBroker.stop === 'function') {
+      const result = await serviceBroker.stop(SERVICE_ID)
+      if (result?.stopped) ctx.logger?.info?.('[dsh-scrapling] broker 已停止工作台服务')
     }
   }
 }

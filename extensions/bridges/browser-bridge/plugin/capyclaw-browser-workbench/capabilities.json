@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "source": "server/tools/capabilities",
+  "capabilities": [
+    {
+      "id": "contract",
+      "version": "0.1.0",
+      "title": "契约探测",
+      "description": "",
+      "tags": [
+        "meta"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/contract.mjs",
+        "export": "contractCapability"
+      },
+      "provides": {
+        "tools": [
+          "browser_capabilities"
+        ],
+        "features": [
+          "browser.contract"
+        ]
+      },
+      "requires": [
+        "engine",
+        "server"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "navigation",
+      "version": "0.1.0",
+      "title": "导航",
+      "description": "",
+      "tags": [
+        "core"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/navigation.mjs",
+        "export": "navigationCapability"
+      },
+      "provides": {
+        "tools": [
+          "browser_navigate"
+        ],
+        "features": [
+          "browser.navigation"
+        ]
+      },
+      "requires": [
+        "engine"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "snapshot",
+      "version": "0.1.0",
+      "title": "页面快照",
+      "description": "",
+      "tags": [
+        "core"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/snapshot.mjs",
+        "export": "snapshotCapability"
+      },
+      "provides": {
+        "tools": [
+          "browser_snapshot"
+        ],
+        "features": [
+          "browser.snapshot"
+        ]
+      },
+      "requires": [
+        "engine"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "interaction",
+      "version": "0.1.0",
+      "title": "页面交互",
+      "description": "",
+      "tags": [
+        "core"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/interaction.mjs",
+        "export": "interactionCapability"
+      },
+      "provides": {
+        "tools": [
+          "browser_click",
+          "browser_fill",
+          "browser_press",
+          "browser_select",
+          "browser_scroll"
+        ],
+        "features": [
+          "browser.interaction"
+        ]
+      },
+      "requires": [
+        "engine"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "tabs",
+      "version": "0.1.0",
+      "title": "标签页管理",
+      "description": "",
+      "tags": [
+        "core"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/tabs.mjs",
+        "export": "tabsCapability"
+      },
+      "provides": {
+        "tools": [
+          "browser_tabs"
+        ],
+        "features": [
+          "browser.tabs"
+        ]
+      },
+      "requires": [
+        "engine"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "screenshot",
+      "version": "0.1.0",
+      "title": "页面截图",
+      "description": "",
+      "tags": [
+        "verify"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/screenshot.mjs",
+        "export": "screenshotCapability"
+      },
+      "provides": {
+        "tools": [
+          "browser_screenshot"
+        ],
+        "features": [
+          "browser.screenshot"
+        ]
+      },
+      "requires": [
+        "engine",
+        "server"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "session",
+      "version": "0.1.0",
+      "title": "会话管理",
+      "description": "",
+      "tags": [
+        "core"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/session.mjs",
+        "export": "sessionCapability"
+      },
+      "provides": {
+        "tools": [
+          "browser_status",
+          "browser_wait",
+          "browser_history",
+          "browser_close"
+        ],
+        "features": [
+          "browser.session"
+        ]
+      },
+      "requires": [
+        "engine"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "evaluate",
+      "version": "0.1.0",
+      "title": "页面脚本",
+      "description": "",
+      "tags": [
+        "advanced"
+      ],
+      "keywords": [],
+      "entry": {
+        "module": "./capabilities/evaluate.mjs",
+        "export": "evaluateCapability"
+      },
+      "provides": {
+        "tools": [
+          "browser_evaluate"
+        ],
+        "features": [
+          "browser.evaluate"
+        ]
+      },
+      "requires": [
+        "engine"
+      ],
+      "dependsOn": []
+    }
+  ]
+}

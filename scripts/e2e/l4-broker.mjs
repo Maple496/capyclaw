@@ -15,6 +15,14 @@ import { ROOT, Recorder, getJson, makeJunction, portFree, removeJunction, run, s
 
 const SUITES = [
   {
+    ns: 'browser',
+    suiteDir: path.join(ROOT, 'extensions/bridges/browser-bridge/plugin/capyclaw-browser-suite'),
+    linkPackages: [
+      ['browser-workbench', path.join(ROOT, 'extensions/bridges/browser-bridge/plugin/capyclaw-browser-workbench')],
+    ],
+    services: [{ id: 'browser-workbench', port: 39315 }],
+  },
+  {
     ns: 'canvas',
     suiteDir: path.join(ROOT, 'extensions/bridges/canvas-bridge/plugin/capyclaw-canvas-suite'),
     linkPackages: [

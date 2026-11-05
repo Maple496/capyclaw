@@ -6,15 +6,20 @@
  *
  * 只绑 127.0.0.1；/healthz 报标准服务信息，`/` 是爬虫工作台界面，
  * /demo/* 是内置离线演示页（不依赖外网即可完整体验爬取流程）。
- * lib/host.mjs 在被 insert 时会以同一装配拉起本服务并返回 disposer。
+ * lib/host.mjs 只通过 serviceBroker 启停本服务，不在 dsh 进程内监听端口。
  */
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
-import { createServer } from 'node:http'
 import { fileURLToPath } from 'node:url'
+import { createRequire } from 'node:module'
 import { isMain, parseArgs } from '@capyclaw/plugin-kit'
+import { installServiceSignalHandlers, startStandaloneService } from '@capyclaw/plugin-kit/service/server'
 
 import { createCrawler } from '../lib/crawler.mjs'
+
+/* 版本号单一真源：读包内 package.json。 */
+const requireFromHere = createRequire(import.meta.url)
+const { version: PKG_VERSION } = requireFromHere('../package.json')
 
 export const DEFAULT_PORT = 39640
 export const CONTRACT_VERSION = '1'
@@ -98,32 +103,23 @@ function normalizeSelectors(raw) {
 export async function startWorkbenchServer(options = {}) {
   const packageDir = options.packageDir
     || path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-  const port = Number(options.port) || DEFAULT_PORT
+  const port = options.port === undefined ? DEFAULT_PORT : Number(options.port)
   const host = options.host || '127.0.0.1'
-  const crawler = options.crawler || createCrawler()
-  const version = options.version || '1.1.0'
+  const crawler = options.crawler || createCrawler({
+    timeoutMs: options.timeoutMs,
+    userAgent: options.userAgent,
+    maxHtmlBytes: options.maxHtmlBytes,
+  })
+  const version = options.version || PKG_VERSION
   const uiDir = path.join(packageDir, 'ui')
   const demoDir = path.join(packageDir, 'demo')
   const files = staticFiles(uiDir, demoDir)
   const startedAt = Date.now()
 
-  const server = createServer(async (req, res) => {
+  const handler = async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host || `127.0.0.1:${port}`}`)
     try {
-      /* ---- 健康检查 / 指标（服务契约） ---- */
-      if (url.pathname === '/healthz' && req.method === 'GET') {
-        return sendJson(res, 200, {
-          ok: true,
-          name: 'scrapling-workbench',
-          version,
-          contractVersion: CONTRACT_VERSION,
-          uptimeSec: Math.round((Date.now() - startedAt) / 1000),
-          port,
-          pid: process.pid,
-          crawls: crawler.counters.total,
-          capabilities: { http: true, browser: false, selectors: true },
-        })
-      }
+      /* ---- 指标 ---- */
       if (url.pathname === '/metrics' && req.method === 'GET') {
         const body = [
           '# HELP scrapling_up 服务存活状态',
@@ -224,20 +220,22 @@ export async function startWorkbenchServer(options = {}) {
       }
       return sendError(res, 500, { code: 'INTERNAL', message: error.message || '服务内部错误', hint: '请重试；若持续失败请查看服务日志。' })
     }
-  })
+  }
 
-  await new Promise((resolve, reject) => {
-    server.once('error', reject)
-    server.listen(port, host, () => resolve())
-  })
-
-  return {
+  const instance = await startStandaloneService({
+    service: 'scrapling-workbench',
     port,
     host,
-    url: `http://${host === '127.0.0.1' ? '127.0.0.1' : host}:${port}`,
-    crawler,
-    close: () => new Promise((resolve) => server.close(() => resolve())),
-  }
+    health: () => ({
+      name: 'scrapling-workbench',
+      version,
+      contractVersion: CONTRACT_VERSION,
+      crawls: crawler.counters.total,
+      capabilities: { http: true, browser: false, selectors: true },
+    }),
+    handler,
+  })
+  return { ...instance, crawler }
 }
 
 async function main() {
@@ -249,11 +247,7 @@ async function main() {
   const port = flags.port === undefined ? DEFAULT_PORT : Number(flags.port)
   const instance = await startWorkbenchServer({ port, host: flags.host })
   console.log(`[dsh-scrapling] 工作台已就绪: ${instance.url}/ （浏览器打开即用）`)
-  const shutdown = () => {
-    instance.close().then(() => process.exit(0))
-  }
-  process.on('SIGINT', shutdown)
-  process.on('SIGTERM', shutdown)
+  installServiceSignalHandlers(instance, { logger: console })
 }
 
 if (isMain(import.meta.url)) {

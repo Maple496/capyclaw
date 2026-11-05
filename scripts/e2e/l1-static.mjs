@@ -1,6 +1,11 @@
 /**
- * L1 静态清单层（离线，秒级）：结构校验、套件/领域清单、组合预览、registry 与
- * dist 索引对齐、launchpad 扫描、28 包名按名解析。
+ * L1 静态清单层（离线，秒级）：结构校验、构建产物漂移（src ↔ plugin/ 字节级
+ * 等价）、套件/领域清单、组合预览、registry 与 dist 索引对齐、launchpad 扫描、
+ * 28 包名按名解析。
+ *
+ * 构建漂移项尤其重要：L3/L4 拉起的是 plugin/ 下的已提交产物，若源码改动后
+ * 忘了 npm run build，e2e 会在旧产物上跑出全绿——此检查是唯一能拦住这条
+ * 路径的闸。
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -12,6 +17,7 @@ const SUITE_KIT = path.join(ROOT, 'packages/capyclaw-suite-kit/bin/dsh-suite.mjs
 const SUITES = [
   ['ppt', path.join(ROOT, 'extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-suite')],
   ['canvas', path.join(ROOT, 'extensions/bridges/canvas-bridge/plugin/capyclaw-canvas-suite')],
+  ['browser', path.join(ROOT, 'extensions/bridges/browser-bridge/plugin/capyclaw-browser-suite')],
 ]
 
 export async function runLayer() {
@@ -20,6 +26,13 @@ export async function runLayer() {
 
   rec.section('插件结构校验')
   rec.check('validate-all（全部插件规范校验）', run('node', ['scripts/validate-all-plugins.mjs']).status === 0)
+
+  rec.section('构建产物漂移（src ↔ plugin/）')
+  for (const [id, dir] of [['ppt', 'ppt-bridge'], ['canvas', 'canvas-bridge'], ['browser', 'browser-bridge']]) {
+    const c = run('npm', ['--prefix', `extensions/bridges/${dir}`, 'run', 'check:plugin'])
+    const drift = (c.stdout + c.stderr).split(/\r?\n/).filter((l) => l.includes('不是最新') || l.includes('Error')).slice(0, 3).join(' | ')
+    rec.check(`${id} bridge build --check（源码与 plugin/ 产物零漂移）`, c.status === 0, drift)
+  }
 
   rec.section('套件清单（validate + compose 路径可解析）')
   for (const [name, suiteDir] of SUITES) {
@@ -64,8 +77,11 @@ export async function runLayer() {
     rec.check('activation registry 服务 cmd 无双重嵌套', nested.length === 0, nested.join(' | '))
   }
 
-  rec.section('漂移与一致性')
-  rec.check('check-suite-drift（ppt 套件元数据）', run('node', ['scripts/check-suite-drift.mjs']).status === 0)
+  rec.section('包契约与漂移')
+  const exportsCheck = run('node', ['scripts/check-package-exports.mjs'])
+  rec.check('package exports/bin 目标全部存在', exportsCheck.status === 0, exportsCheck.stderr || exportsCheck.stdout)
+  rec.check('plugin-kit 测试（服务启动/健康契约）', run('npm', ['--prefix', 'packages/capyclaw-plugin-kit', 'test']).status === 0)
+  rec.check('check-suite-drift（公共插件元数据 × ppt/canvas/browser suite）', run('node', ['scripts/check-suite-drift.mjs']).status === 0)
   const checkReg = run('node', ['scripts/gen-registry.mjs', '--check'])
   rec.check('check-registry（registry 与仓库一致）', checkReg.status === 0, checkReg.stderr)
 
@@ -94,7 +110,7 @@ export async function runLayer() {
   for (const p of registry.plugins) {
     try { resolvePluginDir(p.name); resolved++ } catch { failed.push(p.name) }
   }
-  rec.check(`28 个包名 resolvePluginDir 全命中（实际 ${registry.plugins.length} 个）`, failed.length === 0, failed.join(', '))
+  rec.check(`${registry.plugins.length} 个包名 resolvePluginDir 全命中`, failed.length === 0, failed.join(', '))
 
   return rec.summary()
 }

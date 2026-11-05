@@ -3,12 +3,15 @@
 #
 # 配置项（cordis config → 环境变量 DSH_SCRAPLING_* → 默认值）：
 #   enabled      是否启用            DSH_SCRAPLING_ENABLED     true
-#   port         工作台端口          DSH_SCRAPLING_PORT        39640
+#   port         工作台端口          DSH_SCRAPLING_PORT        39640（固定端口；boot 注入要求
+#                                                             URL 在注入时机已知，auto 会错过时机）
 #   host         监听地址            DSH_SCRAPLING_HOST        127.0.0.1
 #   timeoutMs    请求超时(ms)        DSH_SCRAPLING_TIMEOUT_MS  20000
 #   workbench    是否拉起工作台      DSH_SCRAPLING_WORKBENCH   true
 
 - insert:
+    - id: service-broker
+      name: "@capyclaw/service-broker"
     - id: scrapling-host
       name: "@capyclaw/scrapling"
       config:

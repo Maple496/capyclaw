@@ -1,0 +1,7 @@
+# 统一行尾为 LF：
+#   - composition.lock.json 对依赖 package.json/dsh-suite.json 的原始字节做 sha256，
+#     CRLF/LF 漂移会直接打断 build --check（Windows autocrlf 克隆即中招）；
+#   - syncDir/copyChecked 的字节级等价检查同理，需要跨平台确定的文件内容。
+# 仓库现有 blob 已全部是 LF（git ls-files --eol 验证 0 个 i/crlf），此设置只影响
+# 未来的 checkout（一律 LF）与 commit（CRLF 归一为 LF，与原 autocrlf 行为一致）。
+* text=auto eol=lf

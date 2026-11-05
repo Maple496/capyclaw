@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/scrapling",
-  "version": "1.1.0",
+  "version": "1.1.5",
   "description": "Scrapling 网页抓取集成：HTTP 抓取 + 纯 Node CSS 选择器提取 + 可视化爬虫工作台（浏览器打开即用）",
   "type": "module",
   "main": "./lib/host.mjs",
@@ -11,7 +11,8 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@capyclaw/plugin-kit": "^0.2.0"
+    "@capyclaw/plugin-kit": "^0.2.2",
+    "@capyclaw/service-broker": "^0.2.2"
   },
   "dsh": {
     "bundle": {
@@ -19,7 +20,7 @@
     },
     "client": {
       "platform": "web",
-      "immediately": false
+      "immediately": true
     },
     "category": "tool",
     "platform": "both"
@@ -39,7 +40,8 @@
   ],
   "scripts": {
     "start": "node server/server.mjs",
-    "test": "node --test \"test/*.test.mjs\""
+    "test": "node --test \"test/*.test.mjs\"",
+    "test:internet": "node test/internet-campaign.mjs"
   },
   "engines": {
     "node": ">=18",

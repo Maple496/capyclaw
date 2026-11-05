@@ -33,14 +33,21 @@ npm run bootstrap -- --full
 ## 日常命令速查
 
 ```bash
-npm run build            # 构建全部插件包产物（ppt + canvas → plugin/）
+npm run build            # 构建全部插件包产物（ppt + canvas + browser → plugin/）
 npm run check            # 构建漂移检查（不改文件）
 npm run validate-all     # 全部插件结构校验
-npm run test:e2e         # 六层验证（静态/单元/服务/MCP/broker/发布/浏览器）
+npm run test:e2e         # 六层验证（静态/构建漂移/单元/服务/MCP/broker/发布/浏览器）
 npm run verify:install   # 沙箱安装形态验证（见下）
 npm run release          # zip + index + registry 全链（不发布）
 npm run publish:npm      # 发布预演 dry-run（不真发）
 ```
+
+> 单元层取舍：L2 只跑 canvas 的 `node --test`（55 项）；ppt/browser 的
+> `src/mcp`、`src/core` 无独立单测层，由 L3 服务冒烟（真实拉起 relay、走
+> /mcp 全链）覆盖——这是有意取舍，新增纯逻辑模块时优先补进 canvas 式单测。
+
+行尾：仓库以 `.gitattributes` 锁定 `eol=lf`（lock 的 sha256 与 build --check 的
+字节级比对都依赖确定行尾；Windows 上 `core.autocrlf=true` 的检出会破坏一致性）。
 
 ## 沙箱安装形态验证（dsh 用户视角）
 
@@ -75,8 +82,8 @@ npm run verify:install -- --skip-browser
 
 - `npm whoami` 登录 capyclaw 发布账号，或设 `NODE_AUTH_TOKEN`
 - 顺序纪律：支撑库（plugin-kit → document-workbench）→ 运行时插件 → suite；
-  同版本号内容变化必须 bump（npm 禁止同版本重发），参考 `scripts/bump-patch.mjs` 与
-  PUBLISHING.md
+  同版本号内容变化必须 bump（npm 禁止同版本重发），用 `scripts/bump.mjs`
+  （默认 dry-run，`--write` 落盘；`--sync-refs` 收口 suite 引用），详见 PUBLISHING.md
 
 ## dsh 桌面端联调（可选）
 
@@ -88,7 +95,7 @@ dsh plugin --profile <name> add @capyclaw/canvas-suite
 # 或本地联调：编辑 ~/.dsh/profiles/<name>/package.json 用 link: 指向本仓包目录
 ```
 
-联调端口约定：canvas 39313 / ppt 39311 / skills 39321（services.json 固定端口，本地被占用时 e2e 会跳过对应项）。
+联调端口约定：canvas 39313 / ppt 39311 / browser 39315 / skills 39321（services.json 固定端口，本地被占用时 e2e 会跳过对应项）。
 
 ## 故障排除
 

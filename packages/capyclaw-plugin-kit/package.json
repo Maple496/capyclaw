@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/plugin-kit",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "DSH 插件基础设施标准件：HTTP/MCP、单实例锁、参数校验、技能 provider、journal 存储、编辑器传输与租约。",
   "type": "module",
   "main": "./src/index.mjs",
@@ -8,7 +8,7 @@
     ".": "./src/index.mjs",
     "./service/http": "./src/service/http.mjs",
     "./service/mcp-http": "./src/service/mcp-http.mjs",
-    "./service/single-instance": "./src/service/single-instance.mjs",
+    "./service/server": "./src/service/server.mjs",
     "./service/api": "./src/service/api.mjs",
     "./tools/validate": "./src/tools/validate.mjs",
     "./skills/provider": "./src/skills/provider.mjs",
@@ -34,7 +34,9 @@
     "README.md",
     "INTEGRATION.md"
   ],
-  "scripts": {},
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\""
+  },
   "engines": {
     "node": ">=18"
   },

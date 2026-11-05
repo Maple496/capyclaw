@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/service-broker",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "DSH 服务中间件（唯一进程内插件）：按清单/结构化命令把各服务作为独立进程拉起，负责守护、发现（discovery）、控制端点；服务与服务之间不互相带动，跨端口组织一律经过这里。",
   "type": "module",
   "main": "./lib/host.mjs",

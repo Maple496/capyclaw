@@ -2,7 +2,7 @@
 /**
  * 统一 e2e 入口：六层验证一次跑全（重构回归的主力防线）。
  *
- *   L1 静态清单层   scripts/e2e/l1-static.mjs   结构/清单/一致性（离线秒级）
+ *   L1 静态清单层   scripts/e2e/l1-static.mjs   结构/构建漂移/清单/一致性（离线秒级）
  *   L2 单元层       canvas node --test（55 项）
  *   L3 服务冒烟层   scripts/e2e/l3-services.mjs 双 relay /mcp + stdio + skills + host 模板 + 12 skill 包
  *   L4 broker 层    scripts/e2e/l4-broker.mjs   services.json 新代规格全链路消费

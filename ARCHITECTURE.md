@@ -42,7 +42,7 @@
 | `packages/` | 构建库（plugin-kit、suite-kit）+ 基建级插件产品 + shared 源供给 |
 | `tools/` | plugin-generator（脚手架）、plugin-validator（校验）、plugin-release（打包/发布闸） |
 | `extensions/` | 插件本体：official（7 个官方插件）、bridges（ppt-bridge 构建工场 + 10 个生成包） |
-| `scripts/` | validate-all、check-suite-drift、sync-shared、gen-registry、publish-to-npm、verify-publishable |
+| `scripts/` | validate-all、check-suite-drift（三 suite）、check-package-exports、bump、release、gen-registry、publish-to-npm、verify-publishable |
 | `docs/` | 工程文档（guides / reference） |
 
 ## 三、依赖方向
@@ -84,6 +84,7 @@ npm run build:plugin
 
 | 环节 | 命令 | 产物 |
 |---|---|---|
+| 版本 | `node scripts/bump.mjs <pkg> <level> [--write]` / `--sync-refs` | 本地版本一处提升（package.json / SKILL_PACKAGES 表 / PACKAGE_VERSION / suite version） |
 | 打包 | `release-all` / `release-index` / `release-source` | `dist/plugins/*.zip`、`dist/index.json`、`release/*.zip` |
 | 闸 | `validate-all`（结构）、`verify-publishable`（npm pack 可安装性）、`check-registry`（清单一致） | — |
 | 发布 | `publish:npm`（dry-run）→ `publish:execute`（人工决定） | npm |

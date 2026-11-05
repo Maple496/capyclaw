@@ -1,0 +1,163 @@
+{
+  "$schema": "../../../../../packages/capyclaw-suite-kit/suite.schema.json",
+  "name": "capyclaw-browser-suite",
+  "version": "0.1.0",
+  "title": "浏览器操控工作台套件",
+  "description": "浏览器操控运行时（独立端口服务，Playwright 引擎、有头可见、登录态持久化）+ 3 个独立 skill 包 + 3 个公共基建插件 + 服务中间件（broker）；relay 不 insert 进 dsh 进程，由中间件按清单以独立进程拉起。",
+  "components": [
+    "../../../../../packages/capyclaw-service-host",
+    "../../../../../packages/capyclaw-tool-host",
+    "../../../../../packages/capyclaw-asset-service"
+  ],
+  "packages": {
+    "@capyclaw/plugin-kit": {
+      "role": "support",
+      "version": "^0.2.2",
+      "path": "../../../../../packages/capyclaw-plugin-kit"
+    },
+    "@capyclaw/browser-workbench": {
+      "role": "runtime",
+      "version": "^0.1.0",
+      "path": "../capyclaw-browser-workbench",
+      "requires": {
+        "capabilities": {
+          "host.http": "^1.0.0",
+          "tools.registry": "^1.0.0",
+          "assets.store": "^1.0.0"
+        }
+      },
+      "provides": {
+        "tools": [
+          "browser_*"
+        ],
+        "services": [
+          "browser-workbench"
+        ],
+        "ports": [
+          39315
+        ],
+        "capabilities": {
+          "browser.runtime": "1.0.0",
+          "browser.tools": "1.0.0"
+        }
+      }
+    },
+    "@capyclaw/browser-skill-browser": {
+      "role": "skills",
+      "version": "^0.1.0",
+      "path": "../capyclaw-browser-skill-browser",
+      "requires": {
+        "@capyclaw/browser-workbench": "^0.1.0",
+        "capabilities": {
+          "browser.runtime": "^1.0.0"
+        }
+      },
+      "provides": {
+        "skills": [
+          "browser"
+        ],
+        "capabilities": {
+          "browser.workflows": "1.0.0"
+        }
+      }
+    },
+    "@capyclaw/browser-skill-api": {
+      "role": "skills",
+      "version": "^0.1.0",
+      "path": "../capyclaw-browser-skill-api",
+      "requires": {
+        "@capyclaw/browser-workbench": "^0.1.0",
+        "capabilities": {
+          "browser.runtime": "^1.0.0"
+        }
+      },
+      "provides": {
+        "skills": [
+          "browser-api"
+        ],
+        "capabilities": {
+          "browser.workflows": "1.0.0"
+        }
+      }
+    },
+    "@capyclaw/browser-skill-ops": {
+      "role": "skills",
+      "version": "^0.1.0",
+      "path": "../capyclaw-browser-skill-ops",
+      "requires": {
+        "@capyclaw/browser-workbench": "^0.1.0",
+        "capabilities": {
+          "browser.runtime": "^1.0.0"
+        }
+      },
+      "provides": {
+        "skills": [
+          "browser-ops"
+        ],
+        "capabilities": {
+          "browser.workflows": "1.0.0"
+        }
+      }
+    },
+    "@capyclaw/service-broker": {
+      "role": "runtime",
+      "version": "^0.2.1",
+      "path": "../../../../../packages/capyclaw-service-broker",
+      "provides": {
+        "services": [
+          "serviceBroker"
+        ],
+        "ports": [],
+        "capabilities": {
+          "service.broker": "1.0.0"
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "mcp-browser",
+      "name": "@deepseek-ai/dsh-mcp-client",
+      "config": {
+        "serverName": "browser",
+        "transport": "streamable-http",
+        "url": "http://127.0.0.1:39315/mcp",
+        "failOnStartupError": false,
+        "toolCallTimeoutMs": 120000
+      }
+    },
+    {
+      "id": "browser-skill-browser",
+      "name": "@capyclaw/browser-skill-browser"
+    },
+    {
+      "id": "browser-skill-api",
+      "name": "@capyclaw/browser-skill-api"
+    },
+    {
+      "id": "browser-skill-ops",
+      "name": "@capyclaw/browser-skill-ops"
+    }
+  ],
+  "checks": [
+    {
+      "id": "browser-health",
+      "type": "http",
+      "url": "http://127.0.0.1:39315/healthz",
+      "expectStatus": 200,
+      "expectBody": {
+        "ok": true,
+        "contractsOk": true
+      },
+      "timeoutMs": 3000
+    },
+    {
+      "id": "browser-contract",
+      "type": "contract",
+      "url": "http://127.0.0.1:39315/mcp",
+      "tool": "browser_capabilities",
+      "major": 1,
+      "timeoutMs": 5000
+    }
+  ]
+}

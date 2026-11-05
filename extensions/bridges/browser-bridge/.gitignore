@@ -1,0 +1,13 @@
+# 依赖
+node_modules/
+
+# 运行时状态（broker 拉起时的 hostDir：profile/登录态、截图、锁）
+.host/
+plugin/*/server/.relay-instance.lock
+
+# 测试/调试产物
+*.png
+*.log
+
+# 构建调试产物
+dist/

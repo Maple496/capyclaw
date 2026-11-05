@@ -1,0 +1,63 @@
+{
+  "name": "@capyclaw/browser-workbench",
+  "version": "0.1.0",
+  "description": "浏览器操控工作台运行时：15 个 browser_* MCP 工具（导航/ref 快照/点击/填写/下拉/滚动/标签页/截图）+ Playwright 引擎（有头可见、登录态持久化）+ 可视化工作台。",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "category": "service",
+    "platform": "both",
+    "capabilities": {
+      "source": "server/tools/capabilities",
+      "manifest": "capabilities.json"
+    }
+  },
+  "meta": {
+    "title": "浏览器操控工作台运行时",
+    "description": "AI 直接操控浏览器完成互联网上的点击/打字工作：15 个 browser_* 工具 + 可视化工作台（http://127.0.0.1:39315/）"
+  },
+  "files": [
+    "lib/",
+    "server/",
+    "ui/",
+    "demo/",
+    "!server/.relay-instance.lock",
+    "contract/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "license": "MIT",
+  "scripts": {},
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0",
+    "playwright": "^1.64.0"
+  },
+  "author": {
+    "name": "CapyClaw",
+    "url": "https://github.com/capyclaw",
+    "email": "support@capyclaw.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-workbench"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/capyclaw/dsh-plugins"
+}

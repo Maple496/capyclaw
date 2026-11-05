@@ -1,0 +1,49 @@
+{
+  "name": "@capyclaw/browser-skill-api",
+  "version": "0.1.0",
+  "description": "Browser skill：browser_* 工具契约、ref 快照语义、登录态与安全边界。",
+  "type": "module",
+  "main": "./lib/index.mjs",
+  "exports": {
+    ".": "./lib/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "category": "skills",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "Browser Skill · 浏览器工具手册",
+    "description": "browser_* 工具契约、ref 快照语义、登录态与安全边界。"
+  },
+  "files": [
+    "lib/",
+    "skills/",
+    "contract/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-skill-api"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/extensions/bridges/browser-bridge/plugin/capyclaw-browser-skill-api#readme"
+}

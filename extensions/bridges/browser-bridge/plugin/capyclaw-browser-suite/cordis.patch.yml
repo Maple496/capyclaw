@@ -1,0 +1,18 @@
+# 由 @capyclaw/suite-kit 生成；改 dsh-suite.json 后重跑 compose。
+
+- insert:
+    - id: service-host
+      name: "@capyclaw/service-host"
+    - id: tool-host
+      name: "@capyclaw/tool-host"
+    - id: asset-service
+      name: "@capyclaw/asset-service"
+    - id: mcp-browser
+      name: "@deepseek-ai/dsh-mcp-client"
+      config: {"serverName":"browser","transport":"streamable-http","url":"http://127.0.0.1:39315/mcp","failOnStartupError":false,"toolCallTimeoutMs":120000}
+    - id: browser-skill-browser
+      name: "@capyclaw/browser-skill-browser"
+    - id: browser-skill-api
+      name: "@capyclaw/browser-skill-api"
+    - id: browser-skill-ops
+      name: "@capyclaw/browser-skill-ops"

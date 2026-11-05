@@ -14,7 +14,7 @@ Scrapling 网页抓取插件 —— 为 DeepSeek Harness 提供网页数据爬�
   - `:first-child` / `:last-child` / `:nth-child(k)`
   - 逗号分组按文档序合并去重（XPath union 语义）
   - 支持中文类名/属性值
-- **爬虫工作台**（`http://127.0.0.1:39640/`）—— 浏览器打开即用：
+- **爬虫工作台**（默认 `http://127.0.0.1:39640/`，端口由 broker 管理）—— 浏览器打开即用：
   - 三步引导：选目标 → 观察流程 → 取数据
   - 爬取流程逐步回放（每步真实耗时：解析 URL → 发请求 → 收响应 → 读内容 → 建文档树 → 提取 → 完成）
   - 选择器试玩（随时改随时提取，不重新请求）
@@ -37,8 +37,9 @@ node server/server.mjs            # 默认 http://127.0.0.1:39640/
 # 或指定端口
 node server/server.mjs --port 39641
 
-# 方式二：作为 DSH 插件加载（自动注册服务并拉起工作台）
-# cordis.patch.yml 已配置 port: 39640
+# 方式二：作为 DSH 插件加载
+# cordis.patch.yml 会加载 service-broker；Scrapling 通过 ctx.serviceBroker
+# 投递独立工作台服务，Cordis 进程本身不监听业务端口。
 
 # 单元测试（32 项）
 npm test
@@ -78,7 +79,7 @@ export async function apply(ctx) {
 
 | 接口 | 方法 | 说明 |
 |---|---|---|
-| `/healthz` | GET | `{ ok, name, version, contractVersion, uptimeSec, port, pid, capabilities }` |
+| `/healthz` | GET | 标准 `{ ok, service, pid, port }` + `{ name, version, contractVersion, crawls, capabilities }` |
 | `/metrics` | GET | Prometheus 文本（`scrapling_up` / `scrapling_crawls_total` 等） |
 | `/api/crawl` | POST | `{ url, timeoutMs?, userAgent?, selectors?: [{key, selector}] }` → 步骤流水线 + 提取结果 |
 | `/api/extract` | POST | `{ crawlId, selectors }` 基于历史记录二次提取（免重新请求） |
@@ -93,7 +94,7 @@ export async function apply(ctx) {
 | 配置 | 环境变量 | 默认 | 说明 |
 |---|---|---|---|
 | `enabled` | `DSH_SCRAPLING_ENABLED` | `true` | 是否注册服务与工作台 |
-| `port` | `DSH_SCRAPLING_PORT` | `39640` | 工作台端口 |
+| `port` | `DSH_SCRAPLING_PORT` | `auto` | 工作台端口（`auto` 由 broker 分配；手动直启默认 39640） |
 | `host` | `DSH_SCRAPLING_HOST` | `127.0.0.1` | 监听地址 |
 | `timeoutMs` | `DSH_SCRAPLING_TIMEOUT_MS` | `20000` | 默认请求超时 |
 | `workbench` | `DSH_SCRAPLING_WORKBENCH` | `true` | 是否拉起工作台界面 |
@@ -103,7 +104,7 @@ export async function apply(ctx) {
 ```
 capyclaw-scrapling/
 ├── lib/
-│   ├── host.mjs          # Cordis 入口：注册服务 + 拉起工作台 + boot 全局注入
+│   ├── host.mjs          # Cordis 入口：注册 fetch/parse API + broker 投递工作台 + boot 全局注入
 │   ├── index.mjs         # API 导出
 │   ├── html-parser.mjs   # 容错 HTML 解析器（单遍、隐式闭合、实体解码）
 │   ├── selectors.mjs     # CSS 选择器引擎（parsel 语义）
@@ -126,8 +127,11 @@ capyclaw-scrapling/
 ## 测试与验证
 
 ```bash
-# 单元测试（32 项：解析器 / 选择器 / API / 宿主装配）
+# 单元测试（52 项：解析器 / 选择器 / API / 宿主装配 / 真实世界边界）
 cd extensions/official/capyclaw-scrapling && npm test
+
+# 真实互联网实测（多站点多结构：quotes/books/baidu/gitee/httpbin）
+node test/internet-campaign.mjs
 
 # 六层 e2e（scrapling 在 L3 有 7 项专属冒烟：healthz/metrics/页面/离线自爬/二次提取/诚实拒绝/单测）
 node scripts/e2e-all.mjs --layer l3
@@ -162,7 +166,12 @@ MIT License
 - 🆕 `parse()` 真实实现：自研容错 HTML 解析器 + CSS 选择器引擎（`::text` / `::attr` / 组合器 / 伪类 / 中文标识符）
 - 🆕 爬取流水线 `crawler.crawl()`：步骤计时、结构化错误（含「下一步」提示）、20 条历史
 - 🆕 服务契约 `/healthz` + `/metrics`，浏览器半挂 DSH 右侧边栏
-- ✅ 32 项单测 + e2e L3 七项专属冒烟
+- 🔧 E2E 加固（大规模端到端测试发现并修复）：
+  - **多编码解码**：响应头 charset → BOM → meta 嗅探三级解码，GBK/GB2312/GB18030/UTF-16 中文老站点不再乱码
+  - **深度上限 512**（浏览器同款）：5 万层嵌套不再栈溢出
+  - **结构伪类 O(1) 化**：兄弟位置索引缓存，2MB/5 万元素页面提取从 49.5s 降到 0.42s
+  - **大结果渲染上限**：表格只画前 500 行，导出仍含全部数据
+- ✅ 52 项单测（含 20 项真实世界边界场景）+ e2e L3 七项专属冒烟 + 真实互联网多站点实测
 - 诚实边界不变：浏览器渲染 / XPath 未实现并如实标注
 
 ### 1.0.2 (2026-11-04)

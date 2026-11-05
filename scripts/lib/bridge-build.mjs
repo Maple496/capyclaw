@@ -61,24 +61,31 @@ export function createCheckedFs(checkOnly) {
   function syncDir(src, dst, label, ignore = []) {
     if (!existsSync(src)) fail('缺少目录: ' + src)
     const filtered = (files) => files.filter((file) => !ignore.includes(file))
-    if (!checkOnly) {
-      rmSync(dst, { recursive: true, force: true })
-      mkdirSync(dst, { recursive: true })
-      cpSync(src, dst, { recursive: true })
-      console.log(`✓ 拷贝 ${label}/（${listFiles(src).length} 个文件）`)
+    const want = filtered(listFiles(src))
+    const have = existsSync(dst) ? filtered(listFiles(dst)) : null
+    const identical = have !== null
+      && want.join('\n') === have.join('\n')
+      && want.every((rel) => readFileSync(join(src, rel), 'utf8') === readFileSync(join(dst, rel), 'utf8'))
+    if (checkOnly) {
+      if (have === null || want.join('\n') !== have.join('\n')) {
+        throw new Error(`[check] ${label}/ 文件集不是最新，请运行 node scripts/build-plugin.mjs`)
+      }
+      for (const rel of want) {
+        if (readFileSync(join(src, rel), 'utf8') !== readFileSync(join(dst, rel), 'utf8')) {
+          throw new Error(`[check] ${label}/${rel} 不是最新，请运行 node scripts/build-plugin.mjs`)
+        }
+      }
+      console.log(`· ${label}/ 已是最新`)
       return
     }
-    const want = filtered(listFiles(src))
-    const have = filtered(existsSync(dst) ? listFiles(dst) : [])
-    if (want.join('\n') !== have.join('\n')) {
-      throw new Error(`[check] ${label}/ 文件集不是最新，请运行 node scripts/build-plugin.mjs`)
+    if (identical) {
+      console.log(`· ${label}/ 已是最新`)
+      return
     }
-    for (const rel of want) {
-      if (readFileSync(join(src, rel), 'utf8') !== readFileSync(join(dst, rel), 'utf8')) {
-        throw new Error(`[check] ${label}/${rel} 不是最新，请运行 node scripts/build-plugin.mjs`)
-      }
-    }
-    console.log(`· ${label}/ 已是最新`)
+    rmSync(dst, { recursive: true, force: true })
+    mkdirSync(dst, { recursive: true })
+    cpSync(src, dst, { recursive: true })
+    console.log(`✓ 拷贝 ${label}/（${want.length} 个文件）`)
   }
 
   return { fail, writeChecked, copyChecked, copyFlattened, listFiles, syncDir, checkOnly }
@@ -248,6 +255,10 @@ export function writeRuntimeAsset({ asset, dest, ctx, missingLabel, writeLabel }
 // 组合锁与 suite patch
 // ---------------------------------------------------------------------------
 
+/** CRLF/LF 归一：lock 哈希必须与 worktree 行尾状态无关（Windows autocrlf 检出、
+ *  编辑器改行尾都不应制造假漂移），否则同一内容跨机器会算出不同 sha256。 */
+const eolNormalized = (text) => text.replaceAll('\r\n', '\n')
+
 /** 组合锁：记录 suite 实际解析到的包版本与关键 manifest hash。 */
 export function writeCompositionLock({ suitePkg, ctx }) {
   const suiteManifest = loadSuiteManifest(suitePkg).manifest
@@ -262,7 +273,9 @@ export function writeCompositionLock({ suitePkg, ctx }) {
       version: pkg.version,
       apiVersion: pkg.dsh?.apiVersion || null,
       path: entry.path,
-      sha256: createHash('sha256').update(readFileSync(join(dir, 'package.json'), 'utf8') + extra).digest('hex'),
+      sha256: createHash('sha256').update(
+        eolNormalized(readFileSync(join(dir, 'package.json'), 'utf8')) + eolNormalized(extra),
+      ).digest('hex'),
     }
   }
   const lock = {

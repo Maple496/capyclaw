@@ -1,4 +1,5 @@
 export * from './service/http.mjs'
+export * from './service/server.mjs'
 export * from './service/mcp-http.mjs'
 export * from './service/api.mjs'
 export * from './cli.mjs'

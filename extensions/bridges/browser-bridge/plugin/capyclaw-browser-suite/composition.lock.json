@@ -1,0 +1,60 @@
+{
+  "suite": "capyclaw-browser-suite",
+  "suiteVersion": "0.1.0",
+  "packages": {
+    "@capyclaw/asset-service": {
+      "version": "0.1.2",
+      "apiVersion": "1.0.0",
+      "path": "..\\..\\..\\..\\..\\packages\\capyclaw-asset-service",
+      "sha256": "1e4dcb876e6acf9f253bf7f01b594390c39cf541534f9ff26a97b62ba37e6060"
+    },
+    "@capyclaw/browser-skill-api": {
+      "version": "0.1.0",
+      "apiVersion": null,
+      "path": "../capyclaw-browser-skill-api",
+      "sha256": "c890d889c5207344d909af553761d30aec5920f411f5ce4c1eedf2814d4cfb04"
+    },
+    "@capyclaw/browser-skill-browser": {
+      "version": "0.1.0",
+      "apiVersion": null,
+      "path": "../capyclaw-browser-skill-browser",
+      "sha256": "3550cc83e4f8dba404b1271048fd2c5103c4dcb24717a33ef71ca70bbcc0c507"
+    },
+    "@capyclaw/browser-skill-ops": {
+      "version": "0.1.0",
+      "apiVersion": null,
+      "path": "../capyclaw-browser-skill-ops",
+      "sha256": "500074f484b5054a2ba602df39cd064d26952c86826b3232f2301cc2a955f6bf"
+    },
+    "@capyclaw/browser-workbench": {
+      "version": "0.1.0",
+      "apiVersion": null,
+      "path": "../capyclaw-browser-workbench",
+      "sha256": "ef30aa6b420c3eb8afb14767690f55f5995fb61292dba5d9f000a8afe6443c1d"
+    },
+    "@capyclaw/plugin-kit": {
+      "version": "0.2.2",
+      "apiVersion": null,
+      "path": "../../../../../packages/capyclaw-plugin-kit",
+      "sha256": "2247b5314820fda9a0ae40faf50fc6bcc5bd1877764c12ab528f1baab382ccc6"
+    },
+    "@capyclaw/service-broker": {
+      "version": "0.2.2",
+      "apiVersion": "1.0.0",
+      "path": "../../../../../packages/capyclaw-service-broker",
+      "sha256": "9fcb1090f9b83d2607d20907d497d474a2966142d3ebbe0b5df73ec42a9b10ec"
+    },
+    "@capyclaw/service-host": {
+      "version": "0.1.2",
+      "apiVersion": "1.0.0",
+      "path": "..\\..\\..\\..\\..\\packages\\capyclaw-service-host",
+      "sha256": "c517f6291a63c08e938e2ae0984a5663ed418af244cec7929cbfa4447dfdb845"
+    },
+    "@capyclaw/tool-host": {
+      "version": "0.1.2",
+      "apiVersion": "1.0.0",
+      "path": "..\\..\\..\\..\\..\\packages\\capyclaw-tool-host",
+      "sha256": "c79b9f3efef2ee588c9797562f3fb56135907b03eb2a0d7e22314548e8500723"
+    }
+  }
+}

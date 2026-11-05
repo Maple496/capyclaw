@@ -1,0 +1,49 @@
+{
+  "name": "@capyclaw/browser-skill-ops",
+  "version": "0.1.0",
+  "description": "Browser skill：快照→ref→动作→验证的互联网任务工作流。",
+  "type": "module",
+  "main": "./lib/index.mjs",
+  "exports": {
+    ".": "./lib/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "category": "skills",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "Browser Skill · 网活实操",
+    "description": "快照→ref→动作→验证的互联网任务工作流。"
+  },
+  "files": [
+    "lib/",
+    "skills/",
+    "contract/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-skill-ops"
+  },
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/extensions/bridges/browser-bridge/plugin/capyclaw-browser-skill-ops#readme"
+}

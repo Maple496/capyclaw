@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>演示表单 · 离线练习页</title>
+  <style>
+    body { font: 15px/1.7 "Segoe UI", "Microsoft YaHei", sans-serif; max-width: 640px; margin: 32px auto; padding: 0 16px; color: #222; }
+    fieldset { border: 1px solid #ccd3e0; border-radius: 10px; margin-bottom: 20px; }
+    legend { padding: 0 8px; font-weight: 600; }
+    label { display: block; margin: 10px 0 4px; font-weight: 600; }
+    input[type="text"], input[type="password"], select, textarea {
+      width: 100%; padding: 8px 10px; border: 1px solid #ccd3e0; border-radius: 6px; font: inherit;
+    }
+    .row { display: flex; gap: 16px; align-items: center; margin: 10px 0; }
+    button { padding: 9px 18px; border-radius: 6px; border: 1px solid #3a6ee8; background: #3a6ee8; color: #fff; cursor: pointer; font-size: 15px; }
+    button.ghost { background: #fff; color: #3a6ee8; }
+    #results { background: #f4f7fd; border-radius: 8px; padding: 10px 14px; min-height: 48px; }
+    #results li { margin: 4px 0; }
+    #count { font-weight: 700; }
+  </style>
+</head>
+<body>
+  <h1>演示表单</h1>
+  <p>内置离线练习页：不依赖外网，供 AI 工具链（browser_navigate → browser_snapshot → browser_fill / browser_select / browser_click）演示与 e2e 冒烟使用。</p>
+
+  <form id="demo-form">
+    <fieldset>
+      <legend>注册信息</legend>
+      <label for="username">用户名</label>
+      <input type="text" id="username" name="username" placeholder="请输入用户名">
+
+      <label for="password">密码</label>
+      <input type="password" id="password" name="password" placeholder="密码会被快照掩码显示">
+
+      <label for="city">所在城市</label>
+      <select id="city" name="city">
+        <option value="">— 请选择 —</option>
+        <option value="beijing">北京</option>
+        <option value="shanghai">上海</option>
+        <option value="shenzhen">深圳</option>
+      </select>
+
+      <div class="row">
+        <label style="margin:0"><input type="checkbox" id="agree" name="agree"> 我已阅读并同意服务条款</label>
+      </div>
+
+      <label for="note">备注</label>
+      <textarea id="note" name="note" rows="3" placeholder="选填"></textarea>
+
+      <div class="row">
+        <button type="submit" id="submit">提交注册</button>
+        <button type="button" id="counter" class="ghost">点我计数：<span id="count">0</span></button>
+      </div>
+    </fieldset>
+  </form>
+
+  <h2>操作结果</h2>
+  <ul id="results" role="status">
+    <li>（还没有操作）</li>
+  </ul>
+
+  <script>
+    var results = document.getElementById('results')
+    var count = 0
+    function log(text) {
+      if (results.firstChild && results.firstChild.textContent === '（还没有操作）') results.innerHTML = ''
+      var li = document.createElement('li')
+      li.textContent = new Date().toLocaleTimeString() + ' — ' + text
+      results.insertBefore(li, results.firstChild)
+    }
+    document.getElementById('demo-form').addEventListener('submit', function (e) {
+      e.preventDefault()
+      log('已提交注册：username=' + (document.getElementById('username').value || '(空)') +
+        '，city=' + (document.getElementById('city').value || '(未选)') +
+        '，agree=' + (document.getElementById('agree').checked ? 'on' : 'off'))
+    })
+    document.getElementById('counter').addEventListener('click', function () {
+      count += 1
+      document.getElementById('count').textContent = count
+      log('计数按钮第 ' + count + ' 次被点击')
+    })
+  </script>
+</body>
+</html>

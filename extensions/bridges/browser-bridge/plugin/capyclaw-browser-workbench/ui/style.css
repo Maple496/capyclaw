@@ -1,0 +1,76 @@
+:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --line: #2a2f3a;
+  --text: #e6e9ef;
+  --muted: #8b93a3;
+  --accent: #4f8cff;
+  --ok: #3fb96b;
+  --err: #e2544a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font: 14px/1.6 "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+header { padding: 14px 18px 10px; border-bottom: 1px solid var(--line); }
+h1 { font-size: 17px; margin: 0 0 8px; }
+h2 { font-size: 13px; margin: 0; color: var(--muted); font-weight: 600; }
+.badges { display: inline-flex; gap: 8px; margin-left: 10px; vertical-align: middle; }
+.badge {
+  font-size: 12px; padding: 2px 10px; border-radius: 10px;
+  background: var(--line); color: var(--text);
+}
+.badge.on { background: rgba(63, 185, 107, .18); color: var(--ok); }
+.badge.off { background: rgba(139, 147, 163, .15); color: var(--muted); }
+.actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.actions input {
+  flex: 1; min-width: 220px; padding: 7px 10px; border-radius: 6px;
+  border: 1px solid var(--line); background: var(--panel); color: var(--text);
+}
+button {
+  padding: 7px 14px; border-radius: 6px; border: 1px solid var(--accent);
+  background: var(--accent); color: #fff; cursor: pointer; font-size: 13px;
+}
+button.ghost { background: transparent; color: var(--text); border-color: var(--line); }
+button.danger { border-color: var(--err); color: var(--err); background: transparent; }
+button:disabled { opacity: .5; cursor: wait; }
+main { flex: 1; display: grid; gap: 14px; padding: 14px 18px; grid-template-columns: 1fr 1fr; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.panel-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px; border-bottom: 1px solid var(--line); gap: 10px;
+}
+#view-panel { grid-row: span 2; display: flex; flex-direction: column; }
+.view { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; min-height: 300px; }
+.view img { max-width: 100%; display: block; }
+.placeholder { color: var(--muted); text-align: center; padding: 30px; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.tab {
+  font-size: 12px; padding: 2px 10px; border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--line); color: var(--muted); max-width: 180px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.tab.active { color: var(--text); border-color: var(--accent); }
+.log { list-style: none; margin: 0; padding: 8px 12px; max-height: 260px; overflow: auto; font-size: 12.5px; }
+.log li { padding: 3px 0; border-bottom: 1px dashed #222633; display: flex; gap: 8px; }
+.log .t { color: var(--muted); min-width: 52px; }
+.log .ok { color: var(--ok); }
+.log .fail { color: var(--err); }
+.log .ms { color: var(--muted); margin-left: auto; }
+.snapshot {
+  margin: 0; padding: 12px; overflow: auto; max-height: 300px;
+  font: 12px/1.55 Consolas, "Cascadia Mono", monospace; white-space: pre-wrap;
+  color: #c8d2e4;
+}
+.muted { color: var(--muted); font-size: 12px; }
+footer {
+  padding: 8px 18px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 12px;
+}
+code { background: #1d222c; border-radius: 4px; padding: 1px 5px; font-size: 12px; }

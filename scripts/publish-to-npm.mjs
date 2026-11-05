@@ -22,20 +22,10 @@ import crypto from 'node:crypto'
 import os from 'node:os'
 import path from 'node:path'
 import fs from 'node:fs'
-import { fileURLToPath } from 'node:url'
 
 import { discoverPlugins, publishGateErrors } from '../tools/capyclaw-plugin-release/lib/index.mjs'
 import { validatePlugin } from '../tools/capyclaw-plugin-validator/lib/index.mjs'
-
-const HERE = path.dirname(fileURLToPath(import.meta.url))
-const ROOT = path.resolve(HERE, '..')
-
-/** 支撑库清单（显式维护；这些包没有 dsh.bundle，discoverPlugins 不收）。 */
-const SUPPORT_LIBS = [
-  'packages/capyclaw-plugin-kit',
-  'packages/capyclaw-document-workbench',
-  'extensions/bridges/ppt-bridge/capyclaw-skills-service',
-]
+import { ROOT, SUPPORT_LIBS, pkgOf } from './lib/publish-set.mjs'
 
 const args = process.argv.slice(2)
 const hasFlag = (name) => args.includes(name)
@@ -64,19 +54,24 @@ const npmRun = (args, options = {}) => (fs.existsSync(NPM_CLI)
   ? spawnSync(process.execPath, [NPM_CLI, ...args], { encoding: 'utf8', stdio: 'pipe', ...options })
   : run('npm', args, options))
 
-function pkgOf(dir) {
-  return JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'))
+/** npm view 结果缓存：同一次运行里同一 specifier 只查一次
+ *  （批次构建 + 逐包发布 + 顺序闸原本会对同一 name@version 反复网络往返）。 */
+const viewCache = new Map()
+function npmView(spec, field) {
+  const key = `${spec}|${field}`
+  if (!viewCache.has(key)) viewCache.set(key, npmRun(['view', spec, field]))
+  return viewCache.get(key)
 }
 
 function alreadyPublished(name, version) {
-  const r = npmRun(['view', `${name}@${version}`, 'version'])
+  const r = npmView(`${name}@${version}`, 'version')
   if (r.status !== 0) return false
   return String(r.stdout).trim() === version
 }
 
 /** registry 上已发布 tarball 的 sha1（拿不到返回 null，网络闪断降级为警告）。 */
 function npmShasumOf(name, version) {
-  const r = npmRun(['view', `${name}@${version}`, 'dist.shasum'])
+  const r = npmView(`${name}@${version}`, 'dist.shasum')
   if (r.status !== 0) return null
   return String(r.stdout).trim() || null
 }
@@ -129,7 +124,7 @@ function orderGate(pkg, localMap, batch) {
       seen.add(name)
       const local = localMap.get(name)
       if (local) queue.push(local.pkg) /* 闭包继续沿本仓包展开 */
-      const resolvable = npmRun(['view', `${name}@${range}`, 'version'])
+      const resolvable = npmView(`${name}@${range}`, 'version')
       if (resolvable.status === 0) continue /* ① registry 已可解析 */
       if (batch.has(name)) {
         warnings.push(`${name}@${range} registry 暂不可解析，依赖同批发布（确认批次包含它）`)
@@ -222,12 +217,25 @@ async function publishOne(dir, { kind, localMap, batch }) {
   }
 
   const access = pkg.publishConfig?.access || 'public'
+  const expectedSha = localShasumOf(dir)
   const pub = npmRun(['publish', '--access', access, '--tag', tag], { cwd: dir })
   if (pub.status !== 0) {
     console.log(`✗ ${label} — npm publish 失败`)
     console.log(String(pub.stderr || pub.stdout || '').trim().slice(0, 500))
     return { label, status: 'publish-failed', detail: (pub.stdout || '') + (pub.stderr || '') }
   }
+  /* 发布后复核：registry 收到的 tarball 必须与本地 pack 逐字节一致（shasum）。
+   * 捕获「发布窗口内源码/锁被并发改写，脏产物上了 registry」的静默污染。 */
+  let remoteSha = null
+  for (let i = 0; i < 5 && !remoteSha; i++) {
+    if (i) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 3000)
+    remoteSha = npmShasumOf(pkg.name, pkg.version)
+  }
+  if (remoteSha && expectedSha && remoteSha !== expectedSha) {
+    console.log(`✗ ${label} — 发布后复核失败：registry ${remoteSha.slice(0, 8)} ≠ 本地 ${expectedSha.slice(0, 8)}（registry 可能收到脏产物，bump 后重发）`)
+    return { label, status: 'publish-corrupted', detail: `shasum ${remoteSha} != ${expectedSha}` }
+  }
+  if (!remoteSha) console.log(`! ${label} — 发布后复核降级：registry shasum 暂不可见（副本延迟），请稍后人工核对`)
   console.log(`✓ ${label} — 已发布${tag !== 'latest' ? `（dist-tag=${tag}）` : ''}`)
   return { label, status: 'published' }
 }
@@ -271,7 +279,7 @@ async function main() {
   }, {})
   console.log('\n汇总:', JSON.stringify(summary))
 
-  const failed = done.filter((r) => ['gate-failed', 'invalid', 'test-failed', 'publish-failed', 'version-drift', 'order-blocked'].includes(r.status))
+  const failed = done.filter((r) => ['gate-failed', 'invalid', 'test-failed', 'publish-failed', 'publish-corrupted', 'version-drift', 'order-blocked'].includes(r.status))
   if (failed.length) {
     console.error(`\n${failed.length} 个包未发布：${failed.map((f) => f.label).join(', ')}`)
     process.exitCode = 1

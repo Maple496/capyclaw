@@ -1,0 +1,4 @@
+# @capyclaw/browser-skill-api（目录 capyclaw-browser-skill-api） bundle patch：只注册 browser-api 一个 skill provider。
+- insert:
+    - id: browser-skill-api
+      name: @capyclaw/browser-skill-api

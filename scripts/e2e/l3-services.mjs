@@ -17,6 +17,13 @@ import { ROOT, Recorder, randomPort, run, startService, tempDir, waitFor, getJso
 
 const RELAYS = [
   {
+    ns: 'browser',
+    dir: path.join(ROOT, 'extensions/bridges/browser-bridge/plugin/capyclaw-browser-workbench'),
+    toolCount: 15,
+    capTool: 'browser_capabilities',
+    editorFiles: ['/index.html', '/app.js', '/style.css', '/demo/form.html'],
+  },
+  {
     ns: 'ppt',
     dir: path.join(ROOT, 'extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-workbench'),
     toolCount: 27,
@@ -117,6 +124,72 @@ async function pptStdioHandshake(rec) {
     rec.check('ppt stdio 管道握手', false, error.message)
   }
 }
+
+/* browser-workbench 真浏览器离线冒烟：MCP 全链路 navigate→fill→select→click→验证。
+ * 无头模式跑（不打扰桌面）；本机没有可用浏览器时跳过不失败（诚实边界）。 */
+async function browserRealSmoke(rec) {
+  const port = randomPort()
+  const dir = path.join(ROOT, 'extensions/bridges/browser-bridge/plugin/capyclaw-browser-workbench')
+  const state = tempDir('l3-browser-real')
+  const svc = await startService(process.execPath, [path.join(dir, 'server/relay.mjs'), '--port', String(port), '--dir', state], {
+    logFile: path.join(state, 'relay.log'),
+    timeoutMs: 30000,
+    env: { DSH_BROWSER_HEADLESS: '1' },
+    readyFn: async () => {
+      const h = await getJson(`http://127.0.0.1:${port}/healthz`, 3000).catch(() => null)
+      return h?.ok === true ? h : null
+    },
+  })
+  const rpc = mcpCaller(port)
+  try {
+    const call = async (name, args) => mcpText(await rpc('tools/call', { name, arguments: args }))
+    const findRef = (text, label) => {
+      const line = text.split('\n').find((l) => l.includes(label) && l.includes('[ref='))
+      return line ? (/\[ref=(e\d+)\]/.exec(line) || [])[1] : null
+    }
+
+    let nav
+    try {
+      nav = await call('browser_navigate', { url: `http://127.0.0.1:${port}/demo/form.html` })
+    } catch (error) {
+      const msg = String(error.message || error)
+      return /ENGINE_LAUNCH_FAILED/.test(msg)
+        ? rec.skip('browser 真浏览器全链路', `本机无可用浏览器（${msg.slice(0, 120)}）`)
+        : rec.check('browser 真浏览器 navigate', false, msg.slice(0, 200))
+    }
+    rec.check('browser navigate 演示页（懒启动 + 首屏快照）', nav.includes('演示表单') && nav.includes('[ref='), nav.split('\n')[0])
+
+    const uRef = findRef(nav, 'textbox "用户名"')
+    const selRef = findRef(nav, 'combobox "所在城市"')
+    const afterFill = uRef ? await call('browser_fill', { ref: uRef, text: 'e2e-冒烟' }) : ''
+    rec.check('browser fill 用户名（返回新快照）', !!uRef && afterFill.includes('已填写'), afterFill.split('\n')[0])
+
+    const afterSelect = selRef ? await call('browser_select', { ref: selRef, value: 'shenzhen' }) : ''
+    rec.check('browser select 城市=深圳', !!selRef && afterSelect.includes('已选择'), afterSelect.split('\n')[0])
+
+    const submitRef = findRef(afterSelect || nav, 'button "提交注册"')
+    const afterSubmit = submitRef ? await call('browser_click', { ref: submitRef }) : ''
+    const verified = afterSubmit.includes('已提交注册') && afterSubmit.includes('e2e-冒烟') && afterSubmit.includes('shenzhen')
+    rec.check('browser click 提交 + 快照验证结果（role=status 可见）', verified,
+      (afterSubmit.split('\n').find((l) => l.includes('已提交注册')) || '').slice(0, 120))
+
+    const shot = await call('browser_screenshot', {})
+    rec.check('browser screenshot 落盘', /截图已保存/.test(shot), shot.split('\n')[0])
+
+    const evErr = await rpc('tools/call', { name: 'browser_evaluate', arguments: { script: '1+1' } })
+    rec.check('browser evaluate 诚实拒绝（NOT_IMPLEMENTED）',
+      evErr.result?.isError === true && /NOT_IMPLEMENTED/.test(evErr.result?.content?.[0]?.text || ''), '')
+
+    await call('browser_close', {})
+    const h2 = await getJson(`http://127.0.0.1:${port}/healthz`)
+    rec.check('browser close 后 healthz 如实反映（engine.running=false, errors=0）',
+      h2.engine.running === false && h2.errors === 0, JSON.stringify({ running: h2.engine.running, errors: h2.errors }))
+  } finally {
+    await svc.stop()
+    fs.rmSync(state, { recursive: true, force: true })
+  }
+}
+
 
 /* 极小的「spawn + 写 stdin + 收 stdout」封装（stdio JSON-RPC 用）。 */
 const Stdio = {
@@ -241,9 +314,9 @@ async function scraplingWorkbenchSmoke(rec) {
     fs.rmSync(state, { recursive: true, force: true })
   }
 
-  /* 插件单测纳入 e2e（parser/selectors/api/plugin 共 32 项） */
-  const unit = run('node', ['--test', 'test/html-parser.test.mjs', 'test/selectors.test.mjs', 'test/api.test.mjs', 'test/plugin.test.mjs'], { cwd: dir })
-  rec.check('scrapling 单测全绿（html-parser/selectors/api/plugin）', unit.status === 0, unit.stderr.slice(0, 300))
+  /* 插件单测纳入 e2e（parser/selectors/api/plugin/realworld 共 52 项） */
+  const unit = run('node', ['--test', 'test/html-parser.test.mjs', 'test/selectors.test.mjs', 'test/api.test.mjs', 'test/plugin.test.mjs', 'test/realworld.test.mjs'], { cwd: dir })
+  rec.check('scrapling 单测全绿（html-parser/selectors/api/plugin/realworld）', unit.status === 0, unit.stderr.slice(0, 300))
 }
 
 async function hostTemplateSmoke(rec, { ns, dir }) {
@@ -277,6 +350,9 @@ async function skillProviderSmoke(rec) {
     ...fs.readdirSync(path.join(ROOT, 'extensions/bridges/canvas-bridge/plugin'), { withFileTypes: true })
       .filter((e) => e.isDirectory() && e.name.startsWith('capyclaw-canvas-skill-'))
       .map((e) => ['canvas', path.join(ROOT, 'extensions/bridges/canvas-bridge/plugin', e.name)]),
+    ...fs.readdirSync(path.join(ROOT, 'extensions/bridges/browser-bridge/plugin'), { withFileTypes: true })
+      .filter((e) => e.isDirectory() && e.name.startsWith('capyclaw-browser-skill-'))
+      .map((e) => ['browser', path.join(ROOT, 'extensions/bridges/browser-bridge/plugin', e.name)]),
   ]
   let okCount = 0
   const failures = []
@@ -292,8 +368,8 @@ async function skillProviderSmoke(rec) {
       const skill = list[0]
       const detail = await provider.get({ name: skill.name })
       if (typeof detail.content !== 'string' || detail.content.length < 100) throw new Error('get() 正文过短')
-      /* 契约 note 豁免：canvas 的 canvas / ppt 的 pptmaster-* 不带契约注；其余必须带 */
-      const exempt = skill.name === 'canvas' || skill.name.startsWith('pptmaster-')
+      /* 契约 note 豁免：canvas 的 canvas / ppt 的 pptmaster-* / browser 的 browser 不带契约注；其余必须带 */
+      const exempt = skill.name === 'canvas' || skill.name === 'browser' || skill.name.startsWith('pptmaster-')
       const hasNote = /契约：.*(Workbench)/.test(detail.content)
       if (exempt && hasNote) throw new Error('豁免技能不应带契约注')
       if (!exempt && !hasNote) throw new Error('非豁免技能缺少契约注')
@@ -302,13 +378,13 @@ async function skillProviderSmoke(rec) {
       failures.push(`${ns}:${path.basename(dir)} — ${error.message}`)
     }
   }
-  rec.check(`12 个 skill 包 mock-ctx 加载 + provider list/get + 契约注豁免（通过 ${okCount}/${pkgs.length}）`,
+  rec.check(`15 个 skill 包 mock-ctx 加载 + provider list/get + 契约注豁免（通过 ${okCount}/${pkgs.length}）`,
     failures.length === 0, failures.join(' | '))
 }
 
 export async function runLayer() {
   const rec = new Recorder('L3 服务/MCP 冒烟层')
-  rec.section('双 relay（统一 start:workbench 形态）')
+  rec.section('三 relay（统一 start:workbench 形态）')
   for (const relay of RELAYS) await relaySmoke(rec, relay)
 
   rec.section('ppt 旧 stdio 入口（start:standalone 形态）')
@@ -320,10 +396,15 @@ export async function runLayer() {
   rec.section('scrapling 爬虫工作台（离线全链路）')
   await scraplingWorkbenchSmoke(rec)
 
+  rec.section('browser 真浏览器全链路（离线演示页，无浏览器则跳过）')
+  await browserRealSmoke(rec)
+  const browserUnit = run('npm', ['--prefix', 'extensions/bridges/browser-bridge', 'test'], { cwd: ROOT })
+  rec.check('browser-bridge 单测全绿（engine/contract/relay/host 22 项）', browserUnit.status === 0, browserUnit.stderr.slice(0, 300))
+
   rec.section('host.mjs 统一模板（进程内兼容入口）')
   for (const relay of RELAYS) await hostTemplateSmoke(rec, relay)
 
-  rec.section('12 个生成 skill 包')
+  rec.section('15 个生成 skill 包')
   await skillProviderSmoke(rec)
 
   return rec.summary()

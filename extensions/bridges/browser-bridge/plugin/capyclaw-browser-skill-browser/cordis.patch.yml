@@ -1,0 +1,4 @@
+# @capyclaw/browser-skill-browser（目录 capyclaw-browser-skill-browser） bundle patch：只注册 browser 一个 skill provider。
+- insert:
+    - id: browser-skill-browser
+      name: @capyclaw/browser-skill-browser

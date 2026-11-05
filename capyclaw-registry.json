@@ -18,6 +18,86 @@
       "suite": true
     },
     {
+      "id": "browser-skill-api",
+      "name": "@capyclaw/browser-skill-api",
+      "version": "0.1.0",
+      "title": "Browser Skill · 浏览器工具手册",
+      "description": "browser_* 工具契约、ref 快照语义、登录态与安全边界。",
+      "category": "skills",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "path": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-skill-api",
+      "directory": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-skill-api",
+      "bundle": true,
+      "client": false,
+      "suite": false
+    },
+    {
+      "id": "browser-skill-browser",
+      "name": "@capyclaw/browser-skill-browser",
+      "version": "0.1.0",
+      "title": "Browser Skill · 浏览器路由",
+      "description": "浏览器操控总入口：按意图路由到实操、API 手册技能。",
+      "category": "skills",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "path": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-skill-browser",
+      "directory": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-skill-browser",
+      "bundle": true,
+      "client": false,
+      "suite": false
+    },
+    {
+      "id": "browser-skill-ops",
+      "name": "@capyclaw/browser-skill-ops",
+      "version": "0.1.0",
+      "title": "Browser Skill · 网活实操",
+      "description": "快照→ref→动作→验证的互联网任务工作流。",
+      "category": "skills",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "path": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-skill-ops",
+      "directory": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-skill-ops",
+      "bundle": true,
+      "client": false,
+      "suite": false
+    },
+    {
+      "id": "browser-suite",
+      "name": "@capyclaw/browser-suite",
+      "version": "0.1.0",
+      "title": "浏览器操控工作台套件",
+      "description": "一键安装浏览器操控运行时 + 3 个独立 skill 包 + 公共基建插件",
+      "category": "service",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "path": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-suite",
+      "directory": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-suite",
+      "bundle": true,
+      "client": false,
+      "suite": true
+    },
+    {
+      "id": "browser-workbench",
+      "name": "@capyclaw/browser-workbench",
+      "version": "0.1.0",
+      "title": "浏览器操控工作台运行时",
+      "description": "AI 直接操控浏览器完成互联网上的点击/打字工作：15 个 browser_* 工具 + 可视化工作台（http://127.0.0.1:39315/）",
+      "category": "service",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "path": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-workbench",
+      "directory": "extensions/bridges/browser-bridge/plugin/capyclaw-browser-workbench",
+      "bundle": true,
+      "client": false,
+      "suite": false
+    },
+    {
       "id": "canvas-skill-api",
       "name": "@capyclaw/canvas-skill-api",
       "version": "0.2.0",
@@ -324,7 +404,7 @@
     {
       "id": "ppt-skill-research",
       "name": "@capyclaw/ppt-skill-research",
-      "version": "2.2.3",
+      "version": "2.2.4",
       "title": "PPT Skill · PPT 研究",
       "description": "外部资料、数据、配图研究，产出分析卡。",
       "category": "skills",
@@ -356,7 +436,7 @@
     {
       "id": "ppt-suite",
       "name": "@capyclaw/ppt-suite",
-      "version": "2.4.5",
+      "version": "2.4.8",
       "title": "PPT 工作台套件",
       "description": "一键安装 PPTist 运行时 + 8 个独立 PPT skill 包 + 4 个公共基建插件",
       "category": "service",
@@ -388,7 +468,7 @@
     {
       "id": "scrapling",
       "name": "@capyclaw/scrapling",
-      "version": "1.1.0",
+      "version": "1.1.5",
       "title": "Scrapling 网页抓取",
       "description": "网页数据爬取工具：HTTP 抓取、CSS 选择器提取（::text/::attr，纯 Node 实现）、可视化爬虫工作台（http://127.0.0.1:39640/，步骤回放 + 选择器试玩 + JSON/CSV 导出，内置离线演示页）。浏览器渲染与 XPath 依赖外部 Python scrapling，未实现并如实标注。",
       "category": "tool",
@@ -404,7 +484,7 @@
     {
       "id": "service-broker",
       "name": "@capyclaw/service-broker",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "title": "服务中间件",
       "description": "按清单把各服务作为独立进程拉起，守护、发现与控制端点；服务之间不互相带动",
       "category": "service",
@@ -451,8 +531,8 @@
     }
   ],
   "categories": {
-    "services": 11,
-    "skills": 12,
+    "services": 13,
+    "skills": 15,
     "tools": 4,
     "ui": 1
   },
@@ -471,6 +551,6 @@
     "discord": "https://discord.gg/capyclaw",
     "email": "support@capyclaw.dev"
   },
-  "generatedAt": "2026-11-05T05:51:59.439Z",
+  "generatedAt": "2026-11-05T11:16:48.090Z",
   "generatedBy": "scripts/gen-registry.mjs"
 }
