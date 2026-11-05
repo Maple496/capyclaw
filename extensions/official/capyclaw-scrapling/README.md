@@ -1,264 +1,169 @@
 # dsh-scrapling
 
-Scrapling 网页抓取插件 - 为 DeepSeek Harness 提供强大的网页抓取能力
+Scrapling 网页抓取插件 —— 为 DeepSeek Harness 提供网页数据爬取能力 + **可视化爬虫工作台**。
 
 ## 功能特性
 
-### 🚀 核心功能
-- **快速 HTTP 请求** - 高性能的静态页面抓取
-- **隐身浏览器** - 真实浏览器渲染，绕过反爬虫检测
-- **Cloudflare 绕过** - 自动处理 Cloudflare Turnstile/Interstitial
-- **JavaScript 渲染** - 完整的 JS 页面支持
-- **CSS/XPath 选择器** - 强大的元素选择和提取
-- **并发爬虫** - 高效的多线程爬取
-- **代理轮换** - 自动代理管理和轮换
-- **自适应解析** - 智能元素追踪，适应页面变化
-- **多格式导出** - JSON、CSV、XML 等格式
+### ✅ 已实现（纯 Node，零外部依赖）
 
-## 安装
+- **HTTP 抓取** —— 直连目标网址，跟随重定向，超时可控，错误翻译成人话（含「下一步」提示）
+- **CSS 选择器提取** —— 自研容错 HTML 解析器 + 选择器引擎（Scrapy/parsel 语义）
+  - `::text` / `::attr(name)` 伪元素
+  - 类型/类/ID/属性选择器（`=` `^=` `$=` `*=` `~=` `|=`）
+  - 后代 / 子代 `>` / 相邻 `+` 组合器
+  - `:first-child` / `:last-child` / `:nth-child(k)`
+  - 逗号分组按文档序合并去重（XPath union 语义）
+  - 支持中文类名/属性值
+- **爬虫工作台**（`http://127.0.0.1:39640/`）—— 浏览器打开即用：
+  - 三步引导：选目标 → 观察流程 → 取数据
+  - 爬取流程逐步回放（每步真实耗时：解析 URL → 发请求 → 收响应 → 读内容 → 建文档树 → 提取 → 完成）
+  - 选择器试玩（随时改随时提取，不重新请求）
+  - 结果表格 / JSON 双视图，复制 JSON、导出 CSV（Excel 可直接打开）/ JSON
+  - 最近 20 条历史，点击回看
+  - 三个内置离线演示页（名言 / 商品 / 新闻），无需外网即可完整体验
+- **服务契约** —— `/healthz`、`/metrics`（Prometheus）、只监听 `127.0.0.1`
 
-### 前提条件
+### 🔒 未实现（诚实声明，不会伪造结果）
 
-需要安装 Python 和 Scrapling 包：
+- **浏览器渲染 / 隐身模式 / Cloudflare 绕过 / JS 渲染** —— 依赖外部 Python `scrapling` 运行时，调用返回结构化 `NOT_IMPLEMENTED`，工作台界面上已锁定
+- **XPath** —— 同上
 
-```bash
-# 安装 Scrapling 及所有依赖
-pip install "scrapling[all]>=0.5"
-
-# 安装浏览器引擎（用于 JavaScript 渲染）
-scrapling install --force
-```
-
-### 插件安装
-
-本插件已集成在 DeepSeek Harness 的官方扩展中，通过 DSH 的插件系统自动加载。
-
-## 使用方法
-
-### API 调用
-
-插件通过 Cordis 依赖注入系统提供 `scrapling` 服务：
-
-```javascript
-// 在其他插件中使用
-export const inject = ['scrapling']
-
-export async function apply(ctx) {
-  // HTTP 抓取
-  const result = await ctx.scrapling.fetch('https://example.com')
-  console.log(result.html)
-  
-  // 浏览器模式抓取
-  const browserResult = await ctx.scrapling.fetchWithBrowser('https://example.com', {
-    waitFor: '.content',
-    timeout: 10000
-  })
-  
-  // 解析 HTML
-  const doc = ctx.scrapling.parse(result.html)
-  const titles = doc.css('h1::text')
-}
-```
-
-### Python 集成
-
-插件内部通过以下方式调用 Scrapling：
-
-#### 基础抓取
-```python
-from scrapling.fetchers import Fetcher
-
-page = Fetcher.get('https://quotes.toscrape.com/')
-quotes = page.css('.quote .text::text').getall()
-```
-
-#### 浏览器模式
-```python
-from scrapling.fetchers import StealthyFetcher
-
-page = StealthyFetcher.get('https://example.com', 
-                          wait_selector='.content',
-                          wait_timeout=10)
-title = page.css('h1::text').get()
-```
-
-#### Spider 爬虫
-```python
-from scrapling.spiders import Spider, Response
-
-class QuotesSpider(Spider):
-    name = "quotes"
-    start_urls = ["https://quotes.toscrape.com/"]
-    
-    async def parse(self, response: Response):
-        for quote in response.css('.quote'):
-            yield {
-                "text": quote.css('.text::text').get(),
-                "author": quote.css('.author::text').get(),
-            }
-```
-
-## 配置选项
-
-在 `cordis.patch.yml` 中可以配置：
-
-```yaml
-- insert:
-    - id: scrapling-host
-      name: dsh-scrapling
-      config:
-        enabled: true
-        defaultTimeout: 30000
-        maxConcurrentRequests: 10
-```
-
-## 架构设计
-
-### 宿主半（lib/host.mjs）
-- 通过 Cordis 插件系统注册服务
-- 提供 Scrapling API 的 JavaScript 封装
-- 管理 Python 进程或 HTTP API 调用
-
-### 浏览器半（client/client.js）
-- 提供前端 UI 集成
-- 注册命令和快捷键
-- 显示抓取状态和结果
-
-## API 参考
-
-### ctx.scrapling.fetch(url, options)
-
-使用 HTTP 模式抓取页面。
-
-**参数:**
-- `url` (string) - 目标 URL
-- `options` (object) - 可选配置
-  - `headers` - 自定义请求头
-  - `proxy` - 代理地址
-  - `timeout` - 超时时间（毫秒）
-
-**返回:** Promise<{ url, html, status }>
-
-### ctx.scrapling.fetchWithBrowser(url, options)
-
-使用浏览器模式抓取页面。
-
-**参数:**
-- `url` (string) - 目标 URL
-- `options` (object) - 可选配置
-  - `waitFor` - 等待的选择器
-  - `timeout` - 超时时间（毫秒）
-  - `screenshot` - 是否截图
-
-**返回:** Promise<{ url, html, screenshot? }>
-
-### ctx.scrapling.parse(html)
-
-解析 HTML 内容。
-
-**参数:**
-- `html` (string) - HTML 字符串
-
-**返回:** ParsedDocument - 包含 css() 和 xpath() 方法的文档对象
-
-## 开发
-
-### 目录结构
-
-```
-dsh-scrapling/
-├── lib/
-│   ├── host.mjs           # Cordis 插件入口
-│   └── index.mjs          # API 导出
-├── client/
-│   └── client.js          # 浏览器端代码
-├── test/
-│   └── plugin.test.mjs    # 测试文件
-├── cordis.patch.yml       # Bundle 配置
-├── package.json           # 包定义
-└── README.md             # 本文件
-```
-
-### 运行测试
+## 快速开始
 
 ```bash
+# 方式一：独立启动工作台（推荐，浏览器打开即用）
+cd extensions/official/capyclaw-scrapling
+node server/server.mjs            # 默认 http://127.0.0.1:39640/
+# 或指定端口
+node server/server.mjs --port 39641
+
+# 方式二：作为 DSH 插件加载（自动注册服务并拉起工作台）
+# cordis.patch.yml 已配置 port: 39640
+
+# 单元测试（32 项）
 npm test
 ```
 
-## 示例
+## API
 
-### 示例 1: 抓取引言网站
+### 服务 API（`ctx.scrapling`）
 
 ```javascript
-const quotes = await ctx.scrapling.fetch('https://quotes.toscrape.com/')
-const doc = ctx.scrapling.parse(quotes.html)
-const allQuotes = doc.css('.quote .text::text')
-console.log('找到', allQuotes.length, '条引言')
+export const inject = ['scrapling']
+
+export async function apply(ctx) {
+  // 1. HTTP 抓取
+  const page = await ctx.scrapling.fetch('https://quotes.toscrape.com/')
+  console.log(page.status, page.html.length)
+
+  // 2. 解析 + 选择器提取（Scrapy 语义）
+  const doc = ctx.scrapling.parse(page.html)
+  doc.css('.quote .text::text')     // → ['“Quote one.”', '“Quote two.”', …]
+  doc.css('a::attr(href)')          // → ['/tag/change/1', …]
+  const quotes = doc.css('.quote')  // → 元素包装（.attrib / .text / .css()）
+
+  // 3. 带步骤计时的爬取流水线（工作台数据源）
+  const record = await ctx.scrapling.crawler.crawl({
+    url: 'https://example.com/',
+    selectors: [{ key: '标题', selector: 'h1::text' }],
+  })
+  console.log(record.steps)   // 每步 { id, label, status, detail, ms }
+  console.log(record.extracts) // { 标题: { selector, count, values } }
+}
 ```
 
-### 示例 2: 处理动态页面
+**诚实边界：** `fetchWithBrowser()` 与 XPath 抛 `NOT_IMPLEMENTED`。
 
-```javascript
-const page = await ctx.scrapling.fetchWithBrowser('https://example.com', {
-  waitFor: '.dynamic-content',
-  timeout: 10000
-})
-const doc = ctx.scrapling.parse(page.html)
-const content = doc.css('.dynamic-content::text')
+### HTTP API（工作台服务）
+
+| 接口 | 方法 | 说明 |
+|---|---|---|
+| `/healthz` | GET | `{ ok, name, version, contractVersion, uptimeSec, port, pid, capabilities }` |
+| `/metrics` | GET | Prometheus 文本（`scrapling_up` / `scrapling_crawls_total` 等） |
+| `/api/crawl` | POST | `{ url, timeoutMs?, userAgent?, selectors?: [{key, selector}] }` → 步骤流水线 + 提取结果 |
+| `/api/extract` | POST | `{ crawlId, selectors }` 基于历史记录二次提取（免重新请求） |
+| `/api/crawls` | GET | 最近 20 条爬取摘要 |
+| `/api/crawls/:id` | GET | 单条记录详情（含 htmlPreview） |
+| `/demo/*.html` | GET | 内置离线演示页（quotes / products / news） |
+
+## 配置
+
+`cordis.patch.yml`（优先级：cordis config → 环境变量 → 默认值）：
+
+| 配置 | 环境变量 | 默认 | 说明 |
+|---|---|---|---|
+| `enabled` | `DSH_SCRAPLING_ENABLED` | `true` | 是否注册服务与工作台 |
+| `port` | `DSH_SCRAPLING_PORT` | `39640` | 工作台端口 |
+| `host` | `DSH_SCRAPLING_HOST` | `127.0.0.1` | 监听地址 |
+| `timeoutMs` | `DSH_SCRAPLING_TIMEOUT_MS` | `20000` | 默认请求超时 |
+| `workbench` | `DSH_SCRAPLING_WORKBENCH` | `true` | 是否拉起工作台界面 |
+
+## 架构
+
+```
+capyclaw-scrapling/
+├── lib/
+│   ├── host.mjs          # Cordis 入口：注册服务 + 拉起工作台 + boot 全局注入
+│   ├── index.mjs         # API 导出
+│   ├── html-parser.mjs   # 容错 HTML 解析器（单遍、隐式闭合、实体解码）
+│   ├── selectors.mjs     # CSS 选择器引擎（parsel 语义）
+│   └── crawler.mjs       # 爬取流水线（步骤计时 + 历史记录）
+├── server/
+│   └── server.mjs        # 工作台 HTTP 服务（独立入口 / 被宿主拉起）
+├── ui/
+│   ├── index.html        # 工作台界面（无框架无构建）
+│   ├── app.js
+│   └── style.css
+├── demo/                 # 内置离线演示页（爬取目标 + 选择器教学）
+├── client/
+│   └── client.js         # 浏览器半：把工作台挂进 DSH 右侧边栏（iframe）
+├── test/                 # 32 项单测（node --test）
+└── cordis.patch.yml      # bundle 配置
 ```
 
-### 示例 3: 使用代理
+**与 DSH web 客户端的桥**：宿主半通过 `webserver/index-inject` 注入 `__DSH_SCRAPLING__`（协议与 launchpad / port-sidebar 相同），浏览器半据此把工作台挂成右侧边栏面板。
 
-```javascript
-const result = await ctx.scrapling.fetch('https://example.com', {
-  proxy: 'http://proxy.example.com:8080'
-})
+## 测试与验证
+
+```bash
+# 单元测试（32 项：解析器 / 选择器 / API / 宿主装配）
+cd extensions/official/capyclaw-scrapling && npm test
+
+# 六层 e2e（scrapling 在 L3 有 7 项专属冒烟：healthz/metrics/页面/离线自爬/二次提取/诚实拒绝/单测）
+node scripts/e2e-all.mjs --layer l3
+
+# 插件规范校验
+node tools/capyclaw-plugin-validator/bin/cli.mjs extensions/official/capyclaw-scrapling
 ```
 
 ## 故障排除
 
-### Scrapling 未安装
-
-**错误**: `ModuleNotFoundError: No module named 'scrapling'`
-
-**解决方案**:
-```bash
-pip install "scrapling[all]>=0.5"
-```
-
-### 浏览器未安装
-
-**错误**: Browser 相关错误
-
-**解决方案**:
-```bash
-scrapling install --force
-```
-
-### 权限问题
-
-确保 DSH 进程有权限执行 Python 和访问网络。
+| 症状 | 处理 |
+|---|---|
+| 打不开 39640 | `node server/server.mjs` 看启动日志；端口被占时用 `--port` 换一个 |
+| 爬取报「无法连接到目标网址」 | 先在浏览器里确认目标网址能打开；内网地址确认服务已启动 |
+| 提取 0 条数据 | 展开页面上的「原始 HTML」对照选择器写法；从演示目标开始学 |
+| 想要浏览器渲染 / XPath | 当前版本未实现，需要外部 Python scrapling 运行时 |
 
 ## 相关链接
 
-- **Scrapling 官方文档**: https://scrapling.readthedocs.io
-- **Scrapling GitHub**: https://github.com/D4Vinci/Scrapling
-- **MCP Server 文档**: https://scrapling.readthedocs.io/en/latest/ai/mcp-server.html
-- **DSH 插件开发**: ../../docs/guides/plugin-development.md
+- **Scrapling 官方文档**： https://scrapling.readthedocs.io
+- **Scrapling GitHub**： https://github.com/D4Vinci/Scrapling
+- **DSH 插件开发**： ../../docs/guides/plugin-development.md
 
 ## 许可证
 
 MIT License
 
-## 作者
-
-- **Scrapling**: D4Vinci
-- **DSH 集成**: DeepSeek Harness Team
-
 ## 版本历史
 
-### 1.0.0 (2026-11-04)
-- 初始版本
-- 基础 HTTP 抓取功能
-- 浏览器模式支持
-- HTML 解析功能
+### 1.1.0 (2026-11-05)
+- 🆕 可视化爬虫工作台（`http://127.0.0.1:39640/`）：流程回放、选择器试玩、JSON/CSV 导出、历史回看、三个内置离线演示页
+- 🆕 `parse()` 真实实现：自研容错 HTML 解析器 + CSS 选择器引擎（`::text` / `::attr` / 组合器 / 伪类 / 中文标识符）
+- 🆕 爬取流水线 `crawler.crawl()`：步骤计时、结构化错误（含「下一步」提示）、20 条历史
+- 🆕 服务契约 `/healthz` + `/metrics`，浏览器半挂 DSH 右侧边栏
+- ✅ 32 项单测 + e2e L3 七项专属冒烟
+- 诚实边界不变：浏览器渲染 / XPath 未实现并如实标注
+
+### 1.0.2 (2026-11-04)
+- 初始版本（仅 HTTP fetch）

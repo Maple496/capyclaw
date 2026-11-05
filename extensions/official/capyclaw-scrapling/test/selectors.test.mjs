@@ -86,13 +86,19 @@ test('伪类 :first-child / :last-child / :nth-child', () => {
   assert.deepEqual(doc.css('li:nth-child(2)::text'), ['2'])
 })
 
-test('逗号分组去重且按文档序（混合 ::text 与元素，与 parsel 一致）', () => {
+test('逗号分组：文档序合并 + 按位置去重（与 parsel union 一致）', () => {
   const doc = createSelectorDocument('<p>1</p><b>2</b><p>3</p>')
   const result = doc.css('p, b, p::text')
-  assert.equal(result.length, 4)
+  // 文档序：p1, '1', b, p3, '3'
+  assert.equal(result.length, 5)
   assert.equal(result[0].tag, 'p')
-  assert.equal(result[1].tag, 'b')
-  assert.deepEqual(result.slice(2), ['1', '3'])
+  assert.equal(result[1], '1')
+  assert.equal(result[2].tag, 'b')
+  assert.equal(result[3].tag, 'p')
+  assert.equal(result[4], '3')
+  // 同一节点命中两个元素分组：按位置去重
+  const dup = doc.css('p, p')
+  assert.equal(dup.length, 2)
 })
 
 test('元素作用域：wrapper.css 只查后代，自身可作祖先', () => {

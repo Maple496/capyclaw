@@ -35,7 +35,7 @@ const bumped = {
   '@capyclaw/llm-tempkey': '1.0.2',
   '@capyclaw/plugin-sync': '0.1.1',
   '@capyclaw/port-sidebar': '1.0.3',
-  '@capyclaw/scrapling': '1.0.2',
+  '@capyclaw/scrapling': '1.1.0',
 }
 // 目录名形式(部分清单用本地目录名做键)
 for (const [name, ver] of Object.entries({ ...bumped })) {

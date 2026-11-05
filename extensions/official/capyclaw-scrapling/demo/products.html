@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>好物清单 · 演示商城</title>
+  <style>
+    body { font-family: "Microsoft YaHei", sans-serif; max-width: 900px; margin: 40px auto; color: #2c2c2c; background: #f6f7fb; }
+    h1 { color: #1f3a93; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .product { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .product .name { font-weight: bold; font-size: 16px; }
+    .product .price { color: #c0392b; font-size: 20px; margin: 6px 0; }
+    .product .meta { color: #777; font-size: 13px; }
+    .rating { color: #e67e22; }
+    .out-of-stock .name::after { content: "（缺货）"; color: #999; }
+    table.summary { border-collapse: collapse; margin-top: 24px; width: 100%; background: #fff; }
+    table.summary th, table.summary td { border: 1px solid #ddd; padding: 6px 10px; text-align: left; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>好物清单</h1>
+  <p class="intro">内置演示商城页：练习表格与卡片两种结构的 CSS 选择器提取。</p>
+
+  <div class="grid">
+    <div class="product" data-sku="A-1001">
+      <div class="name">机械键盘 87 键</div>
+      <div class="price">¥399.00</div>
+      <div class="meta"><span class="rating" data-score="4.8">评分 4.8</span> · 月销 1200+ · <span class="stock">有货</span></div>
+    </div>
+    <div class="product out-of-stock" data-sku="A-1002">
+      <div class="name">无线静音鼠标</div>
+      <div class="price">¥129.00</div>
+      <div class="meta"><span class="rating" data-score="4.5">评分 4.5</span> · 月销 800+ · <span class="stock">缺货</span></div>
+    </div>
+    <div class="product" data-sku="A-1003">
+      <div class="name">4K 显示器 27 寸</div>
+      <div class="price">¥2199.00</div>
+      <div class="meta"><span class="rating" data-score="4.9">评分 4.9</span> · 月销 300+ · <span class="stock">有货</span></div>
+    </div>
+    <div class="product" data-sku="A-1004">
+      <div class="name">USB-C 扩展坞</div>
+      <div class="price">¥259.00</div>
+      <div class="meta"><span class="rating" data-score="4.6">评分 4.6</span> · 月销 2100+ · <span class="stock">有货</span></div>
+    </div>
+    <div class="product" data-sku="A-1005">
+      <div class="name">降噪蓝牙耳机</div>
+      <div class="price">¥799.00</div>
+      <div class="meta"><span class="rating" data-score="4.7">评分 4.7</span> · 月销 560+ · <span class="stock">有货</span></div>
+    </div>
+    <div class="product out-of-stock" data-sku="A-1006">
+      <div class="name">桌面升降支架</div>
+      <div class="price">¥459.00</div>
+      <div class="meta"><span class="rating" data-score="4.4">评分 4.4</span> · 月销 90+ · <span class="stock">缺货</span></div>
+    </div>
+  </div>
+
+  <table class="summary">
+    <thead><tr><th>商品</th><th>价格</th><th>评分</th></tr></thead>
+    <tbody>
+      <tr><td>机械键盘 87 键</td><td>399.00</td><td>4.8</td></tr>
+      <tr><td>无线静音鼠标</td><td>129.00</td><td>4.5</td></tr>
+      <tr><td>4K 显示器 27 寸</td><td>2199.00</td><td>4.9</td></tr>
+    </tbody>
+  </table>
+
+  <footer class="site-footer"><p>内置演示页 · 用于 DSH Scrapling 工作台演示</p></footer>
+</body>
+</html>

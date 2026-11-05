@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>科技早报 · 演示新闻站</title>
+  <style>
+    body { font-family: "Microsoft YaHei", sans-serif; max-width: 800px; margin: 40px auto; color: #222; }
+    h1 { font-size: 26px; }
+    .article { border-bottom: 1px solid #e5e5e5; padding: 14px 0; }
+    .article h2 { font-size: 18px; margin: 0 0 6px; }
+    .article h2 a { color: #0b5394; text-decoration: none; }
+    .article .excerpt { color: #555; font-size: 14px; margin: 4px 0 8px; }
+    .article .info { color: #999; font-size: 12px; }
+    .article .info .category { background: #e8f0fe; color: #1a73e8; border-radius: 3px; padding: 1px 8px; margin-right: 8px; }
+    .article.featured h2 a { color: #b45309; }
+    .article.featured h2::before { content: "★ "; color: #e8a33d; }
+  </style>
+</head>
+<body>
+  <h1>科技早报</h1>
+  <p class="intro">内置演示新闻页：练习链接、日期与分类的选择器提取。</p>
+
+  <div class="article-list">
+    <article class="article featured" data-id="n101">
+      <h2><a href="/article/n101">端侧大模型进入手机：一场内存与算力的平衡术</a></h2>
+      <p class="excerpt">随着专用 NPU 的普及，手机厂商开始在本地运行十亿参数级模型，隐私与延迟成为最大卖点。</p>
+      <div class="info"><span class="category">AI</span><time class="date" datetime="2026-11-04">2026-11-04</time> · 记者：林一</div>
+    </article>
+    <article class="article" data-id="n102">
+      <h2><a href="/article/n102">开源爬虫框架年度盘点：谁在替代 Scrapy？</a></h2>
+      <p class="excerpt">从反反爬能力到自适应选择器，新一代抓取库正在重新定义「数据采集」的工程边界。</p>
+      <div class="info"><span class="category">开源</span><time class="date" datetime="2026-11-03">2026-11-03</time> · 记者：周未</div>
+    </article>
+    <article class="article" data-id="n103">
+      <h2><a href="/article/n103">WebAssembly 在数据处理的第三个落地年头</a></h2>
+      <p class="excerpt">把解析器编译到浏览器端运行，正成为数据工具规避后端部署的常见路径。</p>
+      <div class="info"><span class="category">前端</span><time class="date" datetime="2026-11-02">2026-11-02</time> · 记者：陈默</div>
+    </article>
+    <article class="article" data-id="n104">
+      <h2><a href="/article/n104">本地优先软件回潮：为什么工具都想摆脱云端？</a></h2>
+      <p class="excerpt">断网可用、数据自持——本地优先正从极客理念变成产品卖点。</p>
+      <div class="info"><span class="category">产品</span><time class="date" datetime="2026-11-01">2026-11-01</time> · 记者：林一</div>
+    </article>
+    <article class="article" data-id="n105">
+      <h2><a href="/article/n105">数据合规新规下的采集边界：工程师需要知道的五件事</a></h2>
+      <p class="excerpt">robots.txt 之外，新的合规要求正在改变爬虫的默认行为设计。</p>
+      <div class="info"><span class="category">合规</span><time class="date" datetime="2026-10-31">2026-10-31</time> · 记者：周未</div>
+    </article>
+  </div>
+
+  <footer class="site-footer"><p>内置演示页 · 用于 DSH Scrapling 工作台演示</p></footer>
+</body>
+</html>

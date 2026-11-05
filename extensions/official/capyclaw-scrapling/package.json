@@ -1,7 +1,7 @@
 {
   "name": "@capyclaw/scrapling",
-  "version": "1.0.2",
-  "description": "Scrapling 网页抓取集成：支持 HTTP 请求、隐身浏览器、JavaScript 渲染、Cloudflare 绕过、并发爬虫和数据导出",
+  "version": "1.1.0",
+  "description": "Scrapling 网页抓取集成：HTTP 抓取 + 纯 Node CSS 选择器提取 + 可视化爬虫工作台（浏览器打开即用）",
   "type": "module",
   "main": "./lib/host.mjs",
   "exports": {
@@ -26,15 +26,21 @@
   },
   "meta": {
     "title": "Scrapling 网页抓取",
-    "description": "强大的网页抓取工具：支持快速 HTTP 请求、隐身浏览器模式、JavaScript 渲染、Cloudflare 自动绕过、CSS/XPath 选择器、并发爬虫、代理轮换和多格式数据导出(JSON/CSV/XML)。"
+    "description": "网页数据爬取工具：HTTP 抓取、CSS 选择器提取（::text/::attr，纯 Node 实现）、可视化爬虫工作台（http://127.0.0.1:39640/，步骤回放 + 选择器试玩 + JSON/CSV 导出，内置离线演示页）。浏览器渲染与 XPath 依赖外部 Python scrapling，未实现并如实标注。"
   },
   "files": [
     "lib/",
     "client/",
+    "server/",
+    "ui/",
+    "demo/",
     "cordis.patch.yml",
     "README.md"
   ],
-  "scripts": {},
+  "scripts": {
+    "start": "node server/server.mjs",
+    "test": "node --test \"test/*.test.mjs\""
+  },
   "engines": {
     "node": ">=18",
     "dsh": "^0.2.0-rc.2"

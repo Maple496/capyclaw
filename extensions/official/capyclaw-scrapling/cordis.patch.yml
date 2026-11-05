@@ -1,9 +1,16 @@
 # dsh-scrapling bundle patch
 # Scrapling 网页抓取插件配置
+#
+# 配置项（cordis config → 环境变量 DSH_SCRAPLING_* → 默认值）：
+#   enabled      是否启用            DSH_SCRAPLING_ENABLED     true
+#   port         工作台端口          DSH_SCRAPLING_PORT        39640
+#   host         监听地址            DSH_SCRAPLING_HOST        127.0.0.1
+#   timeoutMs    请求超时(ms)        DSH_SCRAPLING_TIMEOUT_MS  20000
+#   workbench    是否拉起工作台      DSH_SCRAPLING_WORKBENCH   true
 
 - insert:
     - id: scrapling-host
       name: "@capyclaw/scrapling"
       config:
-        # Scrapling 配置选项
         enabled: true
+        port: 39640

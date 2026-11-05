@@ -4,6 +4,7 @@
  *     + 编辑器页 + /assets 上传回读，干净关停
  *   - ppt 旧 stdio 入口管道握手
  *   - skills-service：/healthz（providers=8）+ /skills + SKILL 正文
+ *   - scrapling 爬虫工作台：独立服务 + /healthz/metrics + 离线自爬 + 二次提取 + 单测
  *   - workbench host.mjs 模板产物：mock ctx 调 apply() 真实拉起 relay 再 dispose
  *   - 12 个 skill 包：mock ctx 注册 provider，list/get 与契约 note 豁免规则
  */
@@ -12,7 +13,7 @@ import path from 'node:path'
 import { spawn } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
 
-import { ROOT, Recorder, randomPort, startService, tempDir, waitFor, getJson, mcpCaller, mcpText } from './harness.mjs'
+import { ROOT, Recorder, randomPort, run, startService, tempDir, waitFor, getJson, mcpCaller, mcpText } from './harness.mjs'
 
 const RELAYS = [
   {
@@ -170,6 +171,81 @@ async function skillsServiceSmoke(rec) {
   }
 }
 
+/* scrapling 爬虫工作台：独立服务真实拉起 + 离线自爬演示页全链路。 */
+async function scraplingWorkbenchSmoke(rec) {
+  const port = randomPort()
+  const dir = path.join(ROOT, 'extensions/official/capyclaw-scrapling')
+  const state = tempDir('l3-scrapling')
+  const svc = await startService(process.execPath, ['server/server.mjs', '--port', String(port)], {
+    cwd: dir,
+    logFile: path.join(state, 'workbench.log'),
+    readyFn: async () => {
+      const h = await getJson(`http://127.0.0.1:${port}/healthz`, 3000).catch(() => null)
+      return h?.ok ? h : null
+    },
+  })
+  try {
+    const base = `http://127.0.0.1:${port}`
+    const h = await getJson(`${base}/healthz`)
+    rec.check('scrapling /healthz（name + capabilities 诚实边界）',
+      h.name === 'scrapling-workbench' && h.capabilities?.http === true && h.capabilities?.browser === false,
+      JSON.stringify({ name: h.name, capabilities: h.capabilities }))
+
+    const metrics = await fetch(`${base}/metrics`).then((r) => r.text())
+    rec.check('scrapling /metrics Prometheus 文本', /scrapling_up 1/.test(metrics), metrics.split('\n')[0])
+
+    const page = await fetch(`${base}/`)
+    const html = await page.text()
+    rec.check('scrapling 工作台页面可访问', page.status === 200 && html.includes('DSH 爬虫工作台'), `HTTP ${page.status}`)
+
+    const crawlRes = await fetch(`${base}/api/crawl`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        url: `${base}/demo/quotes.html`,
+        selectors: [
+          { key: '名言', selector: '.quote .text::text' },
+          { key: '标签链接', selector: '.quote .tag::attr(href)' },
+        ],
+      }),
+    })
+    const crawlJson = await crawlRes.json()
+    const steps = crawlJson.crawl?.steps?.map((s) => s.id) || []
+    rec.check('scrapling 离线自爬（步骤流水线 + 提取）',
+      crawlJson.ok === true
+        && JSON.stringify(steps) === JSON.stringify(['url', 'request', 'response', 'body', 'dom', 'extract', 'done'])
+        && crawlJson.crawl.extracts['名言'].count === 8,
+      JSON.stringify({ ok: crawlJson.ok, steps, 名言: crawlJson.crawl?.extracts?.['名言']?.count }))
+
+    const extractRes = await fetch(`${base}/api/extract`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ crawlId: crawlJson.crawl.id, selectors: [{ key: '标题', selector: 'h1::text' }] }),
+    })
+    const extractJson = await extractRes.json()
+    rec.check('scrapling /api/extract 二次提取（免重爬）',
+      extractJson.ok === true && extractJson.results['标题'].values[0] === '每日名言',
+      JSON.stringify(extractJson.results?.['标题']?.values))
+
+    const browserMode = await fetch(`${base}/api/crawl`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ url: `${base}/demo/quotes.html`, mode: 'browser' }),
+    })
+    const browserJson = await browserMode.json()
+    rec.check('scrapling 浏览器模式诚实拒绝（NOT_IMPLEMENTED）',
+      browserMode.status === 400 && browserJson.error?.code === 'NOT_IMPLEMENTED',
+      browserJson.error?.code || '')
+  } finally {
+    await svc.stop()
+    fs.rmSync(state, { recursive: true, force: true })
+  }
+
+  /* 插件单测纳入 e2e（parser/selectors/api/plugin 共 32 项） */
+  const unit = run('node', ['--test', 'test/html-parser.test.mjs', 'test/selectors.test.mjs', 'test/api.test.mjs', 'test/plugin.test.mjs'], { cwd: dir })
+  rec.check('scrapling 单测全绿（html-parser/selectors/api/plugin）', unit.status === 0, unit.stderr.slice(0, 300))
+}
+
 async function hostTemplateSmoke(rec, { ns, dir }) {
   const port = randomPort()
   const state = tempDir(`l3-host-${ns}`)
@@ -240,6 +316,9 @@ export async function runLayer() {
 
   rec.section('skills-service')
   await skillsServiceSmoke(rec)
+
+  rec.section('scrapling 爬虫工作台（离线全链路）')
+  await scraplingWorkbenchSmoke(rec)
 
   rec.section('host.mjs 统一模板（进程内兼容入口）')
   for (const relay of RELAYS) await hostTemplateSmoke(rec, relay)

@@ -52,6 +52,13 @@ const P_CLOSERS = new Set([
   'p', 'pre', 'section', 'table', 'ul',
 ])
 
+/**
+ * 文档树最大深度（对齐浏览器的 512 层上限）。
+ * 超过上限的新元素拍平为第 512 层祖先的子节点（浏览器同款行为），
+ * 同时保护下游所有递归遍历器不会栈溢出。
+ */
+const MAX_TREE_DEPTH = 512
+
 /** 常用命名实体（够覆盖真实页面 95%+ 的情况，其余按字面量保留）。 */
 const NAMED_ENTITIES = {
   amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00a0',
@@ -85,9 +92,10 @@ export function decodeEntities(input) {
 
 const TAG_NAME_RE = /^[a-zA-Z][a-zA-Z0-9:_.-]*/
 
-/** 解析一段 HTML，返回 #document 根节点。 */
+/** 解析一段 HTML，返回 #document 根节点。入口剥掉 UTF-8 BOM。 */
 export function parseHtml(html) {
-  const source = typeof html === 'string' ? html : String(html ?? '')
+  const input = typeof html === 'string' ? html : String(html ?? '')
+  const source = input.charCodeAt(0) === 0xfeff ? input.slice(1) : input
   const doc = { tag: '#document', attrs: {}, children: [], parent: null }
   const stack = [doc]
   const top = () => stack[stack.length - 1]
@@ -180,7 +188,8 @@ export function parseHtml(html) {
       continue
     }
 
-    stack.push(node)
+    /* 深度上限：超过 512 层不再入栈，新元素拍平为兄弟（浏览器同款行为） */
+    if (stack.length < MAX_TREE_DEPTH) stack.push(node)
   }
 
   return doc

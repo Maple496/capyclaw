@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DSH 爬虫工作台 · 看得见的数据爬取</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🕷️</span>
+      <div>
+        <h1>DSH 爬虫工作台</h1>
+        <p class="subtitle">看得见的数据爬取 —— 每一步都实时呈现</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span id="health-pill" class="pill pill-unknown">检查服务中…</span>
+      <a class="help-link" href="#关于本工具" title="能力说明">ⓘ 能力说明</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ 第一步：选择目标 ============ -->
+    <section class="card" id="card-target">
+      <div class="card-head">
+        <span class="step-no">①</span>
+        <div>
+          <h2>选择要爬取的网页</h2>
+          <p class="card-desc">输入任意网址，或点一个演示目标马上体验（内置演示无需外网）。</p>
+        </div>
+      </div>
+
+      <div class="target-row">
+        <label class="mode-switch" title="当前版本仅支持 HTTP 直连抓取">
+          <input type="radio" name="mode" value="http" checked>
+          <span>HTTP 抓取</span>
+        </label>
+        <label class="mode-switch mode-disabled" title="浏览器渲染模式未实现：依赖外部 Python scrapling 运行时">
+          <input type="radio" name="mode" value="browser" disabled>
+          <span>浏览器渲染 🔒</span>
+        </label>
+      </div>
+
+      <form id="crawl-form" class="crawl-form">
+        <div class="url-row">
+          <input id="url-input" type="text" inputmode="url" placeholder="例如：http://127.0.0.1:39640/demo/quotes.html"
+                 autocomplete="off" spellcheck="false" required>
+          <button type="submit" id="crawl-btn" class="btn btn-primary">开始爬取</button>
+        </div>
+
+        <div class="demo-chips" id="demo-chips">
+          <span class="chips-label">演示目标：</span>
+          <button type="button" class="chip" data-url="/demo/quotes.html" data-kind="quotes">📚 每日名言</button>
+          <button type="button" class="chip" data-url="/demo/products.html" data-kind="products">🛒 好物清单</button>
+          <button type="button" class="chip" data-url="/demo/news.html" data-kind="news">📰 科技早报</button>
+          <button type="button" class="chip chip-ext" data-url="https://quotes.toscrape.com/" data-kind="ext-quotes">🌍 真实网站·英文名言站（需外网）</button>
+        </div>
+
+        <details class="advanced">
+          <summary>高级选项（可不改）</summary>
+          <div class="advanced-grid">
+            <label>超时时间（毫秒）
+              <input id="timeout-input" type="number" min="1000" max="120000" step="1000" value="20000">
+            </label>
+            <label>User-Agent（浏览器标识）
+              <input id="ua-input" type="text" placeholder="留空使用默认 UA">
+            </label>
+          </div>
+        </details>
+      </form>
+    </section>
+
+    <!-- ============ 第二步：观察流程 ============ -->
+    <section class="card card-hidden" id="card-pipeline">
+      <div class="card-head">
+        <span class="step-no">②</span>
+        <div>
+          <h2>DSH 是怎么爬到数据的</h2>
+          <p class="card-desc">下面是本次爬取的每个环节与真实耗时（按实际时间轴回放）。</p>
+        </div>
+      </div>
+      <ol class="pipeline" id="pipeline"></ol>
+      <div id="crawl-error" class="error-banner banner-hidden"></div>
+      <div id="page-summary" class="page-summary summary-hidden"></div>
+    </section>
+
+    <!-- ============ 第三步：提取数据 ============ -->
+    <section class="card card-hidden" id="card-extract">
+      <div class="card-head">
+        <span class="step-no">③</span>
+        <div>
+          <h2>用选择器把数据取出来</h2>
+          <p class="card-desc">CSS 选择器告诉 DSH 要抓页面里的哪些数据；<code>::text</code> 取文字、<code>::attr(名)</code> 取属性。点演示目标会自动配好示例。</p>
+        </div>
+      </div>
+
+      <div class="selector-rows" id="selector-rows"></div>
+      <div class="extract-actions">
+        <button type="button" id="add-field-btn" class="btn btn-ghost">＋ 添加字段</button>
+        <button type="button" id="extract-btn" class="btn btn-primary">提取数据</button>
+      </div>
+      <p class="selector-tip">
+        常用写法：<code>.price::text</code>（类名 price 的文字）·
+        <code>a::attr(href)</code>（所有链接地址）·
+        <code>table.summary tr td:nth-child(2)::text</code>（表格第 2 列）
+      </p>
+
+      <div id="extract-result" class="extract-result result-hidden">
+        <div class="result-tabs">
+          <button type="button" class="tab tab-active" data-tab="table">表格</button>
+          <button type="button" class="tab" data-tab="json">JSON</button>
+          <div class="result-actions">
+            <button type="button" id="copy-json-btn" class="btn btn-small">复制 JSON</button>
+            <button type="button" id="download-json-btn" class="btn btn-small">下载 JSON</button>
+            <button type="button" id="download-csv-btn" class="btn btn-small">导出 CSV（Excel 可开）</button>
+          </div>
+        </div>
+        <div id="result-table-wrap" class="result-pane"></div>
+        <pre id="result-json" class="result-pane json-pane" hidden></pre>
+        <p class="result-note" id="result-note"></p>
+      </div>
+
+      <details class="raw-html">
+        <summary>看看这个网页的原始 HTML（找选择器用）</summary>
+        <pre id="raw-html-pre" class="raw-html-pre"></pre>
+      </details>
+    </section>
+
+    <!-- ============ 历史 ============ -->
+    <section class="card card-hidden" id="card-history">
+      <div class="card-head">
+        <span class="step-no">🕘</span>
+        <div>
+          <h2>最近爬取记录</h2>
+          <p class="card-desc">点任意一条可以回看当时的流程与数据（服务保留最近 20 条）。</p>
+        </div>
+      </div>
+      <div id="history-list" class="history-list"></div>
+    </section>
+
+    <!-- ============ 能力说明 ============ -->
+    <section class="card" id="关于本工具">
+      <div class="card-head">
+        <span class="step-no">ⓘ</span>
+        <div>
+          <h2>能力说明（诚实边界）</h2>
+          <p class="card-desc">本工具当前版本的能力与边界，如实告知：</p>
+        </div>
+      </div>
+      <ul class="capability-list">
+        <li>✅ <b>HTTP 抓取</b>：直连目标网址获取页面内容，支持重定向跟随与超时控制。</li>
+        <li>✅ <b>CSS 选择器提取</b>：纯 Node 实现（无外部依赖），支持 <code>::text</code>、<code>::attr()</code>、组合器与常见伪类。</li>
+        <li>✅ <b>数据导出</b>：JSON / CSV，可复制或下载。</li>
+        <li>🔒 <b>浏览器渲染</b>：未实现。需要外部 Python <code>scrapling</code> 运行时（隐身浏览器 / Cloudflare 绕过 / JS 渲染），界面上已锁定，不会假装可用。</li>
+        <li>🔒 <b>XPath</b>：未实现，同样如实标注。</li>
+        <li>🏠 <b>本服务只监听 127.0.0.1</b>，不会暴露到外网。</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>dsh-scrapling 工作台 · 服务地址 <code id="footer-origin"></code> · <a href="/healthz" target="_blank">健康检查</a></p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

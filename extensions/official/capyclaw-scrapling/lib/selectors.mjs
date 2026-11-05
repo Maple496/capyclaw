@@ -59,8 +59,8 @@ export function parseSelectorList(input) {
 function parseComplexSelector(source, full) {
   if (!source) throw new SelectorError(`选择器存在空分组: "${full}"`)
   let pseudo = null
-  // 末端伪元素只允许出现在整个分组末尾
-  const pseudoMatch = /::(text|attr)\s*(?:\(\s*([-\w]+)\s*\))?\s*$/.exec(source)
+  // 末端伪元素只允许出现在整个分组末尾（::attr() 空参在这里先剥掉，再由下方给出准确报错）
+  const pseudoMatch = /::(text|attr)\s*(?:\(\s*([-\w]*)\s*\))?\s*$/.exec(source)
   if (pseudoMatch) {
     if (pseudoMatch[1] === 'text') pseudo = { kind: 'text' }
     else {
@@ -217,26 +217,49 @@ function matchCompound(node, compound) {
     }
   }
   for (const pseudo of compound.pseudoClasses) {
-    const siblings = elementSiblings(node)
-    if (pseudo.kind === 'first-child' && siblings[0] !== node) return false
-    if (pseudo.kind === 'last-child' && siblings[siblings.length - 1] !== node) return false
-    if (pseudo.kind === 'nth-child' && siblings[pseudo.n - 1] !== node) return false
+    const info = siblingInfo(node)
+    if (pseudo.kind === 'first-child' && info.nth !== 1) return false
+    if (pseudo.kind === 'last-child' && info.nth !== info.total) return false
+    if (pseudo.kind === 'nth-child' && info.nth !== pseudo.n) return false
   }
   return true
 }
 
-/** 同一父节点下的元素兄弟（含自身）。 */
-function elementSiblings(node) {
+/**
+ * 元素兄弟位置索引缓存（父节点 → Map<节点, {nth, total, prevRaw}>）。
+ * 结构伪类与相邻组合器在高Sibling数页面（如 5 万元素列表）上如果每次
+ * 都重建过滤数组会是 O(n²)，这里每个父节点只计算一次，查询 O(1)。
+ * 文档树解析后不再修改，WeakMap 随节点生命周期回收，无失效问题。
+ */
+const siblingIndexCache = new WeakMap()
+
+function siblingInfo(node) {
   const parent = node.parent
-  if (!parent) return [node]
-  return (parent.children || []).filter(isElement)
+  if (!parent) return { nth: 1, total: 1, prevRaw: -1 }
+  let cache = siblingIndexCache.get(parent)
+  if (!cache) {
+    cache = new Map()
+    let nth = 0
+    let prevRaw = -1
+    const children = parent.children || []
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i]
+      if (!isElement(child)) continue
+      nth++
+      cache.set(child, { nth, total: 0, prevRaw, selfRaw: i })
+      prevRaw = i
+    }
+    for (const info of cache.values()) info.total = nth
+    siblingIndexCache.set(parent, cache)
+  }
+  return cache.get(node) || { nth: 1, total: 1, prevRaw: -1 }
 }
 
-/** 节点的前一个元素兄弟。 */
+/** 节点的前一个元素兄弟（相邻组合器用）。 */
 function prevElementSibling(node) {
-  const siblings = elementSiblings(node)
-  const at = siblings.indexOf(node)
-  return at > 0 ? siblings[at - 1] : null
+  const info = siblingInfo(node)
+  if (info.prevRaw < 0 || !node.parent) return null
+  return (node.parent.children || [])[info.prevRaw] || null
 }
 
 /**
@@ -345,6 +368,10 @@ export function wrapElement(node, options = {}) {
 /**
  * 执行选择器提取。
  *
+ * 逗号分组的语义与 parsel（XPath union）对齐：每组独立匹配，
+ * 结果按文档序合并、按位置去重；元素结果返回包装对象，
+ * ::text/::attr 返回字符串。
+ *
  * @param {object} root 解析后的文档/元素节点
  * @param {string} selectorText 选择器（可含 ::text / ::attr(name)，支持逗号分组）
  * @param {object} [options]
@@ -354,18 +381,41 @@ export function wrapElement(node, options = {}) {
 export function extract(root, selectorText, options = {}) {
   const { whitespace = 'normalize' } = options
   const selectorList = parseSelectorList(selectorText)
-  const out = []
-  for (const [node, selector] of matchNodes(root, selectorList)) {
-    if (!selector.pseudo) { out.push(wrapElement(node, options)); continue }
+
+  /* DFS 序号：同一文本节点被多组命中时按位置去重（XPath union 语义） */
+  const ordinals = new Map()
+  let counter = 0
+  const numberNodes = (node) => {
+    for (const child of node.children || []) {
+      if (child.tag === '#comment') continue
+      ordinals.set(child, counter++)
+      if (child.tag !== '#text') numberNodes(child)
+    }
+  }
+  numberNodes(root)
+
+  /* 排序键：序号×3 + 类别（元素 0 / 属性 1 / 文本 2），属性挂在其元素之后、子节点之前 */
+  const keyOf = (node, kind) => ordinals.get(node) * 3 + kind
+  const items = []
+  for (const [node, selector] of matchNodes(root, selectorList, { perSelector: true })) {
+    if (!selector.pseudo) { items.push({ key: keyOf(node, 0), value: wrapElement(node, options) }); continue }
     if (selector.pseudo.kind === 'text') {
-      for (const text of textNodesOf(node)) {
-        const value = whitespace === 'keep' ? text : normalizeText(text)
-        if (whitespace === 'keep' || value) out.push(value)
+      for (const textNode of textNodeList(node)) {
+        const value = whitespace === 'keep' ? textNode.text : normalizeText(textNode.text)
+        if (whitespace === 'keep' || value) items.push({ key: keyOf(textNode, 2), value })
       }
     } else {
       const value = node.attrs[selector.pseudo.name]
-      if (value !== undefined) out.push(value)
+      if (value !== undefined) items.push({ key: keyOf(node, 1), value })
     }
+  }
+  items.sort((a, b) => a.key - b.key)
+  const out = []
+  const seenKeys = new Set()
+  for (const item of items) {
+    if (seenKeys.has(item.key)) continue
+    seenKeys.add(item.key)
+    out.push(item.value)
   }
   return out
 }
