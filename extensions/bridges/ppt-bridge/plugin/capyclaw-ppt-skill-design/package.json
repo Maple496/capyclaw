@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ppt-skill-design",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "PPT skill：design token、版式、反 AI slop；只做视觉决策。",
   "type": "module",
   "main": "./lib/index.mjs",

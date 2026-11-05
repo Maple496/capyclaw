@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ppt-skill-ppt",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "PPT skill：PPT 总入口：按意图路由到执行、成稿、审美、审计、研究技能。",
   "type": "module",
   "main": "./lib/index.mjs",

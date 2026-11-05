@@ -4,10 +4,7 @@ node_modules/
 # Build outputs
 out/
 dist/
-dist-products/
-dist-launchers/
 release/
-bundles/
 
 # IDE
 .vscode/
@@ -52,5 +49,5 @@ __pycache__/
 # Internal ops docs (not for publish)
 SECURITY_AUDIT_REPORT.md
 
-# Editor runtime state
-**/data/last-open.json
+# bridge 插件包运行时状态（各 bridge .gitignore 亦有同规则）
+extensions/bridges/*/plugin/*/data/

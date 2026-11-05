@@ -20,12 +20,11 @@
 
 | 包 | ctx 服务 | 职责 | 不负责 |
 |---|---|---|---|
-| `dsh-service-host` | `ctx.serviceHost` | HTTP 路由、`/healthz`、`/metrics`、静态资源、单实例锁、端口复用、discovery、优雅关闭；standalone/embedded 双模式 | 业务状态、工具、资产 |
-| `dsh-tool-host` | `ctx.toolHost` | `defineTool`/`defineCapability`、能力注册表、参数校验、契约报告、MCP 协议壳、instructions 模板 | HTTP 监听、业务实现 |
+| `@capyclaw/service-host` | `ctx.serviceHost` | HTTP 路由、`/healthz`、`/metrics`、静态资源、单实例锁、端口复用、discovery、优雅关闭；standalone/embedded 双模式 | 业务状态、工具、资产 |
+| `@capyclaw/tool-host` | `ctx.toolHost` | `defineTool`/`defineCapability`、能力注册表、参数校验、契约报告、MCP 协议壳、instructions 模板 | HTTP 监听、业务实现 |
 | `@capyclaw/state-service` | `ctx.state` | 原子状态、journal（2MB 轮转）、命名 checkpoint、崩溃恢复 | work 文件归属（属于 workspace） |
-| `dsh-asset-service` | `ctx.assets` | sha256 对象仓库、`/assets/<id>`、base64 上传、content-type | 作品目录、版本 |
-| `dsh-editor-host` | `ctx.editorHost` | 编辑器静态托管、租约仲裁、心跳、连接状态 | 编辑器业务 UI |
-| `dsh-mcp-gateway` | `ctx.mcpGateway` | 聚合多个插件的 MCP 工具面，向外部客户端暴露单一 `/mcp` | 插件业务、鉴权、持久化 |
+| `@capyclaw/asset-service` | `ctx.assets` | sha256 对象仓库、`/assets/<id>`、base64 上传、content-type | 作品目录、版本 |
+| `@capyclaw/editor-host` | `ctx.editorHost` | 编辑器静态托管、租约仲裁、心跳、连接状态 | 编辑器业务 UI |
 
 ## 文档工作台框架
 
@@ -139,18 +138,18 @@ assertServiceApi(ctx.serviceHost, { name: 'serviceHost', major: 1 })
 
 | 原模块 | 去向 |
 |---|---|
-| `server/relay.mjs` 的端口/锁/复用/静态/关闭 | `dsh-service-host` |
-| `server/router.mjs`、`routes/health.mjs`、`runtime/metrics.mjs` | `dsh-service-host` |
-| `server/mcp/handler.mjs`、`dispatch.mjs`、`validate.mjs` | `dsh-tool-host` |
-| `server/tools/kernel/{define,registry}.mjs` | `dsh-tool-host` |
-| `server/contract.mjs` 的报告结构 | `dsh-tool-host` |
+| `server/relay.mjs` 的端口/锁/复用/静态/关闭 | `@capyclaw/service-host` |
+| `server/router.mjs`、`routes/health.mjs`、`runtime/metrics.mjs` | `@capyclaw/service-host` |
+| `server/mcp/handler.mjs`、`dispatch.mjs`、`validate.mjs` | `@capyclaw/tool-host` |
+| `server/tools/kernel/{define,registry}.mjs` | `@capyclaw/tool-host` |
+| `server/contract.mjs` 的报告结构 | `@capyclaw/tool-host` |
 | `server/store/backends/file-backend.mjs`、`runtime/recovery.mjs` | `@capyclaw/state-service`（backend）/ `@capyclaw/document-workbench/session`（recover） |
 | `server/store/{doc,index,sanitize,lease,checkpoints}.mjs` | `@capyclaw/document-workbench/session` |
 | `server/routes/bridge.mjs`、`server/runtime/watch.mjs` | `@capyclaw/document-workbench/bridge` / `session` |
 | `core/ops/*` | `@capyclaw/document-workbench/ops` |
 | `src/editor/session.js`、`src/editor/screenshot.js` | `@capyclaw/document-workbench/client` / `screenshot` |
-| `server/routes/assets.mjs`、`lib/host.mjs` 的 assetStore | `dsh-asset-service` |
-| `server/routes/editor.mjs`、编辑器租约 | `dsh-editor-host` |
+| `server/routes/assets.mjs`、`lib/host.mjs` 的 assetStore | `@capyclaw/asset-service` |
+| `server/routes/editor.mjs`、编辑器租约 | `@capyclaw/editor-host` |
 | `core/*`、`server/tools/capabilities|domains`、`ppt-shim`、`bridge-client` | 保留（PPT 领域） |
 | `editor/ppt-full-app.js` | 保留（PPTist AGPL 编译产物，不能进 MIT 公共包） |
 

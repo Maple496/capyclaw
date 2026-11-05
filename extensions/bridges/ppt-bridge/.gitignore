@@ -1,8 +1,9 @@
 # 依赖
 node_modules/
 
-# 运行时单实例锁（插件运行/测试时生成）
-plugin/dsh-ppt-workbench/server/.relay-instance.lock
+# 运行时状态与单实例锁（插件运行/测试时生成；与 canvas-bridge 同规则）
+plugin/*/data/
+plugin/*/server/.relay-instance.lock
 
 # 构建输出（独立模式兜底目录）
 dist/

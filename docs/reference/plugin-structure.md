@@ -1,97 +1,74 @@
 # DSH 插件体系架构规范
 
-## 📁 目录结构（强制）
+## 📁 目录结构
 
 ```
 deepseekharness_dev/
-├── extensions/                          # 🆕 统一插件根目录
-│   ├── official/                        # 官方维护插件
-│   │   ├── port-sidebar/                # 端口侧边栏
-│   │   ├── document-viewer/             # 文档查看器
+├── extensions/                          # 插件根目录
+│   ├── official/                        # 官方维护插件（独立可发布包）
+│   │   ├── capyclaw-launchpad/
+│   │   ├── capyclaw-plugin-sync/
 │   │   └── ...
-│   ├── suites/                          # 插件套件（组合包）
-│   │   ├── ppt-suite/                   # PPT 工作台套件
-│   │   └── office-suite/                # 未来的 Office 套件
-│   ├── bridges/                         # 外部工具桥接
-│   │   ├── canvas-bridge/               # Canvas MCP 桥
-│   │   └── ppt-bridge/                  # PPT 编辑器桥
-│   └── experimental/                    # 实验性插件
-│       └── ...
+│   └── bridges/                         # 外部工具桥（构建工场，private）
+│       ├── ppt-bridge/                  # src/* → plugin/ 下 10 个生成包
+│       └── canvas-bridge/               # src/* → plugin/ 下 6 个生成包
 │
-├── packages/                            # 基础设施（不变）
-│   ├── @capyclaw/plugin-kit/                  # 插件开发 SDK
-│   ├── @capyclaw/suite-kit/                   # 套件打包工具
-│   ├── dsh-service-host/                # 服务托管
+├── packages/                            # 基础设施包
+│   ├── capyclaw-plugin-kit/             # 插件开发 SDK（@capyclaw/plugin-kit）
+│   ├── capyclaw-suite-kit/              # 组合标准件（@capyclaw/suite-kit，private）
+│   ├── capyclaw-service-host/           # 服务托管
 │   └── ...
 │
-├── tools/                               # 开发工具链
-│   ├── plugin-validator/                # 插件验证工具
-│   ├── plugin-generator/                # 插件脚手架生成器
-│   ├── plugin-release/                  # 发布、源索引与校验
-
+├── tools/                               # 开发工具链（目录名 capyclaw-plugin-*）
+│   ├── capyclaw-plugin-generator/       # 插件脚手架生成器
+│   ├── capyclaw-plugin-validator/       # 插件验证工具
+│   └── capyclaw-plugin-release/         # 发布、源索引与校验（private）
 │
-└── vendor/                              # 外来引入代码（flow-executor）
-
-## 废弃目录
-- ❌ `plugins/` → 迁移到 `extensions/`
-- ❌ `bridges/` → 迁移到 `extensions/bridges/`
-- ❌ `plugins/ppt文档/` → 迁移到 `research/vendor-libraries/`
+└── scripts/                             # 流水线脚本（validate-all / publish / registry 等）
 ```
+
+**命名约定（统一）**：发布包名 `@capyclaw/<base>`，目录名 = 包名去 scope（`capyclaw-<base>`）；
+私有构建工场（bridges、plugin-release）用 `@capyclaw/ppt-bridge`、`@capyclaw/canvas-bridge`
+等短目录名。已发布包的包名不改（保 npm 连续性）。
 
 ---
 
-## 🔒 插件规范（强制验证）
+## 🔒 插件规范（验证器强制）
 
 ### 1. 目录结构（必需）
 ```
 my-plugin/
 ├── package.json              # 必需：包含 dsh 字段
-├── lib/                      # 必需：主入口（host 端）
-│   └── index.mjs
-├── client/                   # 可选：客户端代码
-│   └── client.js
-├── test/                     # 必需：至少一个测试
-│   └── *.test.mjs
+├── lib/                      # 必需：主入口（host.mjs / index.mjs）
 ├── README.md                 # 必需：使用说明
-└── cordis.patch.yml          # 可选：Cordis 配置
+├── test/                     # 可选：测试（有 npm test 则发布前必跑）
+└── cordis.patch.yml          # bundle 插件必需（dsh.bundle.patch 指向）
 ```
 
 ### 2. package.json 必需字段
 ```json
 {
-  "name": "dsh-*",                       // 强制：必须 dsh- 前缀
-  "version": "x.y.z",                    // 强制：语义化版本
-  "description": "...",                  // 强制：清晰描述
-  "type": "module",                      // 强制：ESM
-  "main": "./lib/index.mjs",             // 强制：主入口
-  "exports": { ... },                    // 强制：明确导出
-  "dependencies": {
-    "@capyclaw/plugin-kit": "^x.y.z"           // 强制：必须依赖 plugin-kit
+  "name": "@capyclaw/*",                  // 作用域包名（历史 dsh-* 形态亦兼容）
+  "version": "x.y.z",
+  "description": "...",
+  "type": "module",                       // 强制：ESM
+  "main": "./lib/host.mjs",               // cordis 插件入口；纯库用 ./src/index.mjs
+  "engines": { "dsh": "^0.2.0-rc.2" },    // 发布闸要求
+  "publishConfig": { "access": "public" },// 作用域包发布必需
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "category": "ui|service|bridge|tool|skills",
+    "platform": "web|desktop|both"
   },
-  "dsh": {                               // 强制：DSH 元数据
-    "bundle": { ... },
-    "category": "ui|service|bridge|tool", // 强制：插件分类
-    "platform": "web|desktop|both"       // 强制：支持平台
-  },
-  "meta": {                              // 强制：用户可见元数据
-    "title": "...",
-    "description": "..."
-  },
-  "scripts": {
-    "test": "..."                        // 强制：测试脚本
-  }
+  "meta": { "title": "...", "description": "..." }
 }
 ```
 
-### 3. 基础设施依赖（分层，强制检查）
+### 3. 基础设施依赖（分层）
 
 **最小层（Tier 0）：纯客户端插件**
 ```json
-{
-  "dependencies": {
-    "@capyclaw/plugin-kit": "^0.2.0"  // 仅此，提供注册辅助和类型
-  }
-}
+{ "dependencies": { "@capyclaw/plugin-kit": "^0.2.0" } }
 ```
 
 **标准层（Tier 1）：需要服务端能力**
@@ -99,7 +76,7 @@ my-plugin/
 {
   "dependencies": {
     "@capyclaw/plugin-kit": "^0.2.0",
-    "dsh-service-host": "^0.1.0"  // 服务托管
+    "@capyclaw/service-host": "^0.1.0"
   }
 }
 ```
@@ -109,9 +86,9 @@ my-plugin/
 {
   "dependencies": {
     "@capyclaw/plugin-kit": "^0.2.0",
-    "dsh-service-host": "^0.1.0",
-    "dsh-tool-host": "^0.1.0",      // 工具集成
-    "dsh-asset-service": "^0.1.0"   // 资产管理
+    "@capyclaw/service-host": "^0.1.0",
+    "@capyclaw/tool-host": "^0.1.0",
+    "@capyclaw/asset-service": "^0.1.0"
   }
 }
 ```
@@ -120,13 +97,10 @@ my-plugin/
 ```json
 {
   "dependencies": {
-    "@capyclaw/suite-kit": "^0.1.0",
-    "my-plugin-a": "^1.0.0",
-    "my-plugin-b": "^1.0.0"
+    "@capyclaw/plugin-kit": "^0.2.0",
+    "my-plugin-a": "^1.0.0"
   },
-  "dsh": {
-    "suite": "./dsh-suite.json"
-  }
+  "dsh": { "suite": "./dsh-suite.json" }
 }
 ```
 
@@ -134,77 +108,31 @@ my-plugin/
 
 ## ⚙️ 验证规则（程序强制）
 
-### 自动验证检查项
+### 自动验证检查项（tools/capyclaw-plugin-validator）
 
-1. **目录结构验证**
-   - ✅ 必需文件存在：package.json, lib/, README.md, test/
-   - ✅ 命名规范：`dsh-*` 或 `@org/dsh-*`
+1. **目录结构**：必需文件 package.json / README.md / lib
+2. **package.json**：必需字段、`@capyclaw/plugin-kit` 依赖、
+   基础设施包版本在锁定范围内（INFRASTRUCTURE_VERSIONS）
+3. **代码质量**：ESM 模块格式；可加载（import 不报错），
+   导出符合约定（apply / name）
 
-2. **package.json 验证**
-   - ✅ 必需字段完整：name, version, main, dsh, meta
-   - ✅ 依赖检查：必须包含 `@capyclaw/plugin-kit`
-   - ✅ 版本一致性：基础设施包版本必须在锁定范围内
-
-3. **代码质量验证**
-   - ✅ ESM 模块格式
-   - ✅ 至少一个测试文件存在
-   - ✅ 测试可执行（npm test 不报错）
-
-4. **运行时验证**
-   - ✅ 插件可正常加载（import 不报错）
-   - ✅ 导出符合约定（提供 apply 或 name 字段）
+**测试是可选的但被鼓励**：有 `scripts.test` 的包在 `publish:execute` 时必跑测试
+（canvas-bridge 的 55 项测试是现役范例）。验证器不强制 test/ 目录。
 
 ### 验证时机
-- 开发时：`npm run validate` 手动验证
-- 提交前：Git pre-commit hook 自动验证
-- CI/CD：所有插件自动验证
-- 安装时：`dsh plugin install` 验证后才安装
+- 开发时：`npm run validate-plugin <路径>` / `npm run validate-all`
+- 发布前：`npm run release`（构建 → lint → 校验 → 打包 → registry 一致性，
+  详见 [PUBLISHING.md](../PUBLISHING.md)）
+- 本仓库不设 pre-commit hook 与 CI——发布闸即验证闸
 
 ---
 
 ## 🛠️ 开发工具
 
-### 1. 创建新插件
 ```bash
-npm run create-plugin official/my-plugin --tier 1
-# 生成标准骨架，自动配置依赖
+npm run create-plugin                    # 脚手架生成插件骨架
+npm run validate-plugin <path>           # 验证单个插件
+npm run validate-all                     # 验证全部插件
+npm run release                          # 一键发布准备流水线
+npm run publish:execute                  # 发布（先库后插件，默认 dry-run）
 ```
-
-### 2. 验证插件
-```bash
-npm run validate-plugin extensions/official/my-plugin
-# 输出：✅ 所有检查通过 或 ❌ 违规项清单
-```
-
-### 3. 测试插件
-```bash
-npm run validate-plugin -- extensions/official/my-plugin
-# 运行测试 + 集成验证
-```
-
-### 4. 发布插件（套件）
-```bash
-npm run publish-suite extensions/suites/my-suite
-# 自动锁定依赖版本、生成 composition.lock.json
-```
-
----
-
-## 📦 迁移计划
-
-### Phase 1: 目录重组（本次）
-- 创建 `extensions/`, `tools/`, `research/`
-- 迁移现有插件到新结构
-- 清理 `plugins/ppt文档/`
-
-### Phase 2: 强制验证（本次）
-- 实现 `plugin-validator` 工具
-- 所有插件必须通过验证才能使用
-
-### Phase 3: 脚手架与自动化
-- 实现 `plugin-generator`
-- 集成到开发流程
-
-### Phase 4: 文档与培训
-- 完整的插件开发指南
-- 示例插件库

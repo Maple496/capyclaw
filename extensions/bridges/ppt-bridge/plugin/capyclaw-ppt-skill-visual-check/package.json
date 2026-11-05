@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ppt-skill-visual-check",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "PPT skill：只读审计与按需截图，报告 pass/blocking；不改稿。",
   "type": "module",
   "main": "./lib/index.mjs",

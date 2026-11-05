@@ -28,9 +28,6 @@
     "publish:npm": "node scripts/publish-to-npm.mjs",
     "publish:execute": "node scripts/publish-to-npm.mjs --execute"
   },
-  "devDependencies": {
-    "@deepseek-ai/cordis": "^4.0.4"
-  },
   "workspaces": [
     "packages/*",
     "extensions/official/*",

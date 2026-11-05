@@ -27,52 +27,52 @@
       "sha256": "7f96e38d28c1389f1b2890aa2fcbc5c19caf70d7c9752171cebba29a14052980"
     },
     "@capyclaw/ppt-skill-api": {
-      "version": "2.2.1",
-      "apiVersion": null,
-      "path": "../capyclaw-ppt-skill-api",
-      "sha256": "e873e7497c542976ffdda62b12dceec8dd3a3ac6d4cc96498a486a62719ecb15"
-    },
-    "@capyclaw/ppt-skill-authoring": {
-      "version": "2.2.1",
-      "apiVersion": null,
-      "path": "../capyclaw-ppt-skill-authoring",
-      "sha256": "2f2e10dc7d37b1f5db0ac86c7e244285d386fc725917380075b53822e86014f7"
-    },
-    "@capyclaw/ppt-skill-design": {
-      "version": "2.2.1",
-      "apiVersion": null,
-      "path": "../capyclaw-ppt-skill-design",
-      "sha256": "58ee249e0c93f3efb5943faa9655491d21caa595610891d97f13b71c3f8c6bf4"
-    },
-    "@capyclaw/ppt-skill-editing": {
-      "version": "2.2.1",
-      "apiVersion": null,
-      "path": "../capyclaw-ppt-skill-editing",
-      "sha256": "40147be8508f2fbb9c38e24f12b0b231b446b93f3742d7eb7e64e9163be93230"
-    },
-    "@capyclaw/ppt-skill-narrative": {
       "version": "2.2.2",
       "apiVersion": null,
+      "path": "../capyclaw-ppt-skill-api",
+      "sha256": "060e62a0ef36f0334e613c3a9794f1cf9f5b21bb02eb39829c57102a528c93dc"
+    },
+    "@capyclaw/ppt-skill-authoring": {
+      "version": "2.2.2",
+      "apiVersion": null,
+      "path": "../capyclaw-ppt-skill-authoring",
+      "sha256": "98566fa933200c6903a59bc6b0955191b6f9ea5f66c4c945e9790aaa1bc2201e"
+    },
+    "@capyclaw/ppt-skill-design": {
+      "version": "2.2.2",
+      "apiVersion": null,
+      "path": "../capyclaw-ppt-skill-design",
+      "sha256": "7ff8944d1933f321e61f6fb480f3b29d74c7a91be89e928353e283477b98e4ef"
+    },
+    "@capyclaw/ppt-skill-editing": {
+      "version": "2.2.2",
+      "apiVersion": null,
+      "path": "../capyclaw-ppt-skill-editing",
+      "sha256": "0f622a69ea7ece3ce2e0f9c1e195ecf31362aad60c4d189f159dc21323b0426b"
+    },
+    "@capyclaw/ppt-skill-narrative": {
+      "version": "2.2.3",
+      "apiVersion": null,
       "path": "../capyclaw-ppt-skill-narrative",
-      "sha256": "c040e37be52de1901612d887671c04dfb313c5aff5da32cae6aab4adaf4886a2"
+      "sha256": "dca8e8e42071d045ed6442702969e064752a996dcb16430371ae55bc35b891ee"
     },
     "@capyclaw/ppt-skill-ppt": {
-      "version": "2.2.1",
+      "version": "2.2.2",
       "apiVersion": null,
       "path": "../capyclaw-ppt-skill-ppt",
-      "sha256": "43bf194cd9f33034323e1ab19514dd287b1488618f11d4a59471a59d33c85083"
+      "sha256": "f03bebe6b302908753e879cdc9dbdf650c37e92d86c6487f4ca39e825b9b5989"
     },
     "@capyclaw/ppt-skill-research": {
-      "version": "2.2.1",
+      "version": "2.2.2",
       "apiVersion": null,
       "path": "../capyclaw-ppt-skill-research",
-      "sha256": "edc16dd35728c30e08cc984e49041b917d21c7cd839bf9285dcc309aba44af34"
+      "sha256": "cdfed34644a2f7bca3ec0d38db63bd2f3797317d2f8eec683139b8435c8187f4"
     },
     "@capyclaw/ppt-skill-visual-check": {
-      "version": "2.2.1",
+      "version": "2.2.2",
       "apiVersion": null,
       "path": "../capyclaw-ppt-skill-visual-check",
-      "sha256": "34bc3550fa837ea539129616333b120dcc74e066d74bd05f7725a14040a7aa78"
+      "sha256": "08f159c64070efc6c8d59bded98976e8b483f61a8c2e8669700a35cfa3975d4b"
     },
     "@capyclaw/ppt-workbench": {
       "version": "2.4.4",
