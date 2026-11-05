@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/canvas-suite",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Canvas 文档工作台套件：workbench + 4 个独立 skill 包 + 公共基建插件，一键安装、锁定已验证版本。",
   "type": "module",
   "main": "./lib/index.mjs",
@@ -21,7 +21,7 @@
     "@capyclaw/tool-host": "^0.1.0",
     "@capyclaw/asset-service": "^0.1.0",
     "@capyclaw/editor-host": "^0.1.0",
-    "@capyclaw/service-broker": "^0.2.0",
+    "@capyclaw/service-broker": "^0.2.4",
     "@capyclaw/canvas-workbench": "^0.2.0",
     "@capyclaw/canvas-skill-canvas": "^0.2.0",
     "@capyclaw/canvas-skill-api": "^0.2.0",

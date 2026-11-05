@@ -1,7 +1,7 @@
 {
   "$schema": "../../../../../packages/capyclaw-suite-kit/suite.schema.json",
   "name": "capyclaw-ppt-suite",
-  "version": "2.4.8",
+  "version": "2.4.10",
   "title": "PPT 工作台套件",
   "description": "PPTist 运行时（独立端口服务）+ 8 个独立 skill 包 + 4 个公共基建插件 + 文档工作台框架 + 底层 kit + 服务中间件（broker）与技能服务；2026-11-01 起按服务解耦标准：relay 不再 insert 进 dsh 进程，由中间件按清单以独立进程拉起。",
   "components": [
@@ -203,7 +203,7 @@
     },
     "@capyclaw/service-broker": {
       "role": "runtime",
-      "version": "^0.2.1",
+      "version": "^0.2.4",
       "path": "../../../../../packages/capyclaw-service-broker",
       "provides": {
         "services": [

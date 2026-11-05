@@ -1,6 +1,6 @@
 {
   "suite": "capyclaw-browser-suite",
-  "suiteVersion": "0.1.0",
+  "suiteVersion": "0.1.2",
   "packages": {
     "@capyclaw/asset-service": {
       "version": "0.1.2",
@@ -39,10 +39,10 @@
       "sha256": "2247b5314820fda9a0ae40faf50fc6bcc5bd1877764c12ab528f1baab382ccc6"
     },
     "@capyclaw/service-broker": {
-      "version": "0.2.2",
+      "version": "0.2.4",
       "apiVersion": "1.0.0",
       "path": "../../../../../packages/capyclaw-service-broker",
-      "sha256": "9fcb1090f9b83d2607d20907d497d474a2966142d3ebbe0b5df73ec42a9b10ec"
+      "sha256": "a013d1e36eeed9a22d864ff56b2739281ab35eaad6c0eb71880f8f5462864c8b"
     },
     "@capyclaw/service-host": {
       "version": "0.1.2",

@@ -68,7 +68,7 @@
     {
       "id": "browser-suite",
       "name": "@capyclaw/browser-suite",
-      "version": "0.1.0",
+      "version": "0.1.2",
       "title": "浏览器操控工作台套件",
       "description": "一键安装浏览器操控运行时 + 3 个独立 skill 包 + 公共基建插件",
       "category": "service",
@@ -164,7 +164,7 @@
     {
       "id": "canvas-suite",
       "name": "@capyclaw/canvas-suite",
-      "version": "0.2.0",
+      "version": "0.2.2",
       "title": "Canvas 文档工作台套件",
       "description": "一键安装 Canvas 运行时 + 4 个独立 skill 包 + 公共基建插件",
       "category": "service",
@@ -436,7 +436,7 @@
     {
       "id": "ppt-suite",
       "name": "@capyclaw/ppt-suite",
-      "version": "2.4.8",
+      "version": "2.4.10",
       "title": "PPT 工作台套件",
       "description": "一键安装 PPTist 运行时 + 8 个独立 PPT skill 包 + 4 个公共基建插件",
       "category": "service",
@@ -484,7 +484,7 @@
     {
       "id": "service-broker",
       "name": "@capyclaw/service-broker",
-      "version": "0.2.2",
+      "version": "0.2.4",
       "title": "服务中间件",
       "description": "按清单把各服务作为独立进程拉起，守护、发现与控制端点；服务之间不互相带动",
       "category": "service",
@@ -551,6 +551,6 @@
     "discord": "https://discord.gg/capyclaw",
     "email": "support@capyclaw.dev"
   },
-  "generatedAt": "2026-11-05T11:16:48.090Z",
+  "generatedAt": "2026-11-05T12:59:40.673Z",
   "generatedBy": "scripts/gen-registry.mjs"
 }

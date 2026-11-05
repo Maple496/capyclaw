@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ppt-suite",
-  "version": "2.4.8",
+  "version": "2.4.10",
   "description": "PPT 工作台套件：workbench + 8 个独立 skill 包 + 4 个公共基建插件，一键安装、锁定已验证版本。",
   "type": "module",
   "main": "./lib/index.mjs",
@@ -21,7 +21,7 @@
     "@capyclaw/tool-host": "^0.1.0",
     "@capyclaw/asset-service": "^0.1.0",
     "@capyclaw/editor-host": "^0.1.0",
-    "@capyclaw/service-broker": "^0.2.0",
+    "@capyclaw/service-broker": "^0.2.4",
     "@capyclaw/skills-service": "^0.1.0",
     "@capyclaw/ppt-workbench": "^2.4.0",
     "@capyclaw/ppt-skill-api": "^2.2.0",

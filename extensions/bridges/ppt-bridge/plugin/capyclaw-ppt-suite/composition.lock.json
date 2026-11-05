@@ -1,6 +1,6 @@
 {
   "suite": "capyclaw-ppt-suite",
-  "suiteVersion": "2.4.8",
+  "suiteVersion": "2.4.10",
   "packages": {
     "@capyclaw/asset-service": {
       "version": "0.1.2",
@@ -81,10 +81,10 @@
       "sha256": "1da8b09d5379822b4bcaad2f6c23f798c589b337f7396776ffb4fbc88064edbe"
     },
     "@capyclaw/service-broker": {
-      "version": "0.2.2",
+      "version": "0.2.4",
       "apiVersion": "1.0.0",
       "path": "../../../../../packages/capyclaw-service-broker",
-      "sha256": "9fcb1090f9b83d2607d20907d497d474a2966142d3ebbe0b5df73ec42a9b10ec"
+      "sha256": "a013d1e36eeed9a22d864ff56b2739281ab35eaad6c0eb71880f8f5462864c8b"
     },
     "@capyclaw/service-host": {
       "version": "0.1.2",
