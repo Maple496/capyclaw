@@ -63,10 +63,10 @@
       "sha256": "43cb25faa795f4bd2a786ec4defc918b785c9a7a1e8e474bbece1c7c75149c68"
     },
     "@capyclaw/ppt-skill-research": {
-      "version": "2.2.3",
+      "version": "2.2.4",
       "apiVersion": null,
       "path": "../capyclaw-ppt-skill-research",
-      "sha256": "02327fa2ee3eb2fc7abcf315222a0ec8f9511040c3b8bb621f14f4c514b2b862"
+      "sha256": "3f31c0c9bda860570307690596c1b4f52f941a83f78ac3f1ad5f92389843e45e"
     },
     "@capyclaw/ppt-skill-visual-check": {
       "version": "2.2.3",

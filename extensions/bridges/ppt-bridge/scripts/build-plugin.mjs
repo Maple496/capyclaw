@@ -49,7 +49,7 @@ const SKILL_PACKAGES = [
   { slug: 'authoring', skill: 'pptist-authoring', name: '@capyclaw/ppt-skill-authoring', dir: 'capyclaw-ppt-skill-authoring', version: '2.2.3', title: 'PPT 成稿', description: 'deck_brief → clean 简洁版式成稿。' },
   { slug: 'editing', skill: 'pptist-editing', name: '@capyclaw/ppt-skill-editing', dir: 'capyclaw-ppt-skill-editing', version: '2.2.3', title: 'PPT 纯执行', description: '指哪打哪的修改执行器：每步落盘、不审美、不审计、不回头验证。' },
   { slug: 'visual-check', skill: 'pptist-visual-check', name: '@capyclaw/ppt-skill-visual-check', dir: 'capyclaw-ppt-skill-visual-check', version: '2.2.3', title: 'PPT 审计', description: '只读审计与按需截图，报告 pass/blocking；不改稿。' },
-  { slug: 'research', skill: 'pptist-research', name: '@capyclaw/ppt-skill-research', dir: 'capyclaw-ppt-skill-research', version: '2.2.3', title: 'PPT 研究', description: '外部资料、数据、配图研究，产出分析卡。' },
+  { slug: 'research', skill: 'pptist-research', name: '@capyclaw/ppt-skill-research', dir: 'capyclaw-ppt-skill-research', version: '2.2.4', title: 'PPT 研究', description: '外部资料、数据、配图研究，产出分析卡。' },
 ]
 const ASSET = resolve(process.env.PPT_ASSET || join(ROOT, 'assets', 'ppt-full-app.js'))
 const CHECK_ONLY = process.argv.includes('--check')
