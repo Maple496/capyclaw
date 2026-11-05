@@ -4,6 +4,7 @@ const rows = []
 const fixed = {
   'packages/capyclaw-plugin-kit': 'libs',
   'packages/capyclaw-document-workbench': 'libs',
+  'packages/capyclaw-host-shell': 'libs',
   'extensions/bridges/ppt-bridge/capyclaw-skills-service': 'libs',
   'packages/capyclaw-service-host': 'infra',
   'packages/capyclaw-tool-host': 'infra',
@@ -67,5 +68,19 @@ for (const g of order) {
   for (const r of rs) out += `| [\`${r.name}\`](https://www.npmjs.com/package/${r.name}) | ${r.ver} | ${r.desc || '—'} |\n`
 }
 
-fs.writeFileSync('npm-table.md', out.trimEnd() + '\n')
+const table = out.trimEnd() + '\n'
+fs.writeFileSync('npm-table.md', table)
+
+/* README 内嵌同款表格块（npm-table-start/end 标记）一并刷新，不再双份手工同步 */
+{
+  const file = 'README.md'
+  const readme = fs.readFileSync(file, 'utf8')
+  const start = readme.indexOf('<!-- npm-table-start')
+  const end = readme.indexOf('<!-- npm-table-end -->')
+  if (start < 0 || end < 0 || end < start) throw new Error(`${file} 缺少 npm-table 标记块`)
+  const startLineEnd = readme.indexOf('\n', start) + 1
+  const next = readme.slice(0, startLineEnd) + '\n\n' + table.trim() + '\n' + readme.slice(end)
+  if (next !== readme) fs.writeFileSync(file, next)
+}
+
 console.log(`rows: ${rows.length}`)

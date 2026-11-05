@@ -1,0 +1,11 @@
+{
+  "$schema": "../../tools/product-packager/runtime.schema.json",
+  "nodejs": {
+    "version": "18.20.0",
+    "platform": "win32",
+    "arch": "x64",
+    "source": "https://nodejs.org/dist/v18.20.0/node-v18.20.0-win-x64.zip",
+    "sha256": "5da5e201155691e0d8da37869a0275c374675bc6b5f836c3935e6a1a8a1c4f49",
+    "note": "Official Node.js Windows x64 binary distribution"
+  }
+}

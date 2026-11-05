@@ -1,0 +1,57 @@
+{
+  "$schema": "../../tools/product-packager/product.schema.json",
+  "name": "dsh-desktop",
+  "title": "DSH 桌面",
+  "version": "0.1.0",
+  "description": "独立 DSH + 启动程序管理器：base dsh 里选择 launcher（如 PPT 工作台），每个 launcher 是一套独立 domain runtime。",
+  "target": "windows",
+  "nodeRuntime": "./runtime-manifest.json",
+  "base": {
+    "profile": "base",
+    "home": "data/base/dsh-home",
+    "stateDir": "data/base/state",
+    "workspace": "data/base/workspace",
+    "ports": {
+      "proxy": "auto",
+      "upstream": "auto",
+      "broker": "auto",
+      "launchpad": "auto"
+    },
+    "bundles": [
+      "@deepseek-ai/dsh-base",
+      "@deepseek-ai/dsh-web-app",
+      {
+        "name": "dsh-launchpad",
+        "path": "extensions/official/dsh-launchpad"
+      }
+    ],
+    "dependencies": {
+      "dsh-plugin-kit": "packages/dsh-plugin-kit"
+    }
+  },
+  "infra": [
+    "packages/dsh-service-broker",
+    "packages/dsh-workspace-service",
+    "packages/dsh-state-service",
+    "packages/dsh-service-host",
+    "packages/dsh-tool-host",
+    "packages/dsh-asset-service",
+    "packages/dsh-editor-host",
+    "packages/dsh-document-workbench",
+    "packages/dsh-plugin-kit"
+  ],
+  "launchers": [
+    {
+      "id": "ppt",
+      "title": "PPT 工作台",
+      "version": "0.1.0",
+      "description": "PPTist 编辑器 + ppt_* MCP 工具 + 8 个 PPT skill；独立 runtime，不占 base 进程。",
+      "domain": "extensions/bridges/ppt-bridge/domains/ppt",
+      "runtimeId": "rt-ppt",
+      "ports": {
+        "proxy": "auto",
+        "content": "auto"
+      }
+    }
+  ]
+}

@@ -128,6 +128,7 @@ npm run publish:execute      # 确认无误后执行
 | 包 | 版本 | 说明 |
 |---|---|---|
 | [`@capyclaw/document-workbench`](https://www.npmjs.com/package/@capyclaw/document-workbench) | 0.2.0 | 通用文档工作台框架：版本化文档会话、命令注册、桥路由、浏览器编辑器客户端与截图协 |
+| [`@capyclaw/host-shell`](https://www.npmjs.com/package/@capyclaw/host-shell) | 0.1.0 | DSH 宿主壳标准件：零登录 auth-proxy、安全启动 start-saf |
 | [`@capyclaw/plugin-kit`](https://www.npmjs.com/package/@capyclaw/plugin-kit) | 0.2.2 | DSH 插件基础设施标准件：HTTP/MCP、单实例锁、参数校验、技能 prov |
 | [`@capyclaw/skills-service`](https://www.npmjs.com/package/@capyclaw/skills-service) | 0.1.4 | DSH 独立技能服务：聚合 @capyclaw/ppt-skill-* 的 SK |
 
@@ -137,7 +138,7 @@ npm run publish:execute      # 确认无误后执行
 |---|---|---|
 | [`@capyclaw/asset-service`](https://www.npmjs.com/package/@capyclaw/asset-service) | 0.1.2 | DSH 公共资产插件：sha256 对象仓库、/assets 路由、base64 |
 | [`@capyclaw/editor-host`](https://www.npmjs.com/package/@capyclaw/editor-host) | 0.1.2 | DSH 公共编辑器宿主插件：静态托管、租约仲裁、心跳与连接状态，向插件提供 ct |
-| [`@capyclaw/service-broker`](https://www.npmjs.com/package/@capyclaw/service-broker) | 0.2.2 | DSH 服务中间件（唯一进程内插件）：按清单/结构化命令把各服务作为独立进程拉起 |
+| [`@capyclaw/service-broker`](https://www.npmjs.com/package/@capyclaw/service-broker) | 0.2.3 | DSH 服务中间件（唯一进程内插件）：按清单/结构化命令把各服务作为独立进程拉起 |
 | [`@capyclaw/service-host`](https://www.npmjs.com/package/@capyclaw/service-host) | 0.1.2 | DSH 公共服务宿主插件：统一 HTTP 路由、健康检查、指标、单实例锁、端口复 |
 | [`@capyclaw/tool-host`](https://www.npmjs.com/package/@capyclaw/tool-host) | 0.1.2 | DSH 公共工具面插件：能力 DSL、工具注册表、参数校验、契约报告、MCP 协 |
 
@@ -172,7 +173,7 @@ npm run publish:execute      # 确认无误后执行
 | [`@capyclaw/ppt-skill-ppt`](https://www.npmjs.com/package/@capyclaw/ppt-skill-ppt) | 2.2.3 | PPT skill：PPT 总入口：按意图路由到执行、成稿、审美、审计、研究技能 |
 | [`@capyclaw/ppt-skill-research`](https://www.npmjs.com/package/@capyclaw/ppt-skill-research) | 2.2.4 | PPT skill：外部资料、数据、配图研究，产出分析卡 |
 | [`@capyclaw/ppt-skill-visual-check`](https://www.npmjs.com/package/@capyclaw/ppt-skill-visual-check) | 2.2.3 | PPT skill：只读审计与按需截图，报告 pass/blocking |
-| [`@capyclaw/ppt-suite`](https://www.npmjs.com/package/@capyclaw/ppt-suite) | 2.4.8 | PPT 工作台套件：workbench + 8 个独立 skill 包 + 4  |
+| [`@capyclaw/ppt-suite`](https://www.npmjs.com/package/@capyclaw/ppt-suite) | 2.4.9 | PPT 工作台套件：workbench + 8 个独立 skill 包 + 4  |
 | [`@capyclaw/ppt-workbench`](https://www.npmjs.com/package/@capyclaw/ppt-workbench) | 2.4.5 | PPT 工作台运行时：27 个 ppt_* MCP 工具（导入/导出 PPTX  |
 
 ### Canvas 桥(extensions/bridges/canvas-bridge/)
@@ -183,7 +184,7 @@ npm run publish:execute      # 确认无误后执行
 | [`@capyclaw/canvas-skill-authoring`](https://www.npmjs.com/package/@capyclaw/canvas-skill-authoring) | 0.2.0 | Canvas skill：结构设计 → 块级写作 → 一次成稿 → 精修 |
 | [`@capyclaw/canvas-skill-canvas`](https://www.npmjs.com/package/@capyclaw/canvas-skill-canvas) | 0.2.0 | Canvas skill：Canvas 总入口：按意图路由到成稿、执行、API  |
 | [`@capyclaw/canvas-skill-editing`](https://www.npmjs.com/package/@capyclaw/canvas-skill-editing) | 0.2.0 | Canvas skill：指哪打哪的修改执行器：每步落盘、不审美、不审计、不回头 |
-| [`@capyclaw/canvas-suite`](https://www.npmjs.com/package/@capyclaw/canvas-suite) | 0.2.0 | Canvas 文档工作台套件：workbench + 4 个独立 skill 包 |
+| [`@capyclaw/canvas-suite`](https://www.npmjs.com/package/@capyclaw/canvas-suite) | 0.2.1 | Canvas 文档工作台套件：workbench + 4 个独立 skill 包 |
 | [`@capyclaw/canvas-workbench`](https://www.npmjs.com/package/@capyclaw/canvas-workbench) | 0.2.0 | Canvas 文档工作台运行时：22 个 canvas_* MCP 工具（块级写 |
 
 ### Browser 桥(extensions/bridges/browser-bridge/)
@@ -193,7 +194,7 @@ npm run publish:execute      # 确认无误后执行
 | [`@capyclaw/browser-skill-api`](https://www.npmjs.com/package/@capyclaw/browser-skill-api) | 0.1.0 | Browser skill：browser_* 工具契约、ref 快照语义、登录 |
 | [`@capyclaw/browser-skill-browser`](https://www.npmjs.com/package/@capyclaw/browser-skill-browser) | 0.1.0 | Browser skill：浏览器操控总入口：按意图路由到实操、API 手册技能 |
 | [`@capyclaw/browser-skill-ops`](https://www.npmjs.com/package/@capyclaw/browser-skill-ops) | 0.1.0 | Browser skill：快照→ref→动作→验证的互联网任务工作流 |
-| [`@capyclaw/browser-suite`](https://www.npmjs.com/package/@capyclaw/browser-suite) | 0.1.0 | 浏览器操控工作台套件：workbench + 3 个独立 skill 包 + 公 |
+| [`@capyclaw/browser-suite`](https://www.npmjs.com/package/@capyclaw/browser-suite) | 0.1.1 | 浏览器操控工作台套件：workbench + 3 个独立 skill 包 + 公 |
 | [`@capyclaw/browser-workbench`](https://www.npmjs.com/package/@capyclaw/browser-workbench) | 0.1.0 | 浏览器操控工作台运行时：15 个 browser_* MCP 工具（导航/ref |
 <!-- npm-table-end -->
 

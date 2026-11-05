@@ -41,8 +41,8 @@ node scripts/publish-to-npm.mjs --only @capyclaw/launchpad   # 单个包
 统一发布脚本覆盖**全部对外包**：
 
 - **支撑库**（显式清单，先发）：`@capyclaw/plugin-kit`、`@capyclaw/document-workbench`、
-  `@capyclaw/skills-service` —— 它们无 `dsh.bundle`、进不了插件闸，走库发布闸
-  （private / publishConfig.access / license / link 依赖检查）。
+  `@capyclaw/host-shell`、`@capyclaw/skills-service` —— 它们无 `dsh.bundle`、进不了插件闸，
+  走库发布闸（private / publishConfig.access / license / link 依赖检查）。
 - **插件**（`discoverPlugins()` 自动发现，后发）：结构校验 + 插件发布闸。
 
 顺序固定「先库后插件」：`@capyclaw/plugin-kit` 必须先上 registry，插件发布时依赖才可解析。

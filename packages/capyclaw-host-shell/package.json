@@ -1,0 +1,54 @@
+{
+  "name": "@capyclaw/host-shell",
+  "version": "0.1.0",
+  "description": "DSH 宿主壳标准件：零登录 auth-proxy、安全启动 start-safe、单实例锁、前台运行守卫与精确进程管理——与 @deepseek-ai/dsh 同装即得可跑的宿主。",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./foreground-guard": "./src/foreground-guard.mjs",
+    "./single-instance": "./src/single-instance.mjs",
+    "./process-manager": "./src/process-manager.mjs",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "dsh-host": "./bin/dsh-host.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "templates/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh": "^0.2.0-rc.2"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh": {
+      "optional": true
+    }
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "packages/capyclaw-host-shell"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "capyclaw",
+    "host-shell",
+    "auth-proxy"
+  ],
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/packages/capyclaw-host-shell#readme"
+}

@@ -16,6 +16,7 @@ export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 export const SUPPORT_LIBS = [
   'packages/capyclaw-plugin-kit',
   'packages/capyclaw-document-workbench',
+  'packages/capyclaw-host-shell',
   'extensions/bridges/ppt-bridge/capyclaw-skills-service',
 ]
 
