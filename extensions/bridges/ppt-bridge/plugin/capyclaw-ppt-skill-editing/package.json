@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ppt-skill-editing",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "PPT skill：指哪打哪的修改执行器：每步落盘、不审美、不审计、不回头验证。",
   "type": "module",
   "main": "./lib/index.mjs",

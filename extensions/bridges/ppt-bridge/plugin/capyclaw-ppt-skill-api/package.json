@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ppt-skill-api",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "PPT skill：PPTist 工具契约、参数、状态、撤销。",
   "type": "module",
   "main": "./lib/index.mjs",

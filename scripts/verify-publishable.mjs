@@ -38,6 +38,12 @@ function run(cmd, cmdArgs, opts = {}) {
   })
 }
 
+/** npm 直调（node npm-cli.js，不走 shell）：含空格的临时/用户目录不会被拆词。 */
+const NPM_CLI = path.join(path.dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js')
+const npmRun = (args, opts = {}) => (fs.existsSync(NPM_CLI)
+  ? spawnSync(process.execPath, [NPM_CLI, ...args], { encoding: 'utf8', stdio: 'pipe', ...opts })
+  : run('npm', args, opts))
+
 function pkgOf(dir) {
   return JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'))
 }
@@ -85,7 +91,7 @@ async function checkOne(dir, localDirs) {
   if (problems.length) return { label, ok: false, problems }
 
   // 1) dry-run 产物清单
-  const dry = run('npm', ['pack', '--dry-run', '--json'], { cwd: dir })
+  const dry = npmRun(['pack', '--dry-run', '--json'], { cwd: dir })
   if (dry.status !== 0) {
     return { label, ok: false, problems: [`npm pack --dry-run 失败: ${(dry.stderr || '').trim().slice(0, 300)}`] }
   }
@@ -111,7 +117,7 @@ async function checkOne(dir, localDirs) {
 
   // 2) 真正打 tarball，解包扫内容
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'verify-pub-'))
-  const pack = run('npm', ['pack', '--pack-destination', tmp], { cwd: dir })
+  const pack = npmRun(['pack', '--pack-destination', tmp], { cwd: dir })
   if (pack.status !== 0) {
     problems.push(`npm pack 失败: ${(pack.stderr || '').trim().slice(0, 300)}`)
     return { label, ok: false, problems }
@@ -163,7 +169,7 @@ async function checkOne(dir, localDirs) {
     }
   }
   for (const depName of closure) {
-    const p = run('npm', ['pack', '--pack-destination', tmp], { cwd: localDirs.get(depName) })
+    const p = npmRun(['pack', '--pack-destination', tmp], { cwd: localDirs.get(depName) })
     if (p.status === 0) {
       installArgs.push(path.join(tmp, String(p.stdout).trim().split(/\r?\n/).pop()))
     } else {
@@ -171,12 +177,12 @@ async function checkOne(dir, localDirs) {
     }
   }
   installArgs.push(tgz)
-  const install = run('npm', installArgs, { cwd: installDir })
+  const install = npmRun(installArgs, { cwd: installDir })
   if (install.status !== 0) {
     const msg = `${install.stderr || ''}${install.stdout || ''}`
     problems.push(`npm install 失败（依赖不可解析？）: ${msg.trim().split(/\r?\n/).slice(-6).join(' | ').slice(0, 600)}`)
   } else {
-    const ls = run('npm', ['ls', '--all', '--depth=0'], { cwd: installDir })
+    const ls = npmRun(['ls', '--all', '--depth=0'], { cwd: installDir })
     if (ls.status !== 0) problems.push(`npm ls 报告依赖问题: ${(ls.stdout || ls.stderr || '').trim().slice(0, 400)}`)
   }
 

@@ -18,6 +18,8 @@
  *   node scripts/publish-to-npm.mjs [--dry-run|--execute] [--skip-tests] [--only <name>] [--tag <dist-tag>]
  */
 import { spawnSync } from 'node:child_process'
+import crypto from 'node:crypto'
+import os from 'node:os'
 import path from 'node:path'
 import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -56,14 +58,87 @@ function run(cmd, cmdArgs, options = {}) {
   })
 }
 
+/** npm 直调（node npm-cli.js，不走 shell）：含空格的临时/用户目录不会被拆词。 */
+const NPM_CLI = path.join(path.dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js')
+const npmRun = (args, options = {}) => (fs.existsSync(NPM_CLI)
+  ? spawnSync(process.execPath, [NPM_CLI, ...args], { encoding: 'utf8', stdio: 'pipe', ...options })
+  : run('npm', args, options))
+
 function pkgOf(dir) {
   return JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'))
 }
 
 function alreadyPublished(name, version) {
-  const r = run('npm', ['view', `${name}@${version}`, 'version'])
+  const r = npmRun(['view', `${name}@${version}`, 'version'])
   if (r.status !== 0) return false
   return String(r.stdout).trim() === version
+}
+
+/** registry 上已发布 tarball 的 sha1（拿不到返回 null，网络闪断降级为警告）。 */
+function npmShasumOf(name, version) {
+  const r = npmRun(['view', `${name}@${version}`, 'dist.shasum'])
+  if (r.status !== 0) return null
+  return String(r.stdout).trim() || null
+}
+
+/** 本地 npm pack 产物的 sha1（npm pack 确定性：同内容同哈希，可与 dist.shasum 对比）。
+ *  结果按目录缓存，避免同一次运行重复 pack。 */
+const localShasumCache = new Map()
+function localShasumOf(dir) {
+  if (localShasumCache.has(dir)) return localShasumCache.get(dir)
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'pub-sha-'))
+  try {
+    const pack = npmRun(['pack', '--pack-destination', tmp], { cwd: dir })
+    if (pack.status !== 0) return null
+    const tgz = path.join(tmp, String(pack.stdout).trim().split(/\r?\n/).pop())
+    const sha = crypto.createHash('sha1').update(fs.readFileSync(tgz)).digest('hex')
+    localShasumCache.set(dir, sha)
+    return sha
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true })
+  }
+}
+
+/** 本仓全部可发布包：npm 名 → { pkg, dir }（支撑库 + 插件）。 */
+function localPackageMap() {
+  const map = new Map()
+  const dirs = [
+    ...SUPPORT_LIBS.map((rel) => path.join(ROOT, rel)),
+    ...discoverPlugins(),
+  ]
+  for (const dir of dirs) map.set(pkgOf(dir).name, { pkg: pkgOf(dir), dir })
+  return map
+}
+
+/** 发布顺序闸：待发包的 @capyclaw 依赖闭包，每一项必须满足其一——
+ *  ① registry 上已有满足 range 的版本（npm view name@range 可解析）；
+ *  ② 在本次发布批次里（同批上 registry）。
+ *  拦截「只发 canvas-suite 不发 document-workbench」这类顺序手滑：
+ *  发布成功 ≠ 用户能装上（依赖 404/ETARGET 时 npm install 直接失败）。
+ *  返回 { errors, warnings }。 */
+function orderGate(pkg, localMap, batch) {
+  const errors = []
+  const warnings = []
+  const seen = new Set([pkg.name])
+  const queue = [pkg]
+  while (queue.length) {
+    const cur = queue.shift()
+    const deps = { ...(cur.dependencies || {}), ...(cur.peerDependencies || {}), ...(cur.optionalDependencies || {}) }
+    for (const [name, range] of Object.entries(deps)) {
+      if (!name.startsWith('@capyclaw/') || seen.has(name)) continue
+      seen.add(name)
+      const local = localMap.get(name)
+      if (local) queue.push(local.pkg) /* 闭包继续沿本仓包展开 */
+      const resolvable = npmRun(['view', `${name}@${range}`, 'version'])
+      if (resolvable.status === 0) continue /* ① registry 已可解析 */
+      if (batch.has(name)) {
+        warnings.push(`${name}@${range} registry 暂不可解析，依赖同批发布（确认批次包含它）`)
+      } else {
+        errors.push(`${name}@${range} 在 registry 上不可解析，且不在本次发布批次——先发布 ${name}（或加入批次），否则用户安装本包会 404/ETARGET`)
+      }
+    }
+  }
+  return { errors, warnings }
 }
 
 /** 库发布闸：插件闸管不了的分发必需项。返回错误串数组。 */
@@ -88,7 +163,7 @@ function libraryGateErrors(pkg) {
 }
 
 /** 单包发布流程（插件与库共用）。返回结果记录。 */
-async function publishOne(dir, { kind }) {
+async function publishOne(dir, { kind, localMap, batch }) {
   const pkg = pkgOf(dir)
   const label = `${pkg.name}@${pkg.version}`
   if (only && pkg.name !== only) return null
@@ -110,12 +185,31 @@ async function publishOne(dir, { kind }) {
   }
 
   if (alreadyPublished(pkg.name, pkg.version)) {
+    /* 同版本漂移闸：npm pack 确定性 ⇒ 本地 sha1 == registry dist.shasum 当且仅当内容一致。
+     * 不一致 = 同版本号发了不同内容（npm 禁止重发同版本），必须 bump 才能发布。 */
+    const remoteSha = npmShasumOf(pkg.name, pkg.version)
+    const localSha = remoteSha ? localShasumOf(dir) : null
+    if (remoteSha && localSha && remoteSha !== localSha) {
+      console.log(`✗ ${label} — 同版本内容漂移：registry ${remoteSha.slice(0, 8)} ≠ 本地 ${localSha.slice(0, 8)}`)
+      console.log('    npm 不允许同版本重发，请 bump 版本后再发布')
+      return { label, status: 'version-drift', detail: `shasum ${localSha} != ${remoteSha}` }
+    }
+    if (!remoteSha) console.log(`! ${label} — 无法获取 registry shasum（网络？），跳过漂移对比`)
     console.log(`· ${label} — registry 上已存在，跳过`)
     return { label, status: 'skipped-exists' }
   }
 
+  /* 发布顺序闸（发布成功 ≠ 用户能装上）：依赖闭包须 registry 可解析或同批发布。 */
+  const order = orderGate(pkg, localMap, batch)
+  if (order.errors.length) {
+    console.log(`✗ ${label} — 发布顺序闸未过（发布后用户 npm install 会失败）`)
+    for (const item of order.errors) console.log(`    - ${item}`)
+    return { label, status: 'order-blocked', detail: order.errors }
+  }
+  for (const w of order.warnings) console.log(`! ${label} — ${w}`)
+
   if (!skipTests && pkg.scripts?.test) {
-    const t = run('npm', ['test'], { cwd: dir })
+    const t = npmRun(['test'], { cwd: dir })
     if (t.status !== 0) {
       console.log(`✗ ${label} — npm test 失败，跳过发布`)
       return { label, status: 'test-failed', detail: (t.stdout || '') + (t.stderr || '') }
@@ -128,7 +222,7 @@ async function publishOne(dir, { kind }) {
   }
 
   const access = pkg.publishConfig?.access || 'public'
-  const pub = run('npm', ['publish', '--access', access, '--tag', tag], { cwd: dir })
+  const pub = npmRun(['publish', '--access', access, '--tag', tag], { cwd: dir })
   if (pub.status !== 0) {
     console.log(`✗ ${label} — npm publish 失败`)
     console.log(String(pub.stderr || pub.stdout || '').trim().slice(0, 500))
@@ -155,10 +249,20 @@ async function main() {
   console.log(`模式: ${execute ? '执行发布' : 'DRY RUN（加 --execute 才会真正发布）'}${tag !== 'latest' ? `，dist-tag=${tag}` : ''}`)
   console.log(`候选: ${libDirs.length} 个支撑库 + ${pluginDirs.length} 个插件\n`)
 
+  /* 本次发布批次 = 候选中 registry 上尚不存在同名版本的包（顺序闸据此放行同批依赖）。 */
+  const localMap = localPackageMap()
+  const batch = new Set(
+    [...libDirs, ...pluginDirs]
+      .map((dir) => pkgOf(dir))
+      .filter((pkg) => !only || pkg.name === only)
+      .filter((pkg) => !alreadyPublished(pkg.name, pkg.version))
+      .map((pkg) => pkg.name),
+  )
+
   const results = []
   // 先库后插件：plugin-kit 等支撑库必须先上 registry，插件发布时依赖才可解析
-  for (const dir of libDirs) results.push(await publishOne(dir, { kind: 'lib' }))
-  for (const dir of pluginDirs) results.push(await publishOne(dir, { kind: 'plugin' }))
+  for (const dir of libDirs) results.push(await publishOne(dir, { kind: 'lib', localMap, batch }))
+  for (const dir of pluginDirs) results.push(await publishOne(dir, { kind: 'plugin', localMap, batch }))
 
   const done = results.filter(Boolean)
   const summary = done.reduce((acc, item) => {
@@ -167,7 +271,7 @@ async function main() {
   }, {})
   console.log('\n汇总:', JSON.stringify(summary))
 
-  const failed = done.filter((r) => ['gate-failed', 'invalid', 'test-failed', 'publish-failed'].includes(r.status))
+  const failed = done.filter((r) => ['gate-failed', 'invalid', 'test-failed', 'publish-failed', 'version-drift', 'order-blocked'].includes(r.status))
   if (failed.length) {
     console.error(`\n${failed.length} 个包未发布：${failed.map((f) => f.label).join(', ')}`)
     process.exitCode = 1

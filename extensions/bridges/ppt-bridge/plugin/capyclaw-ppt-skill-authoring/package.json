@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ppt-skill-authoring",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "PPT skill：deck_brief → clean 简洁版式成稿。",
   "type": "module",
   "main": "./lib/index.mjs",

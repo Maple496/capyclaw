@@ -39,16 +39,17 @@ const WORKBENCH = join(PLUGIN_ROOT, 'capyclaw-ppt-workbench')
 const SUITE_PKG = join(PLUGIN_ROOT, 'capyclaw-ppt-suite')
 /* skill 包：npm 发布名是 @capyclaw/ppt-skill-*（与 dsh-suite.json rows 一致），
  * 磁盘目录名 = 包名去 scope（capyclaw-ppt-skill-*，与 skills-service 的 dev 扫描一致）。
- * version：narrative 的 2.2.1 已被 npm 占用，跳到 2.2.2；其余首发补丁版 2.2.1。 */
+ * version：同版本内容变化必须 bump（npm 禁止同版本重发，drift 闸在 publish dry-run 拦截）；
+ * narrative 的 2.2.1/2.2.2/2.2.3 均已被 npm 占用，当前 2.2.4。 */
 const SKILL_PACKAGES = [
-  { slug: 'ppt', skill: 'ppt', name: '@capyclaw/ppt-skill-ppt', dir: 'capyclaw-ppt-skill-ppt', version: '2.2.2', title: 'PPT 路由', description: 'PPT 总入口：按意图路由到执行、成稿、审美、审计、研究技能。' },
-  { slug: 'narrative', skill: 'pptmaster-narrative', name: '@capyclaw/ppt-skill-narrative', dir: 'capyclaw-ppt-skill-narrative', version: '2.2.3', title: 'PPT 叙事', description: 'SCQA、金字塔、一页一观点、deck_brief。' },
-  { slug: 'design', skill: 'pptmaster-design', name: '@capyclaw/ppt-skill-design', dir: 'capyclaw-ppt-skill-design', version: '2.2.2', title: 'PPT 审美', description: 'design token、版式、反 AI slop；只做视觉决策。' },
-  { slug: 'api', skill: 'pptist-api', name: '@capyclaw/ppt-skill-api', dir: 'capyclaw-ppt-skill-api', version: '2.2.2', title: 'PPT 工具手册', description: 'PPTist 工具契约、参数、状态、撤销。' },
-  { slug: 'authoring', skill: 'pptist-authoring', name: '@capyclaw/ppt-skill-authoring', dir: 'capyclaw-ppt-skill-authoring', version: '2.2.2', title: 'PPT 成稿', description: 'deck_brief → clean 简洁版式成稿。' },
-  { slug: 'editing', skill: 'pptist-editing', name: '@capyclaw/ppt-skill-editing', dir: 'capyclaw-ppt-skill-editing', version: '2.2.2', title: 'PPT 纯执行', description: '指哪打哪的修改执行器：每步落盘、不审美、不审计、不回头验证。' },
-  { slug: 'visual-check', skill: 'pptist-visual-check', name: '@capyclaw/ppt-skill-visual-check', dir: 'capyclaw-ppt-skill-visual-check', version: '2.2.2', title: 'PPT 审计', description: '只读审计与按需截图，报告 pass/blocking；不改稿。' },
-  { slug: 'research', skill: 'pptist-research', name: '@capyclaw/ppt-skill-research', dir: 'capyclaw-ppt-skill-research', version: '2.2.2', title: 'PPT 研究', description: '外部资料、数据、配图研究，产出分析卡。' },
+  { slug: 'ppt', skill: 'ppt', name: '@capyclaw/ppt-skill-ppt', dir: 'capyclaw-ppt-skill-ppt', version: '2.2.3', title: 'PPT 路由', description: 'PPT 总入口：按意图路由到执行、成稿、审美、审计、研究技能。' },
+  { slug: 'narrative', skill: 'pptmaster-narrative', name: '@capyclaw/ppt-skill-narrative', dir: 'capyclaw-ppt-skill-narrative', version: '2.2.4', title: 'PPT 叙事', description: 'SCQA、金字塔、一页一观点、deck_brief。' },
+  { slug: 'design', skill: 'pptmaster-design', name: '@capyclaw/ppt-skill-design', dir: 'capyclaw-ppt-skill-design', version: '2.2.3', title: 'PPT 审美', description: 'design token、版式、反 AI slop；只做视觉决策。' },
+  { slug: 'api', skill: 'pptist-api', name: '@capyclaw/ppt-skill-api', dir: 'capyclaw-ppt-skill-api', version: '2.2.3', title: 'PPT 工具手册', description: 'PPTist 工具契约、参数、状态、撤销。' },
+  { slug: 'authoring', skill: 'pptist-authoring', name: '@capyclaw/ppt-skill-authoring', dir: 'capyclaw-ppt-skill-authoring', version: '2.2.3', title: 'PPT 成稿', description: 'deck_brief → clean 简洁版式成稿。' },
+  { slug: 'editing', skill: 'pptist-editing', name: '@capyclaw/ppt-skill-editing', dir: 'capyclaw-ppt-skill-editing', version: '2.2.3', title: 'PPT 纯执行', description: '指哪打哪的修改执行器：每步落盘、不审美、不审计、不回头验证。' },
+  { slug: 'visual-check', skill: 'pptist-visual-check', name: '@capyclaw/ppt-skill-visual-check', dir: 'capyclaw-ppt-skill-visual-check', version: '2.2.3', title: 'PPT 审计', description: '只读审计与按需截图，报告 pass/blocking；不改稿。' },
+  { slug: 'research', skill: 'pptist-research', name: '@capyclaw/ppt-skill-research', dir: 'capyclaw-ppt-skill-research', version: '2.2.3', title: 'PPT 研究', description: '外部资料、数据、配图研究，产出分析卡。' },
 ]
 const ASSET = resolve(process.env.PPT_ASSET || join(ROOT, 'assets', 'ppt-full-app.js'))
 const CHECK_ONLY = process.argv.includes('--check')

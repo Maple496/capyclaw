@@ -54,7 +54,13 @@ npm run verify:install -- --skip-browser
 
 - registry 里**已发布**的包直接从 npm registry 安装（真实用户路径）
 - **未发布**包走 `npm pack` tarball 同批安装（等价发布后形态，发布顺序见 PUBLISHING.md）
+- 沙箱目录名**故意含空格**（`dsh plugin sandbox-*`）——Windows 用户路径的经典翻车点，全程无 shell 拼接
 - 断言：依赖树 0 UNMET、28 插件 cordis 加载、canvas 22 工具真浏览器链路、ppt 27 工具冒烟
+
+### 发布闸（publish-to-npm，dry-run 即生效）
+
+- **同版本漂移闸**：本地 `npm pack` sha1 与 registry `dist.shasum` 不一致 → 拒发并要求 bump（npm 禁止同版本重发）
+- **发布顺序闸**：待发包的 `@capyclaw/*` 依赖闭包必须「registry 已可解析」或「同批发布」，否则拒发——拦截「发了 suite 但 document-workbench 还没发」导致用户安装 404/ETARGET 的顺序手滑
 
 ## 平台差异
 

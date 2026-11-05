@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ppt-skill-narrative",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "PPT skill：SCQA、金字塔、一页一观点、deck_brief。",
   "type": "module",
   "main": "./lib/index.mjs",

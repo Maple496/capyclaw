@@ -29,12 +29,18 @@ const run = (cmd, cmdArgs, opts = {}) => spawnSync(cmd, cmdArgs, {
   encoding: 'utf8', shell: process.platform === 'win32', ...opts,
 })
 
+/** npm 直调（node npm-cli.js，不走 shell）：沙箱路径含空格，shell 拼接会拆词。 */
+const NPM_CLI = path.join(path.dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js')
+const npmRun = (args, opts = {}) => (fs.existsSync(NPM_CLI)
+  ? spawnSync(process.execPath, [NPM_CLI, ...args], { encoding: 'utf8', ...opts })
+  : run('npm', args, opts))
+
 /* ── 1. 版本分类：registry 版本是否已在 npm 上 ── */
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, 'capyclaw-registry.json'), 'utf8'))
 const published = []
 const local = []
 for (const p of registry.plugins) {
-  const v = run('npm', ['view', `${p.name}@${p.version}`, 'version'], { stdio: 'pipe' })
+  const v = npmRun(['view', `${p.name}@${p.version}`, 'version'], { stdio: 'pipe' })
   ;((v.status === 0 && String(v.stdout).trim() === p.version) ? published : local).push(p)
 }
 rec.section(`版本分类（registry ${registry.plugins.length} 包）`)
@@ -44,22 +50,25 @@ console.log(`· 待发布/本地 tarball：${local.map((p) => p.name).join('、'
 /* document-workbench 支撑库：npm 版本落后于本地需求时也走 tarball */
 const DW = path.join(ROOT, 'packages', 'capyclaw-document-workbench')
 const dwLocal = JSON.parse(fs.readFileSync(path.join(DW, 'package.json'), 'utf8'))
-const dwNpm = run('npm', ['view', `${dwLocal.name}@${dwLocal.version}`, 'version'], { stdio: 'pipe' })
+const dwNpm = npmRun(['view', `${dwLocal.name}@${dwLocal.version}`, 'version'], { stdio: 'pipe' })
 const dwNeeded = dwNpm.status !== 0 || String(dwNpm.stdout).trim() !== dwLocal.version
 
 /* ── 2. 沙箱 profile：安装（已发布走 registry，其余走 pack tarball） ── */
 rec.section('沙箱安装（空 profile → npm 全量安装）')
-const SB = path.join(os.tmpdir(), `dsh-plugin-verify-${Date.now().toString(36)}`)
+/* 目录名故意含空格：Windows 用户路径（C:\Users\My Name\...）是经典翻车点，
+ * npm 安装、relay 拉起（数组参数不走 shell）、路径拼接必须全程无壳展开。 */
+const SB = path.join(os.tmpdir(), `dsh plugin sandbox-${Date.now().toString(36)}`)
 const PROFILE = path.join(SB, 'profile')
 const TB = path.join(SB, 'tarballs')
 fs.mkdirSync(PROFILE, { recursive: true })
 fs.mkdirSync(TB, { recursive: true })
 fs.writeFileSync(path.join(PROFILE, 'package.json'), `${JSON.stringify({ name: 'dsh-profile-plugin-verify', private: true, version: '1.0.0', dependencies: {} }, null, 2)}\n`)
-console.log(`· 沙箱：${PROFILE}`)
+console.log(`· 沙箱（路径含空格，Windows 真实路径形态）：${PROFILE}`)
+rec.check('沙箱路径含空格（场景成立）', /\s/.test(PROFILE))
 
 if (published.length) {
   const spec = published.map((p) => `${p.name}@${p.version}`)
-  const r = run('npm', ['install', '--no-audit', '--no-fund', ...spec], { cwd: PROFILE })
+  const r = npmRun(['install', '--no-audit', '--no-fund', ...spec], { cwd: PROFILE })
   rec.check(`registry 安装 ${published.length} 包`, r.status === 0, `${(r.stderr || '').trim().split('\n').slice(-3).join(' | ')}`)
 }
 
@@ -68,17 +77,17 @@ if (dwNeeded) packDirs.push(DW)
 if (packDirs.length) {
   const tarballs = []
   for (const dir of packDirs) {
-    const r = run('npm', ['pack', '--pack-destination', TB], { cwd: dir, stdio: 'pipe' })
+    const r = npmRun(['pack', '--pack-destination', TB], { cwd: dir, stdio: 'pipe' })
     if (r.status !== 0) { rec.check(`npm pack ${path.basename(dir)}`, false, (r.stderr || '').slice(0, 120)); continue }
     tarballs.push(path.join(TB, String(r.stdout).trim().split(/\r?\n/).pop()))
   }
-  const r = run('npm', ['install', '--no-audit', '--no-fund', ...tarballs], { cwd: PROFILE })
+  const r = npmRun(['install', '--no-audit', '--no-fund', ...tarballs], { cwd: PROFILE })
   rec.check(`tarball 安装 ${tarballs.length} 个（未发布集，等价发布后形态）`, r.status === 0, `${(r.stderr || '').trim().split('\n').slice(-3).join(' | ')}`)
 }
 
 /* ── 3. 依赖树 + cordis 加载 ── */
 rec.section('依赖树与 cordis 加载')
-const ls = run('npm', ['ls', '--all'], { cwd: PROFILE, stdio: 'pipe' })
+const ls = npmRun(['ls', '--all'], { cwd: PROFILE, stdio: 'pipe' })
 rec.check('npm ls 无 UNMET/invalid', !/UNMET|invalid|missing/.test(`${ls.stdout}${ls.stderr}`), (ls.stderr || '').trim().slice(0, 200))
 
 const scope = path.join(PROFILE, 'node_modules', '@capyclaw')
