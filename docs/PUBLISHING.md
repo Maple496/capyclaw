@@ -72,3 +72,16 @@ npm run publish:execute -- --tag next            # 预发布通道（dist-tag=ne
 - **可安装性自检**（打 tarball → 干净目录安装验证）：`npm run verify-publishable`。
 - **zip 分发**：`npm run release-all` 的产物在 `dist/`（gitignored），
   整源包用 `npm run release-source`，标准校验用 `npm run verify-source`。
+
+### npm 侧已知限制（2026-11 实测）
+
+- **新建包名 429**：短时间连续创建多个新包名会触发 registry 的账号/网络级限流，
+  报错形如 `429 ... as user undefined: rate limited exceeded`。已有包发新版本不受影响。
+  冷却窗口实测超过 17 小时（约 24 小时），期间只能等待；补发时逐包 `--only` 发布即可。
+- **暂存版本冲突**：个别包的发布会进 registry staged 区（未立即上架），
+  再发同版本报 `409 Cannot publish over previously staged version "x.y.z"`。
+  查看/批准需 npm ≥ 11.15 的 `npm stage list|approve`（批准要 2FA），
+  或到 npmjs.com 的 Staged Packages 页操作；无法操作时**升 patch 版本重发**最省事
+  （`ppt-skill-research` 2.2.3 即按此跳到 2.2.4，并连带 suite 2.4.6 更新组合锁）。
+- 发布后 `npm view <pkg> version` 可能短暂滞后（registry 副本），以 `publish:npm` 的
+  逐包结果为准，稍后复核。
