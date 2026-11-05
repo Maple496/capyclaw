@@ -4,7 +4,12 @@
   "private": true,
   "type": "module",
   "description": "dsh 插件工程：构建 dsh 插件、生成打包产物、手动发布到 npm。不包含运行时编排与部署。",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
+    "bootstrap": "node scripts/bootstrap.mjs",
+    "verify:install": "node scripts/sandbox/verify-install.mjs",
     "build": "npm run build:ppt && npm run build:canvas",
     "build:ppt": "npm --prefix extensions/bridges/ppt-bridge run build:plugin",
     "build:canvas": "npm --prefix extensions/bridges/canvas-bridge run build:plugin",

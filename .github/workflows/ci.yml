@@ -1,0 +1,34 @@
+# 开发环境可重建性的持续证明：干净 runner 上 bootstrap → 六层 e2e。
+# 不做发布（publish 人工执行）；L5 网络部分只读 registry.npmjs.org，无需凭据。
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: 环境重建（bootstrap）
+        run: npm run bootstrap -- --skip-smoke
+
+      - name: 六层 e2e（含网络层：dry-run + 可安装性抽检）
+        run: npm run test:e2e
+
+      - name: 沙箱安装形态验证（dsh 用户视角）
+        run: npm run verify:install

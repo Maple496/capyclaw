@@ -149,21 +149,27 @@ export function mcpText(result) {
   return content[0].text
 }
 
-/** Windows junction（目录链接，无需管理员）。 */
+/** 目录链接（Windows junction 无需管理员；POSIX 用目录 symlink）。 */
 export function makeJunction(linkPath, targetPath) {
   const link = path.resolve(linkPath)
   const target = path.resolve(targetPath)
   if (fs.existsSync(link)) return
   fs.mkdirSync(path.dirname(link), { recursive: true })
-  const r = run('cmd', ['/c', 'mklink', '/J', link, target])
-  if (r.status !== 0) throw new Error(`mklink /J 失败: ${link} → ${target}\n${r.stderr}${r.stdout}`)
+  if (process.platform === 'win32') {
+    const r = run('cmd', ['/c', 'mklink', '/J', link, target])
+    if (r.status !== 0) throw new Error(`mklink /J 失败: ${link} → ${target}\n${r.stderr}${r.stdout}`)
+  } else {
+    fs.symlinkSync(target, link, 'dir')
+  }
 }
 
-/** 只删 junction 链接本身（不递归进目标，防止误删真实目录内容）。 */
+/** 只删链接本身（不递归进目标，防止误删真实目录内容）。 */
 export function removeJunction(linkPath) {
   const link = path.resolve(linkPath)
   try {
-    if (fs.existsSync(link)) fs.rmdirSync(link)
+    const st = fs.lstatSync(link) /* 不存在则抛 ENOENT，直接返回 */
+    if (st.isDirectory() && !st.isSymbolicLink()) fs.rmdirSync(link) /* Windows junction */
+    else fs.unlinkSync(link) /* POSIX symlink */
   } catch { /* 尽力而为 */ }
 }
 
