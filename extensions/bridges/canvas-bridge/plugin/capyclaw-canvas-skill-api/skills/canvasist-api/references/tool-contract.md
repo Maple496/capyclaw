@@ -107,7 +107,7 @@
           },
           "level": {
             "type": "number",
-            "description": "heading 级别 1-4"
+            "description": "heading 级别 1-6（映射内核真标题：进目录/大纲，字号加粗自动）"
           },
           "index": {
             "type": "number",
@@ -171,7 +171,7 @@
           },
           "level": {
             "type": "number",
-            "description": "heading 级别 1-4"
+            "description": "heading 级别 1-6（映射内核真标题：进目录/大纲，字号加粗自动）"
           },
           "index": {
             "type": "number",

@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ppt-workbench",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "description": "PPT 工作台运行时：27 个 ppt_* MCP 工具（导入/导出 PPTX + 图表/表格/公式/形状/线条/备注 + 契约探测）+ 本机实时 PPTist 编辑器。",
   "type": "module",
   "main": "./lib/host.mjs",
@@ -46,7 +46,7 @@
   "dependencies": {
     "pptxgenjs": "^3.12.0",
     "@capyclaw/plugin-kit": "^0.2.0",
-    "@capyclaw/document-workbench": "^0.1.0"
+    "@capyclaw/document-workbench": "^0.2.0"
   },
   "author": {
     "name": "CapyClaw",

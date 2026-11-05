@@ -72,6 +72,33 @@ export function createDocumentBridge({
     }
   }
 
+  /** 长轮询轻量体：编辑器 pump 只消费这些字段。
+   *  旧实现回整个信封——大镜像/截图 base64 每次拾取都白白传一轮。 */
+  function watchBody(doc) {
+    return {
+      seq: doc.seq | 0,
+      applied_seq: doc.applied_seq | 0,
+      applied: doc.applied | 0,
+      state_seq: doc.state_seq | 0,
+      error: doc.error || '',
+      title: doc.title || '',
+      shot_req: doc.shot_req | 0,
+      ui_seq: doc.ui_seq | 0,
+      cmds: Array.isArray(doc.cmds) ? doc.cmds : [],
+      ui: Array.isArray(doc.ui) ? doc.ui : [],
+    }
+  }
+
+  /** push 回执轻量体：调用方只用 seq/回执字段，不需要镜像。 */
+  function pushBody(doc) {
+    return {
+      seq: doc.seq | 0,
+      applied_seq: doc.applied_seq | 0,
+      applied: doc.applied | 0,
+      error: doc.error || '',
+    }
+  }
+
   function documentBody(doc) {
     if (projectDocument) return projectDocument(doc)
     return {
@@ -99,9 +126,10 @@ export function createDocumentBridge({
         const doc = authority === 'editor'
           ? await session.enqueue(() => session.push(data.cmds, data.title))
           : await session.runBatch({ cmds: data.cmds, title: data.title, apply, isViewOp })
-        send(req, res, 200, doc)
+        send(req, res, 200, pushBody(doc))
         return true
       }
+      /* GET 全量信封：编辑器 restore（镜像恢复）专用。 */
       send(req, res, 200, session.get())
       return true
     }
@@ -159,7 +187,7 @@ export function createDocumentBridge({
         ...watch,
       })
       if (aborted || res.writableEnded || res.destroyed) return true
-      send(req, res, 200, doc)
+      send(req, res, 200, watchBody(doc))
       return true
     }
 
@@ -211,7 +239,8 @@ export function createDocumentBridge({
         send(req, res, 400, { error: `${bridgeName} 回执不合法` })
         return true
       }
-      send(req, res, 200, await session.enqueue(() => session.ack(data.seq, data.applied, data.error)))
+      await session.enqueue(() => session.ack(data.seq, data.applied, data.error))
+      send(req, res, 200, { ok: true })
       return true
     }
     if (sub === '/state') {
@@ -221,11 +250,14 @@ export function createDocumentBridge({
         return true
       }
       const value = data.value !== undefined ? data.value : data[key]
-      send(req, res, 200, await session.enqueue(() => session.state(value, data.seq)))
+      await session.enqueue(() => session.state(value, data.seq))
+      /* 编辑器刚上传完全量镜像，不能再把整份回传给它——轻量确认即可。 */
+      send(req, res, 200, { ok: true, state_seq: session.get().state_seq | 0 })
       return true
     }
     if (sub === '/shot-request') {
-      send(req, res, 200, session.shotRequest())
+      session.shotRequest()
+      send(req, res, 200, { ok: true, shot_req: session.get().shot_req | 0 })
       return true
     }
     if (sub === '/shot-result') {
@@ -234,7 +266,8 @@ export function createDocumentBridge({
         send(req, res, 400, { error: `${bridgeName} 截图回传不合法` })
         return true
       }
-      send(req, res, 200, session.shotResult(data.req, data.data))
+      session.shotResult(data.req, data.data)
+      send(req, res, 200, { ok: true })
       return true
     }
 

@@ -30,7 +30,7 @@ import { inspectContractSnapshots, describeMismatch } from './contract-snapshots
 import { getTuning } from './tuning.mjs'
 import { createRuntimeStoreClient, loadRuntimeContext } from './infra/runtime/context.mjs'
 import { WorkspaceBackend } from './infra/workspace/manager.mjs'
-import { wordCountOf } from '../core/doc.js'
+import { wordCountOf, memoByDoc } from '../core/doc.js'
 
 export { DEFAULT_PORT, BASE_PATH }
 
@@ -67,6 +67,8 @@ export async function startRelay({
   }
 
   const createApp = serviceHost?.createApp ? (options) => serviceHost.createApp(options) : createServiceApp
+  /* health/metrics 可能被宿主周期抓取：words 按镜像引用 memo。 */
+  const wordsOf = memoByDoc(wordCountOf)
   const app = createApp({
     id: 'canvas-workbench',
     title: 'Canvas Workbench',
@@ -80,7 +82,7 @@ export async function startRelay({
         editor: `http://127.0.0.1:${app.port}/`,
         editorConnected: !!owner,
         hasDoc: !!(doc.doc && Array.isArray(doc.doc.main) && doc.doc.main.length),
-        words: wordCountOf(doc.doc),
+        words: wordsOf(doc.doc),
         seq: doc.seq | 0,
         appliedSeq: doc.applied_seq | 0,
         stateSeq: doc.state_seq | 0,
@@ -99,7 +101,7 @@ export async function startRelay({
       const doc = store.get()
       const owner = doc.owner && doc.owner.id && (Date.now() / 1000 - (doc.owner.ts || 0) <= 10)
       return [
-        ['canvas_workbench_words', wordCountOf(doc.doc)],
+        ['canvas_workbench_words', wordsOf(doc.doc)],
         ['canvas_workbench_seq', doc.seq | 0],
         ['canvas_workbench_applied_seq', doc.applied_seq | 0],
         ['canvas_workbench_state_seq', doc.state_seq | 0],
@@ -145,6 +147,8 @@ export async function startRelay({
     let registry = null
     try {
       const tools = await import('./tools.mjs')
+      /* 进程内直连：MCP 工具与 store 同进程时，镜像读/回执等待不再走回环 HTTP。 */
+      tools.setLocalSession?.(store)
       registry = tools.createRegistry(tools.CAPABILITIES, { enabled: capabilities, toolHost })
     } catch (e) {
       console.error('[canvas-workbench] 工具未装载（构建产物缺失，先跑 scripts/build-plugin.mjs）:', e.message)

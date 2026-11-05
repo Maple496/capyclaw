@@ -5,6 +5,19 @@ import { getTuning } from '../../tuning.mjs'
 
 const VIEW_CMDS = new Set(['pageMode', 'pageScale', 'pageScaleAdd', 'pageScaleMinus', 'pageScaleRecovery', 'mode', 'toggleRuler', 'toggleTrace', 'print', 'locationCatalog'])
 
+/** 兼容兜底：请求号不可知（旧 relay）时退回直接轮询 /shot。 */
+async function pollShotLegacy(ctx) {
+  const pollMs = getTuning().statusPollMs || 50
+  const deadline = Date.now() + 30000
+  let shot = null
+  while (Date.now() < deadline) {
+    shot = await ctx.editor.getShot()
+    if (shot && shot.data) break
+    await sleep(pollMs)
+  }
+  return shot
+}
+
 export const viewCapability = defineCapability({
   id: 'view',
   title: '视图与截图',
@@ -21,15 +34,11 @@ export const viewCapability = defineCapability({
       since: '1.0.0',
       handler: async (_args, ctx) => {
         await ctx.editor.require()
-        await ctx.editor.requestShot()
-        const pollMs = getTuning().statusPollMs || 50
-        const deadline = Date.now() + 30000
-        let shot = null
-        while (Date.now() < deadline) {
-          shot = await ctx.editor.getShot()
-          if (shot && shot.data) break
-          await sleep(pollMs)
-        }
+        const requested = await ctx.editor.requestShot()
+        const reqWanted = (requested && requested.shot_req) || 0
+        const shot = reqWanted > 0
+          ? await ctx.editor.waitForShot(reqWanted, 30000)
+          : await pollShotLegacy(ctx)
         if (!shot || !shot.data) throw new Error('截图超时：编辑器页面未回传画面')
         const base64 = String(shot.data).split(',')[1] || ''
         return {

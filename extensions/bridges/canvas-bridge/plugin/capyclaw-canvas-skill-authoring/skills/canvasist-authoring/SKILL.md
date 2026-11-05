@@ -15,7 +15,7 @@ whenToUse: 用户要从零生成一份文档（报告/方案/说明书/长文）
 
 用 `canvas_write_document` 把全部内容按块写入：
 
-- `heading`（level 1-4）/ `paragraph` / `bullet` / `number` / `quote` / `code` / `divider` / `pageBreak`
+- `heading`（level 1-6，映射内核真标题：进目录/大纲导航，字号加粗自动）/ `paragraph` / `bullet` / `number` / `quote` / `code` / `divider` / `pageBreak`
 - 块级 `style` 可加行内样式（bold/color/size/font/highlight），但成稿阶段**少用**——结构优先，精修交给下一步。
 
 ## 3. 精修

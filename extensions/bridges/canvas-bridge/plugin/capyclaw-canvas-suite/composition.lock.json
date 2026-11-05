@@ -36,13 +36,13 @@
       "version": "0.2.0",
       "apiVersion": null,
       "path": "../capyclaw-canvas-workbench",
-      "sha256": "e183131c815e563852978f7d1db9d048733347b73ae6ed8b21c4769915ce4beb"
+      "sha256": "491b9ed3e00518edf66fb3f44e3d2b9474212fedac1efa6ddfd6fcca5d3e88d4"
     },
     "@capyclaw/document-workbench": {
-      "version": "0.1.1",
+      "version": "0.2.0",
       "apiVersion": null,
       "path": "../../../../../packages/capyclaw-document-workbench",
-      "sha256": "cab15e470c00428f0694c1dd7886e36d371b3d72f44c8a490f447a702b21ec42"
+      "sha256": "80414247643c19b5e866c5599e6573264248f1d9e3796c45cb355be6a36f3caf"
     },
     "@capyclaw/editor-host": {
       "version": "0.1.2",
@@ -55,6 +55,12 @@
       "apiVersion": null,
       "path": "../../../../../packages/capyclaw-plugin-kit",
       "sha256": "7f96e38d28c1389f1b2890aa2fcbc5c19caf70d7c9752171cebba29a14052980"
+    },
+    "@capyclaw/service-broker": {
+      "version": "0.2.1",
+      "apiVersion": "1.0.0",
+      "path": "../../../../../packages/capyclaw-service-broker",
+      "sha256": "c0b05c6c60907a7d40256752013c29b37960f3fc858950ad6d7732550044b537"
     },
     "@capyclaw/service-host": {
       "version": "0.1.2",

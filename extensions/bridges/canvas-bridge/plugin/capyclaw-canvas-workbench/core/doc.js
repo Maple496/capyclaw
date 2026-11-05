@@ -30,12 +30,12 @@ const ZONES = ['header', 'main', 'footer']
 /** 非文本类型：value 是占位符（表格 ' '、图片 dataURL…），不进纯文本投影。 */
 const NON_TEXT_TYPES = new Set(['table', 'image', 'pageBreak', 'separator'])
 
-/** 文档 → 纯文本（保留换行语义：'\n' 元素即换行）。 */
+/** 文档 → 纯文本（保留换行语义：'\n' 即换行；含 title valueList 与表格单元格）。 */
 export function textOf(doc) {
   if (!doc || typeof doc !== 'object') return ''
   const parts = []
   for (const zone of ZONES) {
-    const text = zoneOf(doc[zone])
+    const text = Array.from(walkElements(zoneOf(doc[zone])))
       .map((el) => (el && typeof el.value === 'string' && el.value !== '\n'
         && !NON_TEXT_TYPES.has(el.type) ? el.value : ''))
       .join('')
@@ -52,28 +52,52 @@ export function wordCountOf(doc) {
   return cjk + ascii
 }
 
-/** 从元素流推大纲：大字号/加粗的非空行视为标题，仿编辑器 getCatalog 的层级。 */
+/** 内核 title level 名 → 大纲级别。 */
+const TITLE_LEVEL_OF = { first: 1, second: 2, third: 3, fourth: 4, fifth: 5, sixth: 6 }
+
+/** title 包装元素的纯文本。 */
+function titleText(el) {
+  return (Array.isArray(el.valueList) ? el.valueList : [])
+    .map((v) => (v && typeof v.value === 'string' ? v.value : ''))
+    .join('')
+}
+
+/** 从元素流推大纲：{type:'title'} 用其 level（与编辑器目录同源）；
+ * 其余元素退回大字号/加粗启发式（兼容旧文档/手工伪标题）。 */
 export function outlineOf(doc) {
   const out = []
   let index = 0
   let page = 1
-  for (const el of walkElements(zoneOf(doc && doc.main))) {
+  for (const el of zoneOf(doc && doc.main)) {
+    if (!el || typeof el !== 'object') continue
     if (el.type === 'pageBreak') { page += 1; continue }
-    const value = typeof el.value === 'string' ? el.value.trim() : ''
-    if (!value || value === '\n') continue
-    const size = Number(el.size) || 16
-    const bold = !!el.bold || size >= 28
-    if (!bold && size < 18) continue
-    const level = size >= 28 ? 1 : size >= 22 ? 2 : 3
-    out.push({ id: el.id || null, index: index++, level, page, text: value.slice(0, 60) })
+    if (el.type === 'title') {
+      const value = titleText(el).trim()
+      if (value) {
+        out.push({ id: el.titleId || el.id || null, index: index++, level: TITLE_LEVEL_OF[el.level] || 1, page, text: value.slice(0, 60) })
+      }
+      continue
+    }
+    /* 非标题顶层元素：自身 + 嵌套（表格单元格等）走启发式 */
+    for (const nested of walkElements([el])) {
+      if (nested.type === 'pageBreak') { page += 1; continue }
+      const value = typeof nested.value === 'string' ? nested.value.trim() : ''
+      if (!value || value === '\n') continue
+      const size = Number(nested.size) || 16
+      const bold = !!nested.bold || size >= 28
+      if (!bold && size < 18) continue
+      const level = size >= 28 ? 1 : size >= 22 ? 2 : 3
+      out.push({ id: nested.id || null, index: index++, level, page, text: value.slice(0, 60) })
+    }
   }
   return out
 }
 
-/** 元素统计（summary 用）。 */
+/** 元素统计（summary 用；title 计结构数，文本行计入 valueList 内元素）。 */
 export function elementStats(doc) {
-  const stats = { text: 0, table: 0, image: 0, hyperlink: 0, control: 0, checkbox: 0, radio: 0, separator: 0, pageBreak: 0, other: 0 }
+  const stats = { text: 0, title: 0, table: 0, image: 0, hyperlink: 0, control: 0, checkbox: 0, radio: 0, separator: 0, pageBreak: 0, other: 0 }
   for (const el of walkElements(zoneOf(doc && doc.main))) {
+    if (el.type === 'title') { stats.title += 1; continue }
     if (el.type && stats[el.type] !== undefined) stats[el.type] += 1
     else if (el.type) stats.other += 1
     else if (typeof el.value === 'string' && el.value !== '\n') stats.text += 1
@@ -97,6 +121,20 @@ export function paperOf(options) {
   }
 }
 
+/** 按文档引用记忆的投影：镜像只在编辑器 /state 推送时整体替换，
+ *  引用不变 = 内容不变——status/health/metrics 高频路径 O(1) 摊销。 */
+export function memoByDoc(project) {
+  let ref = null
+  let value = null
+  return (doc) => {
+    if (doc !== ref) {
+      ref = doc
+      value = project(doc)
+    }
+    return value
+  }
+}
+
 /** 紧凑摘要：Agent 的默认「看」。 */
 export function summarize(doc, options) {
   if (!doc || typeof doc !== 'object') return '（桥上没有文档：右侧编辑器未就绪）'
@@ -104,7 +142,7 @@ export function summarize(doc, options) {
   const stats = elementStats(doc)
   const outline = outlineOf(doc)
   const lines = [
-    `字数 ${wordCountOf(doc)}，段落文本 ${stats.text} 处，表格 ${stats.table}，图片 ${stats.image}`,
+    `字数 ${wordCountOf(doc)}，段落文本 ${stats.text} 处，标题 ${stats.title}，表格 ${stats.table}，图片 ${stats.image}`,
   ]
   if (outline.length) {
     lines.push('大纲：')
@@ -117,23 +155,45 @@ export function summarize(doc, options) {
   return lines.join('\n')
 }
 
-/** 在文档中查找文本，返回命中（区域/元素索引/上下文）。 */
+/** 在文档中查找文本，返回命中（区域/元素索引/嵌套下标/上下文）。
+ * valueList（title 等包装元素）与表格单元格都会被检索。 */
 export function findInDoc(doc, needle, limit = 50) {
   const hits = []
   const key = String(needle || '')
   if (!key) return hits
+  const pushHit = (zone, index, sub, value) => {
+    const at = value.indexOf(key)
+    hits.push({
+      zone, index, sub,
+      context: value.slice(Math.max(0, at - 12), at + key.length + 12),
+    })
+  }
   for (const zone of ZONES) {
     const elements = zoneOf(doc[zone])
-    elements.forEach((el, i) => {
-      if (el && typeof el.value === 'string' && el.value.includes(key)) {
-        const at = el.value.indexOf(key)
-        hits.push({
-          zone, index: i,
-          context: el.value.slice(Math.max(0, at - 12), at + key.length + 12),
+    for (let i = 0; i < elements.length; i++) {
+      if (hits.length >= limit) break
+      const el = elements[i]
+      if (!el || typeof el !== 'object') continue
+      if (typeof el.value === 'string' && el.value.includes(key)) pushHit(zone, i, null, el.value)
+      if (Array.isArray(el.valueList)) {
+        el.valueList.forEach((v, s) => {
+          if (hits.length < limit && v && typeof v.value === 'string' && v.value.includes(key)) {
+            pushHit(zone, i, s, v.value)
+          }
         })
-        if (hits.length >= limit) return
       }
-    })
+      if (el.trList) {
+        for (const tr of el.trList) {
+          for (const td of (tr && tr.tdList) || []) {
+            (td.value || []).forEach((v, s) => {
+              if (hits.length < limit && v && typeof v.value === 'string' && v.value.includes(key)) {
+                pushHit(zone, i, s, v.value)
+              }
+            })
+          }
+        }
+      }
+    }
     if (hits.length >= limit) break
   }
   return hits

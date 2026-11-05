@@ -53,7 +53,24 @@ function walk(dir, out = []) {
   return out
 }
 
-async function checkOne(dir) {
+/** 本仓可 pack 的 @capyclaw/* 目录映射（短名 → 绝对路径）：
+ *  可发布插件（discoverPlugins）+ packages/ 下非 private 支撑库。 */
+function buildLocalDirs(pluginDirs) {
+  const map = new Map()
+  for (const dir of pluginDirs) {
+    map.set(pkgOf(dir).name, dir)
+  }
+  const pkgs = path.join(ROOT, 'packages')
+  for (const name of fs.existsSync(pkgs) ? fs.readdirSync(pkgs) : []) {
+    const dir = path.join(pkgs, name)
+    if (!fs.existsSync(path.join(dir, 'package.json'))) continue
+    if (pkgOf(dir).private) continue
+    map.set(pkgOf(dir).name, dir)
+  }
+  return map
+}
+
+async function checkOne(dir, localDirs) {
   const pkg = pkgOf(dir)
   const label = `${pkg.name}@${pkg.version}`
   const problems = []
@@ -121,19 +138,36 @@ async function checkOne(dir) {
   }
 
   // 3) 装进干净目录，确认依赖可解析
-  //    注意：@capyclaw/plugin-kit 若尚未发布到 registry，npm 会 404。
-  //    这里把本地 kit 也打成 tarball 一起安装，验证的是「插件自身依赖/文件完整」，
-  //    而不是「kit 已在 npm 上」——后者由发布顺序保证（先发 kit 再发插件）。
+  //    注意：依赖里的 @capyclaw/* 若尚未发布到 registry（如新的支撑库或
+  //    同批待发的插件），npm 会 404/ETARGET。这里把这些本仓包也打成
+  //    tarball 一起安装，验证的是「插件自身依赖/文件完整」，而不是
+  //    「依赖包已在 npm 上」——后者由发布顺序保证（先支撑库 → 运行时
+  //    插件 → suite）。private 支撑库（构建期内联）不兜底，兜底会掩盖
+  //    「运行时依赖了不该发布的包」这类配置错误。
   const installDir = path.join(tmp, 'consumer')
   fs.mkdirSync(installDir, { recursive: true })
   fs.writeFileSync(path.join(installDir, 'package.json'), `${JSON.stringify({ name: 'consumer', private: true, version: '1.0.0' }, null, 2)}\n`)
   const installArgs = ['install', '--no-audit', '--no-fund']
-  const localKit = path.join(ROOT, 'packages', 'capyclaw-plugin-kit')
   const deps = { ...(pkg.dependencies || {}), ...(pkg.peerDependencies || {}) }
-  if (deps['@capyclaw/plugin-kit'] && fs.existsSync(localKit)) {
-    const kitPack = run('npm', ['pack', '--pack-destination', tmp], { cwd: localKit })
-    if (kitPack.status === 0) {
-      installArgs.push(path.join(tmp, String(kitPack.stdout).trim().split(/\r?\n/).pop()))
+  /* 兜底集合沿依赖闭包展开：suite → workbench → document-workbench
+     这类传递依赖同样未发布，只兜第一层会漏。 */
+  const closure = new Set()
+  const queue = Object.keys(deps).filter((n) => n.startsWith('@capyclaw/') && n !== pkg.name && localDirs.has(n))
+  while (queue.length) {
+    const name = queue.shift()
+    if (closure.has(name)) continue
+    closure.add(name)
+    const meta = pkgOf(localDirs.get(name))
+    for (const dep of Object.keys({ ...(meta.dependencies || {}), ...(meta.peerDependencies || {}) })) {
+      if (dep.startsWith('@capyclaw/') && dep !== pkg.name && localDirs.has(dep)) queue.push(dep)
+    }
+  }
+  for (const depName of closure) {
+    const p = run('npm', ['pack', '--pack-destination', tmp], { cwd: localDirs.get(depName) })
+    if (p.status === 0) {
+      installArgs.push(path.join(tmp, String(p.stdout).trim().split(/\r?\n/).pop()))
+    } else {
+      problems.push(`本地兜底 pack ${depName} 失败: ${(p.stderr || '').trim().split(/\r?\n/).slice(-3).join(' | ').slice(0, 300)}`)
     }
   }
   installArgs.push(tgz)
@@ -161,9 +195,10 @@ async function main() {
   }
 
   console.log(`检查 ${targets.length} 个可发布插件的可安装性\n`)
+  const localDirs = buildLocalDirs(dirs)
   const results = []
   for (const dir of targets) {
-    const result = await checkOne(dir)
+    const result = await checkOne(dir, localDirs)
     results.push(result)
     if (result.ok) {
       console.log(`✓ ${result.label}`)

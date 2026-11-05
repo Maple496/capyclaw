@@ -9,7 +9,7 @@ const BLOCK_ITEM = {
   properties: {
     type: { type: 'string', enum: ['heading', 'paragraph', 'bullet', 'number', 'quote', 'code', 'divider', 'pageBreak'], description: '块类型' },
     text: { type: 'string', description: '块文本' },
-    level: { type: 'number', description: 'heading 级别 1-4' },
+    level: { type: 'number', description: 'heading 级别 1-6（映射内核真标题：进目录/大纲，字号加粗自动）' },
     index: { type: 'number', description: 'number 块序号' },
     style: { type: 'object', description: '行内样式（bold/italic/color/size/font/highlight/underline）' },
   },

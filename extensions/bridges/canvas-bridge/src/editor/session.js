@@ -64,9 +64,35 @@ export function createEditorSession({
     onChange(handler) {
       const app = getApp()
       if (!app || typeof app.on !== 'function') return null
+      const offs = []
+      /* 通道一：门面 'change' —— load()/exec() 等 API 路径会触发 */
       app.on('change', handler)
-      return () => {
+      offs.push(() => {
         try { app.off?.('change', handler) } catch { /* ignore */ }
+      })
+      /* 通道二：内核 eventBus 'contentChange' —— 用户在页面里手工键入/编辑
+       * 不经过门面命令拦截器，只发内核事件；不订阅则用户编辑永远不回推镜像。 */
+      const hookKernel = () => {
+        const bus = (typeof window !== 'undefined' && window.editor && window.editor.eventBus) || null
+        if (!bus || typeof bus.on !== 'function') return false
+        bus.on('contentChange', handler)
+        offs.push(() => {
+          try { bus.off?.('contentChange', handler) } catch { /* ignore */ }
+        })
+        return true
+      }
+      if (!hookKernel()) {
+        /* mount 未完成时 window.editor 尚不存在：ready 后补挂 */
+        const onReady = () => { hookKernel() }
+        app.on('ready', onReady)
+        offs.push(() => {
+          try { app.off?.('ready', onReady) } catch { /* ignore */ }
+        })
+      }
+      return () => {
+        for (const off of offs) {
+          try { off() } catch { /* ignore */ }
+        }
       }
     },
     renderScreenshot() {

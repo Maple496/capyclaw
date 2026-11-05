@@ -54,7 +54,7 @@ export const textCapability = defineCapability({
         const doc = await readMirror(ctx)
         const hits = ctx.doc.findInDoc(doc, args.find, Math.min(200, Math.max(1, Number(args.limit) || 50)))
         if (!hits.length) return { text: `未找到：${args.find}` }
-        const lines = hits.map((h) => `- ${h.zone}[${h.index}] …${h.context}…`)
+        const lines = hits.map((h) => `- ${h.zone}[${h.index}${h.sub != null ? '.' + h.sub : ''}] …${h.context}…`)
         return { text: `命中 ${hits.length} 处：\n${lines.join('\n')}` }
       },
     }),

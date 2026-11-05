@@ -94,6 +94,16 @@ state_seq, ui_seq, ui, shot_req, shot { req, data }, owner
 - `shot_req` / `shot`：截图请求与结果，旧结果会被丢弃。
 - `owner`：文档 owner 租约，默认 TTL 10s。
 
+## 实时性与传输（0.2.0）
+
+- **变更订阅**：`DocumentSession#subscribe(fn)` / `#waitForChange(timeoutMs)`——
+  push/ack/state/ui/shot 的每次状态迁移都会即时唤醒订阅方；长轮询
+  `GET /watch` 与工具侧等待不再受轮询粒度影响（`watch.pollMs` 保留为兜底）。
+- **响应轻量化**：`GET /watch` 只回协议字段（`seq/applied_seq/state_seq/error/
+  title/shot_req/ui_seq/cmds/ui`），不回领域文档与截图 base64；`POST`（push/
+  ack/state/shot-*）响应同理只回回执字段。领域文档只在 `GET` 主端点（编辑器
+  restore）与 `GET /doc|/deck` 出全量。
+
 ## 两种权威模式
 
 - `authority: 'server'`：服务端执行命令，编辑器只拉镜像；PPT 使用这种模式。

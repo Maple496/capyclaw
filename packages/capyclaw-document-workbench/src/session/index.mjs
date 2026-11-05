@@ -45,6 +45,7 @@ export class DocumentSession {
     this.checkpointDir = backend.checkpointDir || ''
     this._tail = Promise.resolve()
     this.doc = this._load()
+    this._waiters = new Set()
   }
 
   /** 串行队列：前一个任务失败不会阻断后续任务。 */
@@ -52,6 +53,40 @@ export class DocumentSession {
     const run = this._tail.then(task, task)
     this._tail = run.then(() => undefined, () => undefined)
     return run
+  }
+
+  /* ---- 变更订阅：长轮询 / 工具等待即时唤醒（轮询兜底仍在） ---- */
+
+  /** 订阅会话变更；返回退订函数。notify 在每次状态迁移后同步触发。 */
+  subscribe(fn) {
+    this._waiters.add(fn)
+    return () => { this._waiters.delete(fn) }
+  }
+
+  _notify() {
+    for (const fn of [...this._waiters]) {
+      try { fn() } catch { /* 订阅方异常不阻塞状态迁移 */ }
+    }
+  }
+
+  /** 等下一次变更或超时（事件先到即返回）：把「轮询粒度」从等待延迟里消掉。 */
+  waitForChange(timeoutMs = 100) {
+    return new Promise((resolve) => {
+      let done = false
+      const off = this.subscribe(() => {
+        if (done) return
+        done = true
+        clearTimeout(timer)
+        off()
+        resolve()
+      })
+      const timer = setTimeout(() => {
+        if (done) return
+        done = true
+        off()
+        resolve()
+      }, Math.max(0, Number(timeoutMs) || 0))
+    })
   }
 
   _journal(event) {
@@ -107,6 +142,7 @@ export class DocumentSession {
     applyPush(this.doc, cmds, title)
     this._save()
     this._journal({ type: 'push', seq: this.doc.seq, title, cmdCount: cmds.length, status: 'pending' })
+    this._notify()
     return this.doc
   }
 
@@ -148,6 +184,7 @@ export class DocumentSession {
     })
     this._save()
     this._journal({ type: 'applied', seq, applied, error: error || '' })
+    this._notify()
     return this.doc
   }
 
@@ -155,6 +192,7 @@ export class DocumentSession {
     applyUi(this.doc, cmds)
     this._save()
     this._journal({ type: 'ui', uiSeq: this.doc.ui_seq, cmdCount: cmds.length })
+    this._notify()
     return this.doc
   }
 
@@ -162,12 +200,14 @@ export class DocumentSession {
     if ((this.doc.seq | 0) !== (seq | 0)) return this.doc
     applyAck(this.doc, seq, applied, error)
     this._save()
+    this._notify()
     return this.doc
   }
 
   state(value, seq) {
     applyState(this.doc, value, seq, { documentKey: this.documentKey })
     this._save()
+    this._notify()
     return this.doc
   }
 
@@ -233,23 +273,31 @@ export class DocumentSession {
   shotRequest() {
     applyShotRequest(this.doc)
     this._save()
+    this._notify()
     return this.doc
   }
 
   shotResult(req, data) {
     applyShotResult(this.doc, req, data)
     this._save()
+    this._notify()
     return this.doc
   }
 
   claim(id, force = false, meta = null) {
     const result = claimOwner(this.doc, id, force, meta)
-    if (result.changed) this._save()
+    if (result.changed) {
+      this._save()
+      this._notify()
+    }
     return { ok: result.ok, owner: result.owner }
   }
 
   release(id) {
-    if (releaseOwner(this.doc, id)) this._save()
+    if (releaseOwner(this.doc, id)) {
+      this._save()
+      this._notify()
+    }
     return { ok: true }
   }
 

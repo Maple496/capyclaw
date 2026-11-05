@@ -21,6 +21,7 @@
     "@capyclaw/tool-host": "^0.1.0",
     "@capyclaw/asset-service": "^0.1.0",
     "@capyclaw/editor-host": "^0.1.0",
+    "@capyclaw/service-broker": "^0.2.0",
     "@capyclaw/canvas-workbench": "^0.2.0",
     "@capyclaw/canvas-skill-canvas": "^0.2.0",
     "@capyclaw/canvas-skill-api": "^0.2.0",

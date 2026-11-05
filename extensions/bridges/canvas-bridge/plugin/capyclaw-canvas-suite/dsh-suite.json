@@ -3,7 +3,7 @@
   "name": "capyclaw-canvas-suite",
   "version": "0.2.0",
   "title": "Canvas 文档工作台套件",
-  "description": "Canvas 编辑器运行时（独立端口服务，编辑器权威桥）+ 4 个独立 skill 包 + 4 个公共基建插件 + 文档工作台框架 + 底层 kit；relay 不 insert 进 dsh 进程，由中间件按清单以独立进程拉起。",
+  "description": "Canvas 编辑器运行时（独立端口服务，编辑器权威桥）+ 4 个独立 skill 包 + 4 个公共基建插件 + 文档工作台框架 + 底层 kit + 服务中间件（broker）；relay 不 insert 进 dsh 进程，由中间件按清单以独立进程拉起。",
   "components": [
     "../../../../../packages/capyclaw-service-host",
     "../../../../../packages/capyclaw-tool-host",
@@ -122,6 +122,20 @@
         ],
         "capabilities": {
           "canvas.workflows": "1.0.0"
+        }
+      }
+    },
+    "@capyclaw/service-broker": {
+      "role": "runtime",
+      "version": "^0.2.1",
+      "path": "../../../../../packages/capyclaw-service-broker",
+      "provides": {
+        "services": [
+          "serviceBroker"
+        ],
+        "ports": [],
+        "capabilities": {
+          "service.broker": "1.0.0"
         }
       }
     }

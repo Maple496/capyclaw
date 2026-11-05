@@ -8,10 +8,12 @@ import { getTuning } from '../tuning.mjs'
 import {
   sanitizeAck, sanitizeClaim, sanitizePush, sanitizeShotResult, sanitizeState,
 } from '../store.mjs'
-import { wordCountOf } from '../../core/doc.js'
+import { wordCountOf, memoByDoc } from '../../core/doc.js'
 
 export function createBridgeRoutes({ store }) {
   const tuning = getTuning()
+  /* /status 是写路径的高频等待端点：words 按镜像引用 memo，O(doc) → O(1) 摊销。 */
+  const wordsOf = memoByDoc(wordCountOf)
   return createDocumentBridge({
     session: store,
     basePath: BASE_PATH,
@@ -36,7 +38,7 @@ export function createBridgeRoutes({ store }) {
     projectStatus: (doc) => ({
       bridge: 'canvas-workbench',
       has_doc: !!(doc.doc && Array.isArray(doc.doc.main) && doc.doc.main.length),
-      words: wordCountOf(doc.doc),
+      words: wordsOf(doc.doc),
     }),
     projectDocument: (doc) => ({
       doc: doc.doc || { header: [], main: [], footer: [] },

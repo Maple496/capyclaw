@@ -356,7 +356,7 @@
     {
       "id": "ppt-suite",
       "name": "@capyclaw/ppt-suite",
-      "version": "2.4.4",
+      "version": "2.4.5",
       "title": "PPT 工作台套件",
       "description": "一键安装 PPTist 运行时 + 8 个独立 PPT skill 包 + 4 个公共基建插件",
       "category": "service",
@@ -372,7 +372,7 @@
     {
       "id": "ppt-workbench",
       "name": "@capyclaw/ppt-workbench",
-      "version": "2.4.4",
+      "version": "2.4.5",
       "title": "PPT 工作台运行时",
       "description": "AI 生成/编辑 PPT：27 个 ppt_* 工具 + 浏览器实时编辑器（http://127.0.0.1:39311/）",
       "category": "service",
@@ -471,6 +471,6 @@
     "discord": "https://discord.gg/capyclaw",
     "email": "support@capyclaw.dev"
   },
-  "generatedAt": "2026-11-05T01:10:21.506Z",
+  "generatedAt": "2026-11-05T05:08:23.627Z",
   "generatedBy": "scripts/gen-registry.mjs"
 }

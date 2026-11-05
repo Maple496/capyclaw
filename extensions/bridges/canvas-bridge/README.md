@@ -38,20 +38,44 @@ node scripts/discover-api.mjs --out contract/canvas-api.json  # 重新探测内�
 
 ## 交互实时性（bench 实测，本机 headless Chromium）
 
-| 指标 | 基线 | 优化后 | 手段 |
-|---|---|---|---|
-| 写工具（write/append/replace/style）p50 | 110ms | **63ms** | statusPollMs 100→50（tuning）；追加族零读直推 |
-| canvas_screenshot p50 | 319ms | **128ms** | 截图轮询接 tuning（300ms→50ms 量化） |
-| 读类（summary/text/audit/capabilities）p50 | 2-4ms | **2-5ms** | /view 轻量投影（relay 侧计算） |
-| 大文档（32KB 镜像）append p50 | 354ms | **323ms** | 零读直推；地板=内核页内 reload（insertElementList 经 exec 在本内核不可用，已探针验证） |
-| **2.7MB 镜像**（内嵌 dataURL 图） | — | append **178ms** / read **130ms** | 零读直推不拉镜像；/view 读缩小 **24,409×**（2.70MB→0.1KB） |
-| 管线地板（push→编辑器应用）p50 | 63ms | **63ms** | document-workbench 长轮询（watchPollMs 75ms 膝点） |
-| 5 路并发追加（整批） | ~~87ms~~ | **533ms** | 旧值是丢批次 bug 的假快；写互斥后串行化（正确性优先，单条 p50 不变） |
+| 指标 | 基线 | R1 调优 | R2 管线重构 | R2 手段 |
+|---|---|---|---|---|
+| 写工具（write/append/replace/style）p50 | 110ms | 63ms | **9-11ms** | 进程内直连 + 回执事件唤醒 |
+| canvas_insert_table p50 | — | 65ms | **18ms** | 同上 |
+| canvas_screenshot p50 | 319ms | 128ms | **37ms** | 截图等待事件唤醒（status-first） |
+| 读类（summary/text/audit/capabilities）p50 | 2-4ms | 2-5ms | **1-2ms** | /view 投影按镜像引用 memo |
+| 大文档（33KB 镜像）append p50 | 354ms | 323ms | **274ms** | 进程内镜像直读；地板=内核页内 reload |
+| 大文档（33KB 镜像）replace p50 | — | 268ms | **216ms** | 同上 |
+| 管线地板（HTTP push→applied）p50 | 63ms | 63ms | **33ms** | watch 事件唤醒（原 75ms 轮询粒度） |
+| 5 路并发追加（整批） | ~~87ms~~ | 533ms | **162ms** | 单条管线 63→32ms（写互斥保留） |
 
-关键设计：
+> 旧值 ~~87ms~~ 是丢批次 bug 的假快；写互斥后串行化是正确性优先。
+
+R2 优化手段（对齐 pptist「轻量读取 + 即时回执」方向，公共库 document-workbench 0.2.0 同步升级）：
+
+- **watch 事件唤醒**：`DocumentSession` 新增 `subscribe`/`waitForChange`，push/ack/state/
+  shot 变更即时唤醒挂起的长轮询与等待方——75ms 轮询粒度不再进入延迟路径（pollMs 保留兜底）。
+- **进程内直连**：MCP 工具与 relay 同进程时注入 store（`setLocalSession`）——镜像读
+  `structuredClone` 直取、回执等待事件唤醒，回环 HTTP + 全量 JSON 序列化双双消失；
+  stdio MCP 等独立形态自动回退 HTTP。
+- **响应轻量化**：`/watch` 只回编辑器消费的协议字段（旧：整个信封含全量镜像+截图
+  base64）；push/ack/state/shot 的 POST 响应同步瘦身——大文档每批次省数 MB 往返。
+- **status/health/metrics O(1) 摊销**：words 等投影按镜像引用 memo（镜像只在编辑器
+  /state 推送时整体替换，引用不变即复用）。
+- **新鲜度判定修正**：`applied_seq>0 且 state_seq 落后` 即追赶中——进程内直连快到
+  「回执后纳秒级读镜像」，旧判定的 `state_seq>0` 守卫会误放行空镜像。
+
+R1 及既有设计：
 
 - **追加族零读直推**：append_blocks / insert_table / insert_image / element(结构)
   推单条 `appendElementList` 指令，不读镜像——延迟与文档大小脱钩。
+- **heading → 内核真标题**：块模型把 heading 编译成 `{type:'title', level:'first'..'sixth'}`
+  包装元素，内核展平后挂 titleId/level —— 编辑器目录（大纲导航）由此构建，
+  字号(26/24/22/20/18/16)与加粗由内核按级应用，与用户手工插入的标题完全同形。
+  行模型：换行只由 value 内 `\n` 决定，title 自带起行，正文行以 `\n` 开头。
+- **用户编辑回推**：编辑器壳双通道订阅（门面 `change` + 内核 `eventBus contentChange`），
+  用户在页面里手工键入/删改经 800ms 防抖回推镜像 —— agent 的读工具能看到用户改动，
+  协作回路双向打通。
 - **/view 轻量投影**：summary/text/outline 在 relay 侧从镜像计算，读路径只回传
   小结果；自带 seq/state_seq 新鲜度重试（编辑器先回执后推镜像，不会读陈旧）。
 - **写互斥**：编辑器权威下 cmds 队列会被下一次 push 覆盖，并发 push 丢批次；

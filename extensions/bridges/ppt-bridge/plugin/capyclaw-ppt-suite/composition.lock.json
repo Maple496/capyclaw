@@ -9,10 +9,10 @@
       "sha256": "1e4dcb876e6acf9f253bf7f01b594390c39cf541534f9ff26a97b62ba37e6060"
     },
     "@capyclaw/document-workbench": {
-      "version": "0.1.1",
+      "version": "0.2.0",
       "apiVersion": null,
       "path": "../../../../../packages/capyclaw-document-workbench",
-      "sha256": "cab15e470c00428f0694c1dd7886e36d371b3d72f44c8a490f447a702b21ec42"
+      "sha256": "80414247643c19b5e866c5599e6573264248f1d9e3796c45cb355be6a36f3caf"
     },
     "@capyclaw/editor-host": {
       "version": "0.1.2",
@@ -75,10 +75,10 @@
       "sha256": "08f159c64070efc6c8d59bded98976e8b483f61a8c2e8669700a35cfa3975d4b"
     },
     "@capyclaw/ppt-workbench": {
-      "version": "2.4.4",
+      "version": "2.4.5",
       "apiVersion": null,
       "path": "../capyclaw-ppt-workbench",
-      "sha256": "16a23fb143120fd0019df19a0e3b818c371e3e27b83cb240990b0182020e66f3"
+      "sha256": "1da8b09d5379822b4bcaad2f6c23f798c589b337f7396776ffb4fbc88064edbe"
     },
     "@capyclaw/service-broker": {
       "version": "0.2.1",

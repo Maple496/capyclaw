@@ -39,7 +39,7 @@ export async function runLayer({ skipNetwork = false } = {}) {
   if (skipNetwork) {
     rec.skip('verify-publishable 抽检', '--skip-network')
   } else {
-    for (const name of ['@capyclaw/canvas-workbench', '@capyclaw/ppt-skill-api']) {
+    for (const name of ['@capyclaw/canvas-workbench', '@capyclaw/canvas-suite', '@capyclaw/ppt-skill-api']) {
       const r = run('node', ['scripts/verify-publishable.mjs', '--only', name])
       rec.check(`verify-publishable ${name}`, r.status === 0, (r.stderr || r.stdout).split('\n').slice(-3).join(' | '))
     }

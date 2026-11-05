@@ -20,6 +20,7 @@ import { join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { syncSharedDir } from '../../../../scripts/lib/shared-sync.mjs'
+import { checkSuiteDrift } from '../../../../scripts/check-suite-drift.mjs'
 import {
   createCheckedFs, syncSkillPackage, renderToolContractMarkdown,
   copyMcpEntries, buildEditorApp, writeRuntimeAsset, writeCompositionLock,
@@ -73,6 +74,10 @@ const COPIES = [
 ]
 
 /* 0. 公共插件快照（必须在 import tools.mjs 之前生成） */
+{
+  const drift = checkSuiteDrift({ quiet: true })
+  if (!drift.ok) ctx.fail('suite 元数据漂移:\n- ' + drift.issues.join('\n- '))
+}
 syncSharedDir(join(ROOT, 'src', 'mcp', 'shared'), { force: !CHECK_ONLY, check: CHECK_ONLY })
 syncSharedDir(join(WORKBENCH, 'server', 'shared'), { force: !CHECK_ONLY, check: CHECK_ONLY })
 

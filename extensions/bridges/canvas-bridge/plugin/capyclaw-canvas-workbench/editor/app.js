@@ -497,11 +497,44 @@
       onChange(handler) {
         const app = getApp();
         if (!app || typeof app.on !== "function") return null;
+        const offs = [];
         app.on("change", handler);
-        return () => {
+        offs.push(() => {
           try {
             app.off?.("change", handler);
           } catch {
+          }
+        });
+        const hookKernel = () => {
+          const bus = typeof window !== "undefined" && window.editor && window.editor.eventBus || null;
+          if (!bus || typeof bus.on !== "function") return false;
+          bus.on("contentChange", handler);
+          offs.push(() => {
+            try {
+              bus.off?.("contentChange", handler);
+            } catch {
+            }
+          });
+          return true;
+        };
+        if (!hookKernel()) {
+          const onReady = () => {
+            hookKernel();
+          };
+          app.on("ready", onReady);
+          offs.push(() => {
+            try {
+              app.off?.("ready", onReady);
+            } catch {
+            }
+          });
+        }
+        return () => {
+          for (const off of offs) {
+            try {
+              off();
+            } catch {
+            }
           }
         };
       },

@@ -3,7 +3,12 @@
  *
  * 内核事实（自 runtime/canvas-full-app.js 反推 + scripts/discover-api.mjs 探测，勿凭印象改）：
  *   - 文档 = {header?, main: Element[], footer?}（load() 三形兼容）
- *   - 段落 = 文本元素 + {value:'\n'}
+ *   - 行模型：换行只由 value 内的 '\n' 字符决定；title 元素自带起行，
+ *     其余文本元素需以 '\n' 开头才另起一行（首行前导 '\n' 由内核归一化剥离）。
+ *     仅靠元素边界（不带 '\n'）会被渲染成与上一行连排。
+ *   - 标题 = {type:'title', level:'first'..'sixth', value:'', valueList:[…]}；
+ *     load() 展平后给 valueList 元素挂 titleId/level，目录（getCatalog）由此构建。
+ *     内核默认字号 first..sixth = 26/24/22/20/18/16，自动加粗。
  *   - 表格 = {type:'table', value:' ', colgroup:[{width}], trList:[
  *              {height, minHeight, tdList:[{colspan,rowspan,value:[...]}]}]}
  *   - 图片 = {type:'image', value:dataURL, width, height}
@@ -22,42 +27,41 @@ export const PAPER = {
   Legal: { width: 816, height: 1344 },
 }
 
-const HEADING_SIZE = { 1: 28, 2: 22, 3: 18, 4: 16 }
+/** heading 级别（1-6）→ 内核 title level 名（目录/样式语义由此承载）。 */
+const TITLE_LEVELS = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth']
 
-/** 单块 → 元素数组 */
+/** 单块 → 元素数组（每块一行：title 自带起行；文本行以 '\n' 开头） */
 export function blockElements(block) {
   if (!block || typeof block !== 'object') return []
   const type = String(block.type || 'paragraph')
   const text = String(block.text ?? block.content ?? '')
 
   if (type === 'heading') {
-    const level = Math.min(4, Math.max(1, Number(block.level) || 1))
-    return [
-      { value: text, size: HEADING_SIZE[level], bold: true },
-      { value: '\n' },
-    ]
+    const level = Math.min(6, Math.max(1, Number(block.level) || 1))
+    /* valueList 内不放 size/bold：交给内核按 level 应用默认字号并加粗，
+     * 与用户手工插入的标题完全同形（目录、样式面板互相通用）。 */
+    return [{ type: 'title', level: TITLE_LEVELS[level - 1], value: '', valueList: [{ value: text }] }]
   }
   if (type === 'bullet') {
-    return [{ value: '• ' + text }, { value: '\n' }]
+    return [{ value: '\n• ' + text }]
   }
   if (type === 'number') {
     const n = Number(block.index) || 1
-    return [{ value: `${n}. ` + text }, { value: '\n' }]
+    return [{ value: `\n${n}. ` + text }]
   }
   if (type === 'quote') {
-    return [{ value: text, italic: true, color: '#666666' }, { value: '\n' }]
+    return [{ value: '\n' + text, italic: true, color: '#666666' }]
   }
   if (type === 'code') {
-    return [{ value: text, font: 'Menlo, Consolas, monospace', size: 12, highlight: '#f2f3f5' },
-      { value: '\n' }]
+    return [{ value: '\n' + text, font: 'Menlo, Consolas, monospace', size: 12, highlight: '#f2f3f5' }]
   }
   if (type === 'divider') {
-    return [{ value: '────────────────────────────' }, { value: '\n' }]
+    return [{ value: '\n────────────────────────────' }]
   }
   if (type === 'pageBreak') {
     return [{ type: 'pageBreak', value: '' }]
   }
-  return [{ value: text }, { value: '\n' }]
+  return [{ value: '\n' + text }]
 }
 
 /** 块数组 → 完整文档体（header/main/footer 必须是数组——内核 draw.setValue
@@ -66,7 +70,7 @@ export function documentOf(blocks) {
   return { header: [], main: blocksToElements(blocks), footer: [] }
 }
 
-/** 块数组 → 扁平元素流（block 级样式 + 行内样式） */
+/** 块数组 → 扁平元素流（block 级样式 + 行内样式；title 块样式落在 valueList 内元素上） */
 export function blocksToElements(blocks) {
   const out = []
   for (const b of Array.isArray(blocks) ? blocks : []) {
@@ -74,9 +78,11 @@ export function blocksToElements(blocks) {
     const style = b && b.style && typeof b.style === 'object' ? b.style : null
     if (style) {
       for (const el of els) {
-        if (el.value === '\n') continue
-        for (const k of ['bold', 'italic', 'underline', 'strikeout', 'color', 'size', 'font', 'highlight']) {
-          if (style[k] !== undefined) el[k] = style[k]
+        const targets = Array.isArray(el.valueList) && el.valueList.length ? el.valueList : [el]
+        for (const t of targets) {
+          for (const k of ['bold', 'italic', 'underline', 'strikeout', 'color', 'size', 'font', 'highlight']) {
+            if (style[k] !== undefined) t[k] = style[k]
+          }
         }
       }
     }
