@@ -466,6 +466,22 @@
       "suite": false
     },
     {
+      "id": "publisher",
+      "name": "@capyclaw/publisher",
+      "version": "0.1.0",
+      "title": "npm 发布器",
+      "description": "在 dsh 内发布 capyclaw 插件工程的可发布集：publisher_preview 全量预演（发现集/发布闸/同版本漂移/依赖顺序），publisher_execute 真发布（需显式 confirm）。发布逻辑与原仓库脚本逐条对齐。",
+      "category": "tool",
+      "platform": "both",
+      "dsh": "^0.2.0-rc.2",
+      "license": "MIT",
+      "path": "extensions/official/capyclaw-publisher",
+      "directory": "extensions/official/capyclaw-publisher",
+      "bundle": true,
+      "client": false,
+      "suite": false
+    },
+    {
       "id": "scrapling",
       "name": "@capyclaw/scrapling",
       "version": "1.1.5",
@@ -533,7 +549,7 @@
   "categories": {
     "services": 13,
     "skills": 15,
-    "tools": 4,
+    "tools": 5,
     "ui": 1
   },
   "author": {
@@ -551,6 +567,6 @@
     "discord": "https://discord.gg/capyclaw",
     "email": "support@capyclaw.dev"
   },
-  "generatedAt": "2026-11-05T12:59:40.673Z",
+  "generatedAt": "2026-11-05T16:21:00.146Z",
   "generatedBy": "scripts/gen-registry.mjs"
 }

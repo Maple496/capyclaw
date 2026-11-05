@@ -20,6 +20,7 @@ const fixed = {
   'extensions/official/capyclaw-port-sidebar': 'official',
   'extensions/official/capyclaw-scrapling': 'official',
   'extensions/official/capyclaw-ddr0-client': 'official',
+  'extensions/official/capyclaw-publisher': 'official',
   'extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-workbench': 'ppt',
   'extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-suite': 'ppt',
   'extensions/bridges/canvas-bridge/plugin/capyclaw-canvas-workbench': 'canvas',

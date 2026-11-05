@@ -1,0 +1,24 @@
+# @capyclaw/publisher bundle patch
+# npm 发布执行器：把 capyclaw 插件工程的发布流水线搬进 dsh。
+#
+# 配置项（cordis config → 环境变量 DSH_PUBLISHER_* → 默认值）：
+#   port         服务端口          DSH_PUBLISHER_PORT       39700（固定端口；mcp 接线要求 URL 已知）
+#   hostDir      锁/状态目录       DSH_PUBLISHER_HOME       缺省随 service-host 约定
+#   strictPort   端口占用即失败    DSH_PUBLISHER_STRICT     false（默认复用已健康实例）
+#
+# 工作区路径（要发布的仓库 checkout）优先级：工具参数 root → DSH_PUBLISHER_ROOT。
+# 发布凭据沿用宿主环境：npm whoami 已登录或 NODE_AUTH_TOKEN。
+
+- insert:
+    - id: publisher-host
+      name: "@capyclaw/publisher"
+      config:
+        port: 39700
+    - id: mcp-capyclaw-publisher
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: capyclaw-publisher
+        transport: streamable-http
+        url: 'http://127.0.0.1:39700/mcp'
+        failOnStartupError: false
+        toolCallTimeoutMs: 600000

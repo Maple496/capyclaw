@@ -35,6 +35,7 @@
 | [`@capyclaw/llm-tempkey`](https://www.npmjs.com/package/@capyclaw/llm-tempkey) | 1.0.2 | DDH 千帆临时 Key 分发客户端：校验主站登录态 → 签发临时 LLM Ke |
 | [`@capyclaw/plugin-sync`](https://www.npmjs.com/package/@capyclaw/plugin-sync) | 0.1.1 | 把运行中的 dsh 插件集合与外部清单对齐：报告差异、按清单启用/停用 bund |
 | [`@capyclaw/port-sidebar`](https://www.npmjs.com/package/@capyclaw/port-sidebar) | 1.0.3 | 在 DSH 右侧边栏稳定展示一个本机端口页面：每个会话的侧边栏都确保存在指向该端 |
+| [`@capyclaw/publisher`](https://www.npmjs.com/package/@capyclaw/publisher) | 0.1.0 | npm 发布执行器：在 dsh 内以 MCP 工具完成 capyclaw 插件工 |
 | [`@capyclaw/scrapling`](https://www.npmjs.com/package/@capyclaw/scrapling) | 1.1.5 | Scrapling 网页抓取集成：HTTP 抓取 + 纯 Node CSS 选择 |
 
 ### PPT 桥(extensions/bridges/ppt-bridge/)

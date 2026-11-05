@@ -12,6 +12,9 @@
     "semver": "^7.5.4",
     "yaml": "^2.3.4"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",

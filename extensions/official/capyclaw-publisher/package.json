@@ -1,0 +1,60 @@
+{
+  "name": "@capyclaw/publisher",
+  "version": "0.1.0",
+  "description": "npm 发布执行器：在 dsh 内以 MCP 工具完成 capyclaw 插件工程的发布预演与真发布（闸门、顺序、漂移、发布后复核），插件工程仓库本身不再持有发布脚本",
+  "type": "module",
+  "main": "./lib/host.mjs",
+  "exports": {
+    ".": "./lib/host.mjs",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "category": "tool",
+    "platform": "both"
+  },
+  "meta": {
+    "title": "npm 发布器",
+    "description": "在 dsh 内发布 capyclaw 插件工程的可发布集：publisher_preview 全量预演（发现集/发布闸/同版本漂移/依赖顺序），publisher_execute 真发布（需显式 confirm）。发布逻辑与原仓库脚本逐条对齐。"
+  },
+  "files": [
+    "lib/",
+    "server/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\""
+  },
+  "dependencies": {
+    "@capyclaw/plugin-kit": "^0.2.0",
+    "@capyclaw/plugin-validator": "^1.0.0",
+    "@capyclaw/service-host": "^0.1.0",
+    "@capyclaw/tool-host": "^0.1.0"
+  },
+  "engines": {
+    "node": ">=18",
+    "dsh": "^0.2.0-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maple496/capyclaw.git",
+    "directory": "extensions/official/capyclaw-publisher"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "npm-publish",
+    "release"
+  ],
+  "bugs": {
+    "url": "https://github.com/Maple496/capyclaw/issues"
+  },
+  "homepage": "https://github.com/Maple496/capyclaw/tree/main/extensions/official/capyclaw-publisher#readme"
+}
