@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/asset-service",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "DSH 公共资产插件：sha256 对象仓库、/assets 路由、base64 上传与 content-type，向插件提供 ctx.assets。",
   "type": "module",
   "main": "./lib/host.mjs",

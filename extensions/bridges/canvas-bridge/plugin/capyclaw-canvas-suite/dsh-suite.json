@@ -13,12 +13,12 @@
   "packages": {
     "@capyclaw/plugin-kit": {
       "role": "support",
-      "version": "^0.2.0",
+      "version": "^0.2.1",
       "path": "../../../../../packages/capyclaw-plugin-kit"
     },
     "@capyclaw/document-workbench": {
       "role": "support",
-      "version": "^0.1.0",
+      "version": "^0.1.1",
       "path": "../../../../../packages/capyclaw-document-workbench"
     },
     "@capyclaw/canvas-workbench": {

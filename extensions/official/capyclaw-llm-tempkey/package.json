@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/llm-tempkey",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "DDH 千帆临时 Key 分发客户端：校验主站登录态 → 签发临时 LLM Key（计费预扣积分）→ 到期前自动轮换 → 通过凭据缝注入 dsh 的 pi-ai 路由。",
   "type": "module",
   "main": "./lib/host.mjs",

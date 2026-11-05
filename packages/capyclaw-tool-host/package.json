@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/tool-host",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "DSH 公共工具面插件：能力 DSL、工具注册表、参数校验、契约报告、MCP 协议壳与 instructions 模板，向插件提供 ctx.toolHost。",
   "type": "module",
   "main": "./lib/host.mjs",

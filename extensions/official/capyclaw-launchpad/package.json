@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/launchpad",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "启动清单管理器 / 启动器：DSL 描述启动模式，管理界面点击启动、编辑、校验，经 dshd 拉起对应 dsh 模式。",
   "type": "module",
   "main": "./lib/host.mjs",

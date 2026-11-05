@@ -3,70 +3,70 @@
   "suiteVersion": "0.2.0",
   "packages": {
     "@capyclaw/asset-service": {
-      "version": "0.1.1",
+      "version": "0.1.2",
       "apiVersion": "1.0.0",
       "path": "..\\..\\..\\..\\..\\packages\\capyclaw-asset-service",
-      "sha256": "2836882e06776af237820cb55b47b6014a501f103d18b91cb9a4cb18b3b2e78f"
+      "sha256": "1e4dcb876e6acf9f253bf7f01b594390c39cf541534f9ff26a97b62ba37e6060"
     },
     "@capyclaw/canvas-skill-api": {
       "version": "0.2.0",
       "apiVersion": null,
       "path": "../capyclaw-canvas-skill-api",
-      "sha256": "6639da0c3a9fda700658bb8417c841eedaa9b42c931dc97ade69aeb25fa4d7e2"
+      "sha256": "19ce2dbad00d5f520f05185fa4ef0b2bb85003878691b1484b68e809382e5a2d"
     },
     "@capyclaw/canvas-skill-authoring": {
       "version": "0.2.0",
       "apiVersion": null,
       "path": "../capyclaw-canvas-skill-authoring",
-      "sha256": "31e7030d097459d688e5f897c5a3d33f7aba88cba32b6d3facfd71e802bcb750"
+      "sha256": "0bc9f4fd051da98e8b185b0f7e82fd2a63d5fa9d72a4f580837607ca18ceb6b4"
     },
     "@capyclaw/canvas-skill-canvas": {
       "version": "0.2.0",
       "apiVersion": null,
       "path": "../capyclaw-canvas-skill-canvas",
-      "sha256": "5e9c31e2dc49c6d848d4bb10bb642c298b10a45a18b518afd3be5445e550f893"
+      "sha256": "b39003b093ffc5b2a56b96b58294e3446ddfd24a643f414b37c6b00ce689567c"
     },
     "@capyclaw/canvas-skill-editing": {
       "version": "0.2.0",
       "apiVersion": null,
       "path": "../capyclaw-canvas-skill-editing",
-      "sha256": "809b76b50f7460609b5b5e888774be19fb45316b211d14761e5ffa4a1e427125"
+      "sha256": "c7b42d7eda4059ffbe999016af1cdb1690a47d0d6948615fad7bf15a94cc909f"
     },
     "@capyclaw/canvas-workbench": {
       "version": "0.2.0",
       "apiVersion": null,
       "path": "../capyclaw-canvas-workbench",
-      "sha256": "363b05c6da6720f4c1d1a412a7286d1cfbb361447a5884beee8b0e3a73acd86e"
+      "sha256": "e183131c815e563852978f7d1db9d048733347b73ae6ed8b21c4769915ce4beb"
     },
     "@capyclaw/document-workbench": {
-      "version": "0.1.0",
+      "version": "0.1.1",
       "apiVersion": null,
       "path": "../../../../../packages/capyclaw-document-workbench",
-      "sha256": "1d3f7fc802fe8e7f8853d38460067fcaa7dfaa4c21617ac9a32d3ace54532e0d"
+      "sha256": "cab15e470c00428f0694c1dd7886e36d371b3d72f44c8a490f447a702b21ec42"
     },
     "@capyclaw/editor-host": {
-      "version": "0.1.1",
+      "version": "0.1.2",
       "apiVersion": "1.0.0",
       "path": "..\\..\\..\\..\\..\\packages\\capyclaw-editor-host",
-      "sha256": "3e628950917fbf442f88001f50e95226f05e427ee827f7a8a227a63d1673f74b"
+      "sha256": "6f2021232fc083296c2e9691876855d4592d831fdb1f1cff6f3f68cd27332893"
     },
     "@capyclaw/plugin-kit": {
-      "version": "0.2.0",
+      "version": "0.2.1",
       "apiVersion": null,
       "path": "../../../../../packages/capyclaw-plugin-kit",
-      "sha256": "4950f15cfe35da21ff60258db1717f4475854836bf26748bb02bba89d72d24ce"
+      "sha256": "7f96e38d28c1389f1b2890aa2fcbc5c19caf70d7c9752171cebba29a14052980"
     },
     "@capyclaw/service-host": {
-      "version": "0.1.1",
+      "version": "0.1.2",
       "apiVersion": "1.0.0",
       "path": "..\\..\\..\\..\\..\\packages\\capyclaw-service-host",
-      "sha256": "a17a2c9624feda6f9f12346091c5b5fb06c6ddb8395c2dd64befcb01276abecb"
+      "sha256": "c517f6291a63c08e938e2ae0984a5663ed418af244cec7929cbfa4447dfdb845"
     },
     "@capyclaw/tool-host": {
-      "version": "0.1.1",
+      "version": "0.1.2",
       "apiVersion": "1.0.0",
       "path": "..\\..\\..\\..\\..\\packages\\capyclaw-tool-host",
-      "sha256": "19fe2ec4a5b1ce06514e92fefcb6165def2e4a14c2b3ffb3412d75ea142cda3a"
+      "sha256": "c79b9f3efef2ee588c9797562f3fb56135907b03eb2a0d7e22314548e8500723"
     }
   }
 }

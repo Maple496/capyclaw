@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/document-workbench",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "通用文档工作台框架：版本化文档会话、命令注册、桥路由、浏览器编辑器客户端与截图协议。",
   "type": "module",
   "main": "./src/index.mjs",

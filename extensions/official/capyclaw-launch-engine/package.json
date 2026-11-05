@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/launch-engine",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "按需激活引擎（组合根）：按 capability 注册表把「要求」解析成有序激活动作，bundle/entry 开关全部转发 plugin-sync、服务进程全部转发 serviceBroker，激活证据只认 pluginInventory 的 fiberPhase=active",
   "type": "module",
   "main": "./lib/index.mjs",

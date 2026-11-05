@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ppt-suite",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "description": "PPT 工作台套件：workbench + 8 个独立 skill 包 + 4 个公共基建插件，一键安装、锁定已验证版本。",
   "type": "module",
   "main": "./lib/index.mjs",

@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/ddr0-client",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "ddr0.com 客户端 - 在 DSH 中直接登录和浏览 ddr0 内容 by CapyClaw",
   "type": "module",
   "main": "./lib/host.mjs",

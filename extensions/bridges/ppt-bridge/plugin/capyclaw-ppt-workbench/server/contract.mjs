@@ -10,7 +10,7 @@ import { createCapabilityReport } from './shared/tool-host.mjs'
 export const CONTRACT_VERSION = '2.4.0'
 
 /** 工作台包版本。 */
-export const PACKAGE_VERSION = '2.4.3'
+export const PACKAGE_VERSION = '2.4.4'
 
 /** 生成模型可读的能力报告。 */
 export function capabilityReport(args, editorUrl = '', runtime = {}) {

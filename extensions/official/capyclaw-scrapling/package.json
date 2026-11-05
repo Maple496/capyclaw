@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/scrapling",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Scrapling 网页抓取集成：支持 HTTP 请求、隐身浏览器、JavaScript 渲染、Cloudflare 绕过、并发爬虫和数据导出",
   "type": "module",
   "main": "./lib/host.mjs",

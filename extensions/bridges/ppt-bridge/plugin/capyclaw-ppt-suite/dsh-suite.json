@@ -13,17 +13,17 @@
   "packages": {
     "@capyclaw/plugin-kit": {
       "role": "support",
-      "version": "^0.2.0",
+      "version": "^0.2.1",
       "path": "../../../../../packages/capyclaw-plugin-kit"
     },
     "@capyclaw/document-workbench": {
       "role": "support",
-      "version": "^0.1.0",
+      "version": "^0.1.1",
       "path": "../../../../../packages/capyclaw-document-workbench"
     },
     "@capyclaw/ppt-workbench": {
       "role": "runtime",
-      "version": "^2.4.0",
+      "version": "^2.4.4",
       "path": "../capyclaw-ppt-workbench",
       "requires": {
         "capabilities": {
@@ -51,7 +51,7 @@
     },
     "@capyclaw/ppt-skill-ppt": {
       "role": "skills",
-      "version": "^2.2.0",
+      "version": "^2.2.2",
       "path": "../capyclaw-ppt-skill-ppt",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
@@ -70,7 +70,7 @@
     },
     "@capyclaw/ppt-skill-narrative": {
       "role": "skills",
-      "version": "^2.2.0",
+      "version": "^2.2.3",
       "path": "../capyclaw-ppt-skill-narrative",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
@@ -89,7 +89,7 @@
     },
     "@capyclaw/ppt-skill-design": {
       "role": "skills",
-      "version": "^2.2.0",
+      "version": "^2.2.2",
       "path": "../capyclaw-ppt-skill-design",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
@@ -108,7 +108,7 @@
     },
     "@capyclaw/ppt-skill-api": {
       "role": "skills",
-      "version": "^2.2.0",
+      "version": "^2.2.2",
       "path": "../capyclaw-ppt-skill-api",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
@@ -127,7 +127,7 @@
     },
     "@capyclaw/ppt-skill-authoring": {
       "role": "skills",
-      "version": "^2.2.0",
+      "version": "^2.2.2",
       "path": "../capyclaw-ppt-skill-authoring",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
@@ -146,7 +146,7 @@
     },
     "@capyclaw/ppt-skill-editing": {
       "role": "skills",
-      "version": "^2.2.0",
+      "version": "^2.2.2",
       "path": "../capyclaw-ppt-skill-editing",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
@@ -165,7 +165,7 @@
     },
     "@capyclaw/ppt-skill-visual-check": {
       "role": "skills",
-      "version": "^2.2.0",
+      "version": "^2.2.2",
       "path": "../capyclaw-ppt-skill-visual-check",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
@@ -184,7 +184,7 @@
     },
     "@capyclaw/ppt-skill-research": {
       "role": "skills",
-      "version": "^2.2.0",
+      "version": "^2.2.2",
       "path": "../capyclaw-ppt-skill-research",
       "requires": {
         "@capyclaw/ppt-workbench": "^2.2.0",
@@ -203,7 +203,7 @@
     },
     "@capyclaw/service-broker": {
       "role": "runtime",
-      "version": "^0.2.0",
+      "version": "^0.2.1",
       "path": "../../../../../packages/capyclaw-service-broker",
       "provides": {
         "services": [
@@ -217,7 +217,7 @@
     },
     "@capyclaw/skills-service": {
       "role": "runtime",
-      "version": "^0.1.0",
+      "version": "^0.1.4",
       "path": "../../capyclaw-skills-service",
       "provides": {
         "services": [

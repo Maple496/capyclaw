@@ -4,7 +4,7 @@
     {
       "id": "asset-service",
       "name": "@capyclaw/asset-service",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "title": "公共资产服务",
       "description": "sha256 对象仓库、/assets 路由、base64 上传与 content-type，向插件提供 ctx.assets",
       "category": "service",
@@ -116,7 +116,7 @@
     {
       "id": "ddr0-client",
       "name": "@capyclaw/ddr0-client",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "title": "ddr0 客户端",
       "description": "在 DSH 中访问 ddr0.com - 登录、积分、社区等功能 by CapyClaw",
       "category": "service",
@@ -132,7 +132,7 @@
     {
       "id": "editor-host",
       "name": "@capyclaw/editor-host",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "title": "公共编辑器宿主",
       "description": "静态托管、租约仲裁、心跳与连接状态，向插件提供 ctx.editorHost",
       "category": "service",
@@ -148,7 +148,7 @@
     {
       "id": "launch-engine",
       "name": "@capyclaw/launch-engine",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "title": "按需激活引擎",
       "description": "容器注入的组合根：capability 注册表声明「要求 → bundle/entry/服务」，引擎解析依赖闭包、逐波激活并按 fiberPhase=active 口径验证；不自己实现任何开关，进程生命周期仍归 dshd。",
       "category": "tool",
@@ -164,7 +164,7 @@
     {
       "id": "launchpad",
       "name": "@capyclaw/launchpad",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "title": "启动清单管理器",
       "description": "用 dsh-stack DSL 管理启动模式：管理界面点击启动/停止、编辑校验 DSL、经 dshd 拉起 broker + dsh + 服务，并在 DSH 侧边栏提供入口。",
       "category": "tool",
@@ -180,7 +180,7 @@
     {
       "id": "llm-tempkey",
       "name": "@capyclaw/llm-tempkey",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "title": "LLM 临时Key客户端",
       "description": "登录校验 + 千帆临时 Key 自动签发/轮换 + 积分计费，经 pi-ai 路由注入 dsh。",
       "category": "service",
@@ -196,7 +196,7 @@
     {
       "id": "plugin-sync",
       "name": "@capyclaw/plugin-sync",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "title": "插件同步",
       "description": "读取外部清单（本地 JSON；HTTP 源预留），与当前 profile 的插件集合比对，输出差异报告；可按清单启用/停用 bundle 与插件行。开关能力全部复用 dsh 原生 pluginManager，不自己实现。",
       "category": "tool",
@@ -212,7 +212,7 @@
     {
       "id": "port-sidebar",
       "name": "@capyclaw/port-sidebar",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "title": "端口侧边栏",
       "description": "右侧边栏常驻展示指定服务（服务解耦标准：config.service 走中间件 discovery，端口不写死）的界面，切换会话/话题不消失。",
       "category": "ui",
@@ -356,7 +356,7 @@
     {
       "id": "ppt-suite",
       "name": "@capyclaw/ppt-suite",
-      "version": "2.4.3",
+      "version": "2.4.4",
       "title": "PPT 工作台套件",
       "description": "一键安装 PPTist 运行时 + 8 个独立 PPT skill 包 + 4 个公共基建插件",
       "category": "service",
@@ -372,7 +372,7 @@
     {
       "id": "ppt-workbench",
       "name": "@capyclaw/ppt-workbench",
-      "version": "2.4.3",
+      "version": "2.4.4",
       "title": "PPT 工作台运行时",
       "description": "AI 生成/编辑 PPT：27 个 ppt_* 工具 + 浏览器实时编辑器（http://127.0.0.1:39311/）",
       "category": "service",
@@ -388,7 +388,7 @@
     {
       "id": "scrapling",
       "name": "@capyclaw/scrapling",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "title": "Scrapling 网页抓取",
       "description": "强大的网页抓取工具：支持快速 HTTP 请求、隐身浏览器模式、JavaScript 渲染、Cloudflare 自动绕过、CSS/XPath 选择器、并发爬虫、代理轮换和多格式数据导出(JSON/CSV/XML)。",
       "category": "tool",
@@ -404,7 +404,7 @@
     {
       "id": "service-broker",
       "name": "@capyclaw/service-broker",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "title": "服务中间件",
       "description": "按清单把各服务作为独立进程拉起，守护、发现与控制端点；服务之间不互相带动",
       "category": "service",
@@ -420,7 +420,7 @@
     {
       "id": "service-host",
       "name": "@capyclaw/service-host",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "title": "公共服务宿主",
       "description": "统一 HTTP 路由、健康检查、指标、单实例锁与端口复用，向插件提供 ctx.serviceHost",
       "category": "service",
@@ -436,7 +436,7 @@
     {
       "id": "tool-host",
       "name": "@capyclaw/tool-host",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "title": "公共服务工具面",
       "description": "能力 DSL、工具注册表、参数校验、契约报告与 MCP 协议壳，向插件提供 ctx.toolHost",
       "category": "service",
@@ -471,6 +471,6 @@
     "discord": "https://discord.gg/capyclaw",
     "email": "support@capyclaw.dev"
   },
-  "generatedAt": "2026-11-04T23:47:52.966Z",
+  "generatedAt": "2026-11-04T23:58:12.859Z",
   "generatedBy": "scripts/gen-registry.mjs"
 }

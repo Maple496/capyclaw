@@ -4,6 +4,7 @@
  * 服务解耦标准：relay 是独立端口服务（server/relay.mjs 即 standalone 入口），
  * 由 dsh-service-broker 按清单以独立进程拉起；本模块只在被 insert 时
  * 以同样装配拉起 relay 并返回 disposer（兼容入口，生产路径走 broker）。
+ * 零 @deepseek-ai 依赖：只用 node 内置模块，最小化跨版本耦合。
  */
 import os from 'node:os'
 import path from 'node:path'
@@ -29,6 +30,8 @@ export async function apply(ctx, config) {
   const { startRelay, DEFAULT_PORT } = await import('../server/relay.mjs')
   const runtime = runtimeContextFromConfig(config || {})
   const workId = (config && config.workId) || runtime?.workId || 'main'
+  /* 进程内若提供 workspace 服务，优先使用它的 scoped client；
+   * 没有时保留 runtime context fallback，保证独立运行。 */
   const workspaceService = safeGet(ctx, 'workspace')
   const storeClient = workspaceService?.getWork
     ? workspaceService.getWork(workId)
@@ -43,7 +46,7 @@ export async function apply(ctx, config) {
   const serviceHost = requireApi(safeGet(ctx, 'serviceHost'), 'serviceHost')
   const toolHost = requireApi(safeGet(ctx, 'toolHost'), 'toolHost')
   const editorHost = requireApi(safeGet(ctx, 'editorHost'), 'editorHost')
-  /* 图片等二进制资源只进对象仓库。 */
+  /* 图片等二进制资源只进对象仓库；文档里只保存 /assets/<sha256> 引用。 */
   const assetService = requireApi(safeGet(ctx, 'assets'), 'assets')
   const assetStore = storeClient
     ? (assetService?.createStore
@@ -72,11 +75,12 @@ export async function apply(ctx, config) {
     editorHost,
   })
   const line = relay.reused
-    ? `[canvas-workbench] 复用已运行的桥: ${relay.url}`
-    : `[canvas-workbench] 桥已就绪: ${relay.url}`
+    ? '[canvas-workbench] 复用已运行的桥: ${relay.url}'
+    : '[canvas-workbench] 桥已就绪: ${relay.url}'
   console.log(line)
   console.log(`[canvas-workbench] 编辑器: ${relay.editorUrl} （浏览器打开即用）`)
   if (runtime) console.log(`[canvas-workbench] runtime=${runtime.runtimeId} work=${workId} namespace=${runtime.store?.namespace || ''}`)
+  if (relay.reused) console.log('[canvas-workbench] 注意：实际端口可能不是配置端口，/mcp 以当前 runtime 的 profile 注入为准')
   return async () => {
     await relay.stop()
     console.log('[canvas-workbench] 桥已停止')

@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/editor-host",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "DSH 公共编辑器宿主插件：静态托管、租约仲裁、心跳与连接状态，向插件提供 ctx.editorHost。",
   "type": "module",
   "main": "./lib/host.mjs",

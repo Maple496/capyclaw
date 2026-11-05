@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/port-sidebar",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "在 DSH 右侧边栏稳定展示一个本机端口页面：每个会话的侧边栏都确保存在指向该端口的 Browser tab，切换话题不消失。",
   "type": "module",
   "main": "./lib/host.mjs",

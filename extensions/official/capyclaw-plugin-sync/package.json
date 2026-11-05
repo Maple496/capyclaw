@@ -1,6 +1,6 @@
 {
   "name": "@capyclaw/plugin-sync",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "把运行中的 dsh 插件集合与外部清单对齐：报告差异、按清单启用/停用 bundle 与插件行（复用 dsh 原生 pluginManager，不重启）",
   "type": "module",
   "main": "./lib/host.mjs",
