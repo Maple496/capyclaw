@@ -208,7 +208,17 @@ function removeDiscovery(hostDir) {
 }
 
 /* ---- 独立运行入口（无 dsh 也可手动拉起，供调试/演示）---- */
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+/* 主模块判定用 realpath：pnpm/junction 等符号链接安装态下 argv[1] 是链接路径，
+ * import.meta.url 是真实路径，字符串直比会漏判（静默不启动）。 */
+function isMainEntry() {
+  if (!process.argv[1]) return false
+  try {
+    return fs.realpathSync(path.resolve(process.argv[1])) === fileURLToPath(import.meta.url)
+  } catch {
+    return path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+  }
+}
+if (isMainEntry()) {
   const arg = (name, dflt) => {
     const i = process.argv.indexOf(name)
     return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : dflt

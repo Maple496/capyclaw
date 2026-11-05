@@ -13,6 +13,7 @@
     "check:canvas": "npm --prefix extensions/bridges/canvas-bridge run check:plugin",
     "lint": "npm --prefix extensions/bridges/ppt-bridge run lint:skills && npm --prefix extensions/bridges/canvas-bridge run lint:skills",
     "test": "npm --prefix extensions/bridges/canvas-bridge test",
+    "test:e2e": "node scripts/e2e-all.mjs",
     "create-plugin": "node tools/capyclaw-plugin-generator/bin/cli.mjs",
     "validate-plugin": "node tools/capyclaw-plugin-validator/bin/cli.mjs",
     "validate-all": "node scripts/validate-all-plugins.mjs",
