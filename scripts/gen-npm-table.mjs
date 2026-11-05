@@ -23,6 +23,8 @@ const fixed = {
   'extensions/bridges/ppt-bridge/plugin/capyclaw-ppt-suite': 'ppt',
   'extensions/bridges/canvas-bridge/plugin/capyclaw-canvas-workbench': 'canvas',
   'extensions/bridges/canvas-bridge/plugin/capyclaw-canvas-suite': 'canvas',
+  'extensions/bridges/browser-bridge/plugin/capyclaw-browser-workbench': 'browser',
+  'extensions/bridges/browser-bridge/plugin/capyclaw-browser-suite': 'browser',
 }
 
 for (const [d, g] of Object.entries(fixed)) {
@@ -30,13 +32,19 @@ for (const [d, g] of Object.entries(fixed)) {
   rows.push({ g, name: p.name, ver: p.version, desc: (p.description || '').split(/[。;；\n]/)[0].slice(0, 40) })
 }
 
-for (const dir of ['extensions/bridges/ppt-bridge/plugin', 'extensions/bridges/canvas-bridge/plugin']) {
+const bridges = [
+  ['extensions/bridges/ppt-bridge/plugin', 'ppt'],
+  ['extensions/bridges/canvas-bridge/plugin', 'canvas'],
+  ['extensions/bridges/browser-bridge/plugin', 'browser'],
+]
+for (const [dir, g] of bridges) {
+  if (!fs.existsSync(dir)) continue
   for (const sub of fs.readdirSync(dir)) {
     const f = `${dir}/${sub}/package.json`
     if (!fs.existsSync(f)) continue
     const p = JSON.parse(fs.readFileSync(f, 'utf8'))
     if (!p.name.includes('skill-') || p.private) continue
-    rows.push({ g: dir.includes('ppt') ? 'ppt' : 'canvas', name: p.name, ver: p.version, desc: (p.description || '').split(/[。;；\n]/)[0].slice(0, 40) })
+    rows.push({ g, name: p.name, ver: p.version, desc: (p.description || '').split(/[。;；\n]/)[0].slice(0, 40) })
   }
 }
 
@@ -47,8 +55,9 @@ const titles = {
   official: '### 官方扩展(extensions/official/)',
   ppt: '### PPT 桥(extensions/bridges/ppt-bridge/)',
   canvas: '### Canvas 桥(extensions/bridges/canvas-bridge/)',
+  browser: '### Browser 桥(extensions/bridges/browser-bridge/)',
 }
-const order = ['libs', 'infra', 'tools', 'official', 'ppt', 'canvas']
+const order = ['libs', 'infra', 'tools', 'official', 'ppt', 'canvas', 'browser']
 
 let out = ''
 for (const g of order) {
