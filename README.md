@@ -1,22 +1,25 @@
 # dsh 插件工程
 
-**本仓库只做三件事：构建 dsh 插件、生成打包产物、手动发布到 npm。**
+**本仓库只做两件事：构建 dsh 插件、生成打包产物。**
 
 不改 dsh 源码。dsh 是 npm 依赖（`@deepseek-ai/dsh`），所有扩展都通过 Cordis 官方扩展点
 （`cordis.patch.yml` 的 `insert`）注入；仓库内全部 patch 操作均为 `insert`，
 没有 `update`/`remove`。
 
-> 测试不在本仓库职责内。仓库产出的合格产物是否发布，由人工执行发布命令决定。
+> 测试不在本仓库职责内。npm 发布也不在：由 dsh 内的 **`@capyclaw/publisher` 插件**
+> （源在本仓 `extensions/official/capyclaw-publisher/`）执行，见 [docs/PUBLISHING.md](docs/PUBLISHING.md)。
 
 ---
 
 ## 流水线
 
 ```
-① 构建            ② 打包                    ③ 手动发布
-build:plugin  →   release-all / release-index  →   publish:npm (dry-run 预览)
-（源内构建，        （dist/plugins/*.zip          publish:execute（人工确认后执行）
+① 构建            ② 打包
+build:plugin  →   release-all / release-index
+（源内构建，        （dist/plugins/*.zip
  产物提交进仓）      + dist/index.json）
+
+发布：dsh 内 @capyclaw/publisher 插件（publisher_preview 预演 → publisher_execute 真发布）
 ```
 
 ```bash
@@ -31,8 +34,6 @@ npm run release-index           # 重建 dist/index.json
 npm run verify-source           # 校验整源包（plugin-source/1 标准）
 
 npm run check-registry          # registry 一致性检查
-npm run publish:npm             # 发布预演（dry-run，不真发）
-npm run publish:execute         # 真正发布到 npm（人工决定时机）
 ```
 
 新建插件：
@@ -64,7 +65,7 @@ tools/        插件工具链
 
 extensions/   插件本体（发布产品）
   official/     launchpad、launch-engine、plugin-sync、llm-tempkey、
-                port-sidebar、scrapling、ddr0-client
+                port-sidebar、scrapling、ddr0-client、publisher（npm 发布器）
   bridges/      ppt-bridge（workbench + 8 个 skill + suite，由 build:plugin 构建）
                 canvas-bridge（workbench + 4 个 skill + suite）
                 browser-bridge（workbench + 3 个 skill + suite，浏览器操控）
@@ -102,16 +103,12 @@ export function apply(ctx, config) {
 
 ## 发布
 
-发布对象由 `tools/capyclaw-plugin-release` 的 `discoverPlugins()` 收敛（过得了发布闸的包），
+发布对象由 `discoverPlugins()` + 支撑库清单收敛（`scripts/lib/publish-set.mjs`），
 清单与 `capyclaw-registry.json` 一致（由 `npm run gen-registry` 生成，不要手改）。
 
-```bash
-npm run publish:npm          # dry-run 预览每个包的发布动作
-npm run publish:execute      # 确认无误后执行
-```
-
-三个 registry 外的依赖包需单独发布：`@capyclaw/plugin-kit`、
-`@capyclaw/document-workbench`、`@capyclaw/skills-service`。详见 [docs/PUBLISHING.md](docs/PUBLISHING.md)。
+**本仓没有发布命令。** 发布在 dsh 内由 `@capyclaw/publisher` 插件执行：
+`publisher_preview({ root })` 预演 → `publisher_execute({ root, confirm: true })` 真发布。
+一次性引导（插件自身首次上 npm）与细节见 [docs/PUBLISHING.md](docs/PUBLISHING.md)。
 
 ---
 
@@ -159,6 +156,7 @@ npm run publish:execute      # 确认无误后执行
 | [`@capyclaw/llm-tempkey`](https://www.npmjs.com/package/@capyclaw/llm-tempkey) | 1.0.2 | DDH 千帆临时 Key 分发客户端：校验主站登录态 → 签发临时 LLM Ke |
 | [`@capyclaw/plugin-sync`](https://www.npmjs.com/package/@capyclaw/plugin-sync) | 0.1.1 | 把运行中的 dsh 插件集合与外部清单对齐：报告差异、按清单启用/停用 bund |
 | [`@capyclaw/port-sidebar`](https://www.npmjs.com/package/@capyclaw/port-sidebar) | 1.0.3 | 在 DSH 右侧边栏稳定展示一个本机端口页面：每个会话的侧边栏都确保存在指向该端 |
+| [`@capyclaw/publisher`](https://www.npmjs.com/package/@capyclaw/publisher) | 0.1.0 | npm 发布执行器：在 dsh 内以 MCP 工具完成 capyclaw 插件工 |
 | [`@capyclaw/scrapling`](https://www.npmjs.com/package/@capyclaw/scrapling) | 1.1.5 | Scrapling 网页抓取集成：HTTP 抓取 + 纯 Node CSS 选择 |
 
 ### PPT 桥(extensions/bridges/ppt-bridge/)

@@ -3,8 +3,9 @@
  * 沙箱安装形态验证（模拟 dsh 用户视角）：
  *
  *   1. 空沙箱 profile（= dsh 删除全部插件后）
- *   2. registry 28 包：npm 上同名版本已发布 → registry 安装；未发布 → npm pack tarball 安装
- *      （后者等价于「发布后」的安装形态；document-workbench 支撑库按需一并 pack）
+ *   2. registry 34 包：npm 上同名版本已发布 → registry 安装；未发布 → npm pack tarball 安装
+ *      （后者等价于「发布后」的安装形态；registry 外支撑包 document-workbench /
+ *       plugin-validator 按需一并 pack）
  *   3. 依赖树完整性 + cordis 式逐插件 import
  *   4. canvas-workbench 真浏览器全链路 + ppt-workbench 对称冒烟（--skip-browser 跳过）
  *
@@ -44,14 +45,21 @@ for (const p of registry.plugins) {
   ;((v.status === 0 && String(v.stdout).trim() === p.version) ? published : local).push(p)
 }
 rec.section(`版本分类（registry ${registry.plugins.length} 包）`)
-rec.check(`npm 已发布 ${published.length} 包（registry 直装）`, published.length > 0)
-console.log(`· 待发布/本地 tarball：${local.map((p) => p.name).join('、') || '无'}`)
+/* 信息输出不做硬断言：发布时序由 dsh 内 @capyclaw/publisher 决定，未发布窗口期属正常
+ * （本地 tarball 安装 = 「发布后形态」等价验证，两种桶都验证安装形态本身）。 */
+console.log(`· npm 已发布 ${published.length} 包（registry 直装）；待发布/本地 tarball：${local.map((p) => p.name).join('、') || '无'}`)
 
-/* document-workbench 支撑库：npm 版本落后于本地需求时也走 tarball */
-const DW = path.join(ROOT, 'packages', 'capyclaw-document-workbench')
-const dwLocal = JSON.parse(fs.readFileSync(path.join(DW, 'package.json'), 'utf8'))
-const dwNpm = npmRun(['view', `${dwLocal.name}@${dwLocal.version}`, 'version'], { stdio: 'pipe' })
-const dwNeeded = dwNpm.status !== 0 || String(dwNpm.stdout).trim() !== dwLocal.version
+/* registry 外支撑包：npm 上没有同名版本（或版本落后）时一并走 tarball。
+ *  - document-workbench：canvas/ppt workbench 的运行时依赖
+ *  - plugin-validator：@capyclaw/publisher 的依赖（bootstrap 发布前只在本地） */
+const extraSupportDirs = [
+  path.join(ROOT, 'packages', 'capyclaw-document-workbench'),
+  path.join(ROOT, 'tools', 'capyclaw-plugin-validator'),
+].filter((dir) => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'))
+  const v = npmRun(['view', `${pkg.name}@${pkg.version}`, 'version'], { stdio: 'pipe' })
+  return v.status !== 0 || String(v.stdout).trim() !== pkg.version
+})
 
 /* ── 2. 沙箱 profile：安装（已发布走 registry，其余走 pack tarball） ── */
 rec.section('沙箱安装（空 profile → npm 全量安装）')
@@ -73,7 +81,7 @@ if (published.length) {
 }
 
 const packDirs = local.map((p) => path.join(ROOT, p.directory))
-if (dwNeeded) packDirs.push(DW)
+packDirs.push(...extraSupportDirs)
 if (packDirs.length) {
   const tarballs = []
   for (const dir of packDirs) {

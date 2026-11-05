@@ -3,18 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "dsh 插件工程：构建 dsh 插件、生成打包产物、手动发布到 npm。不包含运行时编排与部署。",
+  "description": "dsh 插件工程：构建 dsh 插件、生成打包产物。发布由 dsh 内的 @capyclaw/publisher 插件执行，本仓不含发布脚本。",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "bootstrap": "node scripts/bootstrap.mjs",
     "verify:install": "node scripts/sandbox/verify-install.mjs",
-    "build": "npm run build:ppt && npm run build:canvas && npm run build:browser",
+    "build": "node scripts/build-all.mjs",
     "build:ppt": "npm --prefix extensions/bridges/ppt-bridge run build:plugin",
     "build:canvas": "npm --prefix extensions/bridges/canvas-bridge run build:plugin",
     "build:browser": "npm --prefix extensions/bridges/browser-bridge run build:plugin",
-    "check": "npm run check:ppt && npm run check:canvas && npm run check:browser && npm run check:exports",
+    "check": "node scripts/build-all.mjs --check && npm run check:exports",
     "check:exports": "node scripts/check-package-exports.mjs",
     "test:kit": "npm --prefix packages/capyclaw-plugin-kit test",
     "check:ppt": "npm --prefix extensions/bridges/ppt-bridge run check:plugin",
@@ -32,11 +32,8 @@
     "release-index": "node tools/capyclaw-plugin-release/bin/cli.mjs index",
     "release-source": "node tools/capyclaw-plugin-release/bin/cli.mjs bundle",
     "verify-source": "node tools/capyclaw-plugin-release/bin/cli.mjs verify",
-    "verify-publishable": "node scripts/verify-publishable.mjs",
     "gen-registry": "node scripts/gen-registry.mjs",
-    "check-registry": "node scripts/gen-registry.mjs --check",
-    "publish:npm": "node scripts/publish-to-npm.mjs",
-    "publish:execute": "node scripts/publish-to-npm.mjs --execute"
+    "check-registry": "node scripts/gen-registry.mjs --check"
   },
   "workspaces": [
     "packages/*",

@@ -155,7 +155,12 @@ Settings → Secrets and variables → Actions
 
 ---
 
-### 第五层：自动化发布安全
+### 第五层：发布执行安全
+
+> 本仓的 npm 发布由 dsh 内的 `@capyclaw/publisher` 插件执行（不在 CI、不在仓库脚本）。
+> 凭据模型是**宿主环境透传**：插件直接用 dsh 运行用户的 npm 登录态或 `NODE_AUTH_TOKEN`，
+> 本身不经手/存储 token。真发布工具 `publisher_execute` 需要显式 `confirm: true`。
+> 下面的 token/2FA 建议同样适用于这台发布机。
 
 #### 1. 使用 Access Token（而不是密码）
 

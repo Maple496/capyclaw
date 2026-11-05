@@ -1,8 +1,8 @@
 # 插件分发机制
 
-本仓库产出的分发物有三种：**npm 包**（主渠道）、**zip 产物**（`dist/plugins/`）、
-**registry 清单**（`capyclaw-registry.json`）。安装发生在用户的 dsh 环境
-（`~/.dsh/profiles/<name>/package.json`），本仓库不负责安装动作本身。
+本仓库产出的分发物有三种：**npm 包**（主渠道，由 dsh 内 `@capyclaw/publisher` 插件发布）、
+**zip 产物**（`dist/plugins/`）、**registry 清单**（`capyclaw-registry.json`）。
+安装发生在用户的 dsh 环境（`~/.dsh/profiles/<name>/package.json`），本仓库不负责安装动作本身。
 
 > 历史上的 `tools/install-plugins.mjs`（本地 link/批量安装）与 `dshd` 启动器
 > 已随运行编排代码移出仓库（见 `../dsh-archive/`）。
@@ -11,7 +11,7 @@
 
 | 产物 | 生成命令 | 用途 |
 |---|---|---|
-| npm 包 | `npm run publish:execute`（见 [PUBLISHING.md](PUBLISHING.md)） | 用户 `dsh plugin add @capyclaw/xxx` 安装 |
+| npm 包 | dsh 内 `publisher_execute`（见 [PUBLISHING.md](PUBLISHING.md)） | 用户 `dsh plugin add @capyclaw/xxx` 安装 |
 | zip 产物 | `npm run release-all` → `dist/plugins/<name>-<version>.zip` | 离线分发 / 私有镜像 |
 | 索引 | `npm run release-index` → `dist/index.json` | zip 目录索引（schema 1） |
 | 整源包 | `npm run release-source` → `release/dsh-plugin-source-*.zip` | 按 plugin-source/1 标准的整源交付 |

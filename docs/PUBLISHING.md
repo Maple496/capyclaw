@@ -1,62 +1,53 @@
 # 发布到 npm
 
-本仓库的发布是**手动决定**的：流水线只负责构建与打包，是否发布、何时发布由人工执行命令确定。
-
-**一条命令跑完整条发布准备流水线：`npm run release`**（构建 → lint → 结构校验 → zip 产物 →
-索引 → registry 生成与一致性检查）。之后人工检视，再 `npm run publish:execute` 发布。
+**本仓库不发布任何东西。** 仓库职责到 `dist/` 产物为止；npm 发布由 dsh 内的
+**`@capyclaw/publisher` 插件**执行（`extensions/official/capyclaw-publisher/`，
+源在本仓、以 npm 包分发）。发布逻辑（发现集、发布闸、顺序闸、同版本漂移、
+发布后 shasum 复核）逐条移植自本仓原 `scripts/publish-to-npm.mjs`，该脚本已删除。
 
 ## 前置条件
 
 ```bash
-# 1. npm 账号已登录（一次性）
-npm whoami        # 未登录则 npm adduser
+# 1. npm 账号已登录（一次性，发布机/dsh 宿主机）
+npm whoami        # 未登录则 npm adduser（或设 NODE_AUTH_TOKEN）
 
 # 2. 组织 @capyclaw 已创建（作用域包需要）
 # https://www.npmjs.com/org/create
 ```
 
-## 发布流程
+## 一次性引导（仅首次需要）
 
-### 第一步：一键流水线（构建 + 打包 + 清单）
-
-```bash
-npm run release
-# 由 scripts/release.mjs 编排（分阶段计时、失败即停）：
-#   npm run build            # ppt / canvas / browser 三条 bridge 全部插件包重建
-#   npm run lint             # 三个 bridge 的 skill lint
-#   npm run validate-all     # 结构校验全绿
-#   release-all              # 生成 dist/plugins/*.zip（含 vendored 依赖）
-#   release-index            # 生成 dist/index.json
-#   gen-registry             # capyclaw-registry.json 重新生成（一致性由 check-registry / e2e L1 把关）
-# 只跑部分阶段：node scripts/release.mjs --only build,lint
-```
-
-### 第二步：发布预演（dry-run，不真发）
+publisher 依赖 `@capyclaw/plugin-validator`（校验闸），两者当前都不在 npm 上，
+需按依赖顺序手动各发一次——这是本仓**最后两次**裸 `npm publish`：
 
 ```bash
-npm run publish:npm                                  # 全部包（支撑库 + 插件）
-node scripts/publish-to-npm.mjs --only @capyclaw/launchpad   # 单个包
+# ① 先发校验器（publisher 的依赖）
+cd tools/capyclaw-plugin-validator && npm publish --access public
+
+# ② 再发 publisher 自己
+cd extensions/official/capyclaw-publisher && npm publish --access public
 ```
 
-统一发布脚本覆盖**全部对外包**：
+之后（包括 publisher 自身的版本更新）一律走插件发布。
 
-- **支撑库**（显式清单，先发）：`@capyclaw/plugin-kit`、`@capyclaw/document-workbench`、
-  `@capyclaw/host-shell`、`@capyclaw/skills-service` —— 它们无 `dsh.bundle`、进不了插件闸，
-  走库发布闸（private / publishConfig.access / license / link 依赖检查）。
-- **插件**（`discoverPlugins()` 自动发现，后发）：结构校验 + 插件发布闸。
-
-顺序固定「先库后插件」：`@capyclaw/plugin-kit` 必须先上 registry，插件发布时依赖才可解析。
-任何一关不过都会列出原因；已发布过且版本未变的包自动跳过（`skipped-exists`）。
-
-### 第三步：人工确认后执行
+## 发布流程（dsh 内）
 
 ```bash
-npm run publish:execute                          # 全部 → latest
-npm run publish:execute -- --tag next            # 预发布通道（dist-tag=next）
+# 安装（每个 profile 一次）
+dsh plugin add @capyclaw/publisher
 ```
 
-`--tag` 与 zip 源索引的 `--channel` 语义对应：`stable ↔ latest`、`next ↔ next`。
-走了 `next` 的版本正式发布时重新 `publish:execute` 即可落到 `latest`（npm dist-tag 语义）。
+在 dsh 里对 AI 说「预演发布 / 执行发布」，对应工具调用：
+
+1. `publisher_whoami` — npm 凭据预检
+2. `publisher_preview({ root })` — 全量 dry-run：支撑库 + `discoverPlugins()` 插件，
+   先库后插件；发布闸 / pack 闸 / 同版本漂移 / 依赖顺序闸，逐包结果 + 汇总
+3. `publisher_execute({ root, confirm: true })` — 真发布（不可撤销，必须显式 confirm）；
+   可选 `only`（单包）、`tag`（dist-tag，默认 latest）、`skipTests`
+
+`root` = 本仓 checkout 路径（或环境变量 `DSH_PUBLISHER_ROOT`）。
+支撑库清单可用 `DSH_PUBLISHER_LIBS` 覆盖（默认 4 项：plugin-kit /
+document-workbench / host-shell / skills-service，与 `scripts/lib/publish-set.mjs` 对齐）。
 
 ## 版本管理
 
@@ -80,9 +71,10 @@ node scripts/bump.mjs --sync-refs --write    # 把各 dsh-suite.json 的 ^ 引�
 
 ## 常见问题
 
-- **发布被闸挡下**：看 dry-run 输出的具体原因（缺 `publishConfig.access`、
-  有 `link:`/`file:` 依赖、缺 `engines.dsh` 等）。
-- **可安装性自检**（打 tarball → 干净目录安装验证）：`npm run verify-publishable`。
+- **发布被闸挡下**：看 `publisher_preview` 逐包输出的具体原因（缺 `publishConfig.access`、
+  有 `link:`/`file:` 依赖、缺 `engines.dsh`、pack 闸缺文件等）。
+- **可安装性**：preview 自带 pack 闸（`npm pack --dry-run` 断言 package.json / main /
+  patch 必在包内）；沙箱级全量安装验证走本仓 `npm run verify:install`。
 - **zip 分发**：`npm run release-all` 的产物在 `dist/`（gitignored），
   整源包用 `npm run release-source`，标准校验用 `npm run verify-source`。
 
@@ -90,12 +82,12 @@ node scripts/bump.mjs --sync-refs --write    # 把各 dsh-suite.json 的 ^ 引�
 
 - **新建包名 429**：短时间连续创建多个新包名会触发 registry 的账号/网络级限流，
   报错形如 `429 ... as user undefined: rate limited exceeded`。已有包发新版本不受影响。
-  冷却窗口实测超过 17 小时（约 24 小时），期间只能等待；补发时逐包 `--only` 发布即可。
+  冷却窗口实测超过 17 小时（约 24 小时），期间只能等待；补发时逐包 `only` 发布即可。
 - **暂存版本冲突**：个别包的发布会进 registry staged 区（未立即上架），
   再发同版本报 `409 Cannot publish over previously staged version "x.y.z"`。
   查看/批准需 npm ≥ 11.15 的 `npm stage list|approve`（批准要 2FA），
   或到 npmjs.com 的 Staged Packages 页操作；无法操作时**升 patch 版本重发**最省事：
   `node scripts/bump.mjs <pkg> patch --write && npm run build`
   （`ppt-skill-research` 2.2.3 即按此跳到 2.2.4，并连带 suite 2.4.6 更新组合锁）。
-- 发布后 `npm view <pkg> version` 可能短暂滞后（registry 副本），以 `publish:npm` 的
-  逐包结果为准，稍后复核。
+- 发布后 `npm view <pkg> version` 可能短暂滞后（registry 副本），以
+  `publisher_execute` 的逐包结果（含发布后 shasum 复核）为准，稍后复核。

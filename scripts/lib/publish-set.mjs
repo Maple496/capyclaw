@@ -1,8 +1,9 @@
 /**
  * 本仓「可发布包」集合的唯一定义：支撑库 + discoverPlugins() 插件。
  *
- * publish-to-npm 与 bump 共用，避免两份清单漂移。支撑库（纯库/独立服务，
- * 无 dsh.bundle，discoverPlugins 不收）用显式清单维护。
+ * bump（版本提升）与 dsh 内 @capyclaw/publisher 插件（发布）共用这套集合定义，
+ * 避免两份清单漂移。支撑库（纯库/独立服务，无 dsh.bundle，discoverPlugins
+ * 不收）用显式清单维护；插件的 SUPPORT_LIBS 副本以这里为准。
  */
 import fs from 'node:fs'
 import path from 'node:path'

@@ -57,5 +57,5 @@ if (failed) {
   console.error(`\n✗ 卡在 ${failed}，后续步骤未执行`)
   process.exitCode = 1
 } else {
-  console.log('\n✓ 全链完成（产物未发布；发布走 npm run publish:npm → publish:execute）')
+  console.log('\n✓ 全链完成（产物未发布；发布走 dsh 内的 @capyclaw/publisher 插件，见 docs/PUBLISHING.md）')
 }

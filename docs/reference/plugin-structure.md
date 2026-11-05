@@ -116,7 +116,7 @@ my-plugin/
 3. **代码质量**：ESM 模块格式；可加载（import 不报错），
    导出符合约定（apply / name）
 
-**测试是可选的但被鼓励**：有 `scripts.test` 的包在 `publish:execute` 时必跑测试
+**测试是可选的但被鼓励**：有 `scripts.test` 的包在发布（dsh 内 `publisher_execute`）时必跑测试
 （canvas-bridge 的 55 项测试是现役范例）。验证器不强制 test/ 目录。
 
 ### 验证时机
@@ -133,6 +133,6 @@ my-plugin/
 npm run create-plugin                    # 脚手架生成插件骨架
 npm run validate-plugin <path>           # 验证单个插件
 npm run validate-all                     # 验证全部插件
-npm run release                          # 一键发布准备流水线
-npm run publish:execute                  # 发布（先库后插件，默认 dry-run）
+npm run release                          # 一键生产流水线（构建→打包→registry）
+# 发布：dsh 内 @capyclaw/publisher 插件（publisher_preview / publisher_execute）
 ```

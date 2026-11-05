@@ -25,7 +25,7 @@ npm run bootstrap -- --full
 | npm | >= 10（随 Node 20+ 自带） | workspace + lockfile v3 |
 | Git | 任意近期版本 | 仓库含 `package-lock.json`，依赖精确还原 |
 | Playwright chromium | bootstrap 自动安装 | L6 真浏览器层用；浏览器二进制不进 node_modules，换机必装 |
-| 网络 | registry.npmjs.org 可达 | 安装与 L5 发布预演（dry-run，无需登录）；`--skip-network` 可离线跑大部分层 |
+| 网络 | registry.npmjs.org 可达 | 依赖安装与只读 registry 查询（无需登录）；`--skip-network` 可离线跑大部分层 |
 | 平台 | Windows / Linux / macOS | e2e 全链已做跨平台分支（junction↔symlink、taskkill↔SIGTERM） |
 
 不需要：dsh 桌面端、数据库、Docker。插件构建/测试/打包全部自包含。
@@ -39,8 +39,10 @@ npm run validate-all     # 全部插件结构校验
 npm run test:e2e         # 六层验证（静态/构建漂移/单元/服务/MCP/broker/发布/浏览器）
 npm run verify:install   # 沙箱安装形态验证（见下）
 npm run release          # zip + index + registry 全链（不发布）
-npm run publish:npm      # 发布预演 dry-run（不真发）
 ```
+
+> npm 发布不在本仓：由 dsh 内的 `@capyclaw/publisher` 插件执行（`publisher_preview`
+> / `publisher_execute`），见 [PUBLISHING.md](PUBLISHING.md)。
 
 > 单元层取舍：L2 只跑 canvas 的 `node --test`（55 项）；ppt/browser 的
 > `src/mcp`、`src/core` 无独立单测层，由 L3 服务冒烟（真实拉起 relay、走
@@ -64,7 +66,7 @@ npm run verify:install -- --skip-browser
 - 沙箱目录名**故意含空格**（`dsh plugin sandbox-*`）——Windows 用户路径的经典翻车点，全程无 shell 拼接
 - 断言：依赖树 0 UNMET、28 插件 cordis 加载、canvas 22 工具真浏览器链路、ppt 27 工具冒烟
 
-### 发布闸（publish-to-npm，dry-run 即生效）
+### 发布闸（dsh 内 @capyclaw/publisher 插件，preview 即生效）
 
 - **同版本漂移闸**：本地 `npm pack` sha1 与 registry `dist.shasum` 不一致 → 拒发并要求 bump（npm 禁止同版本重发）
 - **发布顺序闸**：待发包的 `@capyclaw/*` 依赖闭包必须「registry 已可解析」或「同批发布」，否则拒发——拦截「发了 suite 但 document-workbench 还没发」导致用户安装 404/ETARGET 的顺序手滑
@@ -78,12 +80,14 @@ npm run verify:install -- --skip-browser
 | Playwright 系统库 | 免 | 缺库时 `sudo npx playwright install-deps chromium` |
 | npm 脚本 | 脚本内部统一 `shell: win32` 处理 | 同一套代码，无需改 |
 
-## 发布（可选，仅发布机需要）
+## 发布（在 dsh 内执行，本仓无发布脚本）
 
-- `npm whoami` 登录 capyclaw 发布账号，或设 `NODE_AUTH_TOKEN`
-- 顺序纪律：支撑库（plugin-kit → document-workbench）→ 运行时插件 → suite；
-  同版本号内容变化必须 bump（npm 禁止同版本重发），用 `scripts/bump.mjs`
-  （默认 dry-run，`--write` 落盘；`--sync-refs` 收口 suite 引用），详见 PUBLISHING.md
+- 前置：dsh 宿主机 `npm whoami` 已登录 capyclaw 发布账号，或设 `NODE_AUTH_TOKEN`
+- 工具：`publisher_whoami` → `publisher_preview({ root })` → `publisher_execute({ root, confirm: true })`
+  （`root` = 本仓 checkout 路径，或设 `DSH_PUBLISHER_ROOT`）
+- 顺序纪律由插件的顺序闸自动把守（支撑库先于插件）；同版本号内容变化必须 bump
+  （npm 禁止同版本重发），用 `scripts/bump.mjs`（默认 dry-run，`--write` 落盘；
+  `--sync-refs` 收口 suite 引用），详见 PUBLISHING.md
 
 ## dsh 桌面端联调（可选）
 
@@ -105,4 +109,4 @@ dsh plugin --profile <name> add @capyclaw/canvas-suite
 | L4 跳过：固定端口被占用 | 停掉本机 393xx 段服务（dsh 实例），或 `--layer` 跳过 L4 |
 | Windows 上 symlink 报权限 | 不应出现（用的是 junction）；若出现说明跑在非 NTFS 盘 |
 | `npm install` 后 e2e 找不到 workspace 包 | 确认在仓库根执行（workspace 根 hoist） |
-| L5 dry-run 失败 | 网络不通 registry.npmjs.org 时加 `--skip-network` |
+| L5 / 网络层失败 | 网络不通 registry.npmjs.org 时加 `--skip-network` |
