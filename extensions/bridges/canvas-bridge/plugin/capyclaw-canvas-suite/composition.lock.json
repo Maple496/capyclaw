@@ -51,16 +51,16 @@
       "sha256": "6f2021232fc083296c2e9691876855d4592d831fdb1f1cff6f3f68cd27332893"
     },
     "@capyclaw/plugin-kit": {
-      "version": "0.2.1",
+      "version": "0.2.2",
       "apiVersion": null,
       "path": "../../../../../packages/capyclaw-plugin-kit",
-      "sha256": "7f96e38d28c1389f1b2890aa2fcbc5c19caf70d7c9752171cebba29a14052980"
+      "sha256": "2247b5314820fda9a0ae40faf50fc6bcc5bd1877764c12ab528f1baab382ccc6"
     },
     "@capyclaw/service-broker": {
-      "version": "0.2.1",
+      "version": "0.2.2",
       "apiVersion": "1.0.0",
       "path": "../../../../../packages/capyclaw-service-broker",
-      "sha256": "c0b05c6c60907a7d40256752013c29b37960f3fc858950ad6d7732550044b537"
+      "sha256": "9fcb1090f9b83d2607d20907d497d474a2966142d3ebbe0b5df73ec42a9b10ec"
     },
     "@capyclaw/service-host": {
       "version": "0.1.2",
