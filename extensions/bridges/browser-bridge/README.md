@@ -2,6 +2,7 @@
 
 浏览器操控工作台套件的中台：Playwright 引擎、ref 快照交互、MCP 工具服务、
 插件包构建与 skill 源。与 `ppt-bridge` / `canvas-bridge` 同构，构建产物在 `plugin/`。
+构建流程调用仓库级 `scripts/lib/bridge-build.mjs`；本 bridge 声明 Browser 配置，保留手写 host 与无编辑器的差异。
 
 ## 结构
 

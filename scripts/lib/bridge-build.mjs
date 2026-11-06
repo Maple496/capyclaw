@@ -1,16 +1,23 @@
 /**
- * bridge 构建公共库：ppt-bridge 与 canvas-bridge 的 build-plugin.mjs 共用的
- * 受检写文件原语、skill 包生成、工具契约 markdown、组合锁、suite patch 生成
- * 与 workbench host 模板。
+ * bridge 构建公共库：三个 bridge（ppt / canvas / browser）的 build-plugin.mjs
+ * 共用的构建驱动（runBridgeBuild）、受检写文件原语、基建供应表（INFRA_KIT_FILES）、
+ * skill 包生成、工具契约 markdown、组合锁、suite patch 生成与 workbench host 模板。
+ *
+ * 分工：本库是唯一的流水线实现；各 bridge 的 scripts/build-plugin.mjs 只保留
+ * 差异声明（SKILL_PACKAGES 表、COPIES 表、拼接哪些基建文件、sanity 清单）。
  *
  * 等价性约束：除 host.mjs（两 bridge 历史上有政策/注释漂移，模板统一口径）
- * 外，本库生成的文件内容必须与两 bridge 的历史产物字节级一致——
+ * 外，本库生成的文件内容必须与三 bridge 的历史产物字节级一致——
  * `build-plugin.mjs --check` 的漂移检查通过即为等价性证明。
  */
 import { createHash } from 'node:crypto'
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import { dirname, join, relative } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { loadSuiteManifest } from '@capyclaw/suite-kit'
+import { checkSuiteDrift } from '../check-suite-drift.mjs'
+import { syncSharedDir } from './shared-sync.mjs'
 
 // ---------------------------------------------------------------------------
 // 受检文件原语（写前比对；--check 模式只报漂移不落盘）
@@ -440,4 +447,229 @@ export async function apply(ctx, config) {
   }
 }
 `
+}
+
+// ---------------------------------------------------------------------------
+// 基建供应表：构建期拼接进 workbench 的 plugin-kit 运行时文件（唯一登记处）
+// ---------------------------------------------------------------------------
+
+/**
+ * plugin-kit 源 → workbench 目标。只登记「构建时拼接进产物」的运行时文件；
+ * packages 级公共插件（service-host 等）走 server/shared 快照
+ * （scripts/sync-shared.mjs 的 PUBLIC_SHARED），不在此表。
+ *
+ * flatten：拍平到目标目录后需改写 `'../tuning.mjs'` → `'./tuning.mjs'`
+ * （否则会解析到 server/tuning.mjs，relay 调优键不同，造成静默错配）。
+ *
+ * 新增拼接文件：在 sources 里加一行，再在对应 bridge 的 kitInfra 里选键；
+ * 不要在各 build-plugin.mjs 里直接写 copyChecked/copyFlattened 调用。
+ */
+export const INFRA_KIT_FILES = {
+  http: { src: 'service/http.mjs', dst: 'server/infra/http.mjs', flatten: true },
+  tuning: { src: 'tuning.mjs', dst: 'server/infra/tuning.mjs' },
+  fsLock: { src: 'util/fs-lock.mjs', dst: 'server/infra/util/fs-lock.mjs' },
+  blobStore: { src: 'store/blob-store.mjs', dst: 'server/infra/store/blob-store.mjs' },
+  workspace: { src: 'workspace/manager.mjs', dst: 'server/infra/workspace/manager.mjs' },
+  runtimeContext: { src: 'runtime/context.mjs', dst: 'server/infra/runtime/context.mjs' },
+  heartbeatWorker: { src: 'editor/heartbeat-worker.js', dst: 'editor/heartbeat-worker.js' },
+}
+
+// ---------------------------------------------------------------------------
+// 构建驱动：一套流水线，各 bridge 只提供差异配置
+// ---------------------------------------------------------------------------
+
+/**
+ * 跑完整插件构建（步骤 0~7，与历史三份 build-plugin.mjs 逐步对齐）。
+ *
+ * config（各 bridge 的差异声明）：
+ *   ns / nsLabel / contractFile / contractTitle / contractCapabilitiesSource /
+ *   providerPrefix / noteSkipExpr / noteExpr
+ *                                  skill 包生成参数与契约形态（原 SKILL_CFG）
+ *   workbenchDir / suiteDir        plugin/ 下的两个目录名
+ *   host                           renderWorkbenchHost 参数；null = 手写 host.mjs
+ *   skillPackages                  SKILL_PACKAGES 表（行格式被 scripts/bump.mjs 解析）
+ *   copies                         [源, workbench 目标] 的 MCP 源拷贝表
+ *   kitInfra                       INFRA_KIT_FILES 的键（拼接哪些基建文件）
+ *   syncCoreDir                    bridge 有 src/core 镜像时 true
+ *   legacyDirs                     需清理的废弃产物目录（--check 时报错）
+ *   editor                         { assetEnv, assetPath, dest, missingLabel, writeLabel } | null
+ *   toolContractSkills             生成 references/tool-contract.md 的 skill 名
+ *   required                       [[dir, [files...]], ...] 包完整性清单
+ */
+export async function runBridgeBuild({ root, config, checkOnly = false }) {
+  const {
+    workbenchDir, suiteDir, nsLabel, contractFile, providerPrefix,
+    noteSkipExpr, noteExpr, host = null, skillPackages, copies = [],
+    kitInfra = [], syncCoreDir = false, legacyDirs = [], editor = null,
+    toolContractSkills = [], required = [],
+  } = config
+
+  const PLUGIN_ROOT = join(root, 'plugin')
+  const KIT_ROOT = join(root, '..', '..', '..', 'packages', 'capyclaw-plugin-kit')
+  const WORKBENCH = join(PLUGIN_ROOT, workbenchDir)
+  const SUITE_PKG = join(PLUGIN_ROOT, suiteDir)
+  const ctx = createCheckedFs(checkOnly)
+  const skillCfg = { ns: config.ns, nsLabel, contractFile, providerPrefix, noteSkipExpr, noteExpr }
+
+  /* 0. 公共插件快照（必须在 import tools.mjs 之前生成） */
+  {
+    const drift = checkSuiteDrift({ quiet: true })
+    if (!drift.ok) ctx.fail('suite 元数据漂移:\n- ' + drift.issues.join('\n- '))
+  }
+  syncSharedDir(join(root, 'src', 'mcp', 'shared'), { force: !checkOnly, check: checkOnly })
+  syncSharedDir(join(WORKBENCH, 'server', 'shared'), { force: !checkOnly, check: checkOnly })
+
+  /* 1. 生成工具契约快照（唯一真源：capabilities → registry → tools.mjs）。
+   * ppt 侧历史上导出名为 CAPABILITY_LIST（同一数组的别名），统一取 CAPABILITIES。 */
+  const toolModule = await import(pathToFileURL(join(root, 'src', 'mcp', 'tools.mjs')).href)
+  const { TOOLS, TOOL_META, FEATURES } = toolModule
+  const rawCapabilities = toolModule.CAPABILITIES
+  const contractCapabilities = config.contractCapabilitiesSource === 'registry'
+    ? toolModule.CAPABILITY_LIST
+    : rawCapabilities
+  if (!Array.isArray(rawCapabilities) || !Array.isArray(contractCapabilities)) {
+    throw new Error('tools.mjs 未导出所需的能力清单')
+  }
+  const { CONTRACT_VERSION, PACKAGE_VERSION } = await import(pathToFileURL(join(root, 'src', 'mcp', 'contract.mjs')).href)
+
+  const toolNames = TOOLS.map((tool) => tool.name).sort()
+  const metaNames = Object.keys(TOOL_META).sort()
+  if (toolNames.join('\n') !== metaNames.join('\n')) {
+    throw new Error('registry 的 TOOL_META 与 TOOLS 不一致：\n' +
+      `tools: ${toolNames.join(', ')}\nmeta:  ${metaNames.join(', ')}`)
+  }
+  const contract = {
+    contractVersion: CONTRACT_VERSION,
+    packageVersion: PACKAGE_VERSION,
+    toolCount: TOOLS.length,
+    tools: TOOLS.map((tool) => ({
+      name: tool.name,
+      kind: TOOL_META[tool.name].kind,
+      since: TOOL_META[tool.name].since,
+      capability: TOOL_META[tool.name].capability,
+      description: tool.description,
+      inputSchema: tool.inputSchema,
+    })),
+    features: FEATURES,
+    capabilities: contractCapabilities,
+  }
+  const contractJson = JSON.stringify(contract, null, 2) + '\n'
+  const contractTargets = [
+    [join(root, 'contract'), `contract/${contractFile}`],
+    [join(WORKBENCH, 'contract'), `${workbenchDir}/contract/${contractFile}`],
+    [join(SUITE_PKG, 'contract'), `${suiteDir}/contract/${contractFile}`],
+  ]
+  for (const entry of skillPackages) {
+    contractTargets.push([join(skillPkgDir(PLUGIN_ROOT, entry), 'contract'), `${entry.dir}/contract/${contractFile}`])
+  }
+  for (const [dir, label] of contractTargets) {
+    ctx.writeChecked(join(dir, contractFile), contractJson, label)
+  }
+
+  /* 1.5 生成 capabilities.json 元数据（用于组件库） */
+  {
+    const capabilitiesMetadata = {
+      version: 1,
+      source: 'server/tools/capabilities',
+      capabilities: rawCapabilities.map((cap) => ({
+        id: cap.id,
+        version: PACKAGE_VERSION,
+        title: cap.title || cap.id,
+        description: cap.description || '',
+        tags: cap.tags || [],
+        keywords: [],
+        entry: {
+          module: `./capabilities/${cap.id}.mjs`,
+          export: `${cap.id}Capability`,
+        },
+        provides: {
+          tools: cap.tools.map((t) => t.name),
+          features: cap.features || [],
+        },
+        requires: cap.requires || [],
+        dependsOn: cap.dependsOn || [],
+      })),
+    }
+    ctx.writeChecked(join(WORKBENCH, 'capabilities.json'), JSON.stringify(capabilitiesMetadata, null, 2) + '\n', `${workbenchDir}/capabilities.json`)
+  }
+
+  /* 2. host.mjs：模板生成（有 host 配置）或保留手写（browser） */
+  if (host) {
+    ctx.writeChecked(join(WORKBENCH, 'lib', 'host.mjs'), renderWorkbenchHost(host), `${workbenchDir}/lib/host.mjs`)
+  }
+
+  /* 3. MCP 拷贝 + core 镜像 + 基建拼接（INFRA_KIT_FILES） */
+  copyMcpEntries(copies, { root, workbench: WORKBENCH, ctx })
+  ctx.syncDir(join(root, 'src', 'mcp', 'tools'), join(WORKBENCH, 'server', 'tools'), 'server/tools')
+  if (syncCoreDir) ctx.syncDir(join(root, 'src', 'core'), join(WORKBENCH, 'core'), 'core')
+  for (const dir of legacyDirs) {
+    const target = join(WORKBENCH, dir)
+    if (checkOnly) {
+      if (existsSync(target)) throw new Error(`[check] ${dir} 已废弃，请运行 node scripts/build-plugin.mjs 清理`)
+    } else {
+      rmSync(target, { recursive: true, force: true })
+    }
+  }
+  for (const key of kitInfra) {
+    const entry = INFRA_KIT_FILES[key]
+    if (!entry) throw new Error(`未知的基建拼接键: ${key}（见 INFRA_KIT_FILES）`)
+    const from = join(KIT_ROOT, 'src', entry.src)
+    const to = join(WORKBENCH, entry.dst)
+    if (entry.flatten) ctx.copyFlattened(from, to, entry.dst)
+    else ctx.copyChecked(from, to, entry.dst)
+  }
+
+  /* 4. 编辑器打包 + 运行时资产（纯运行时；无编辑器的 bridge 跳过） */
+  if (editor) {
+    const require = createRequire(import.meta.url)
+    await buildEditorApp({ root, workbench: WORKBENCH, ctx, esbuild: require('esbuild') })
+    writeRuntimeAsset({
+      asset: editor.assetPath,
+      dest: join(WORKBENCH, editor.dest),
+      ctx,
+      missingLabel: editor.missingLabel,
+      writeLabel: editor.dest,
+    })
+  }
+
+  /* 5. 技能源 → 单 skill 包 + 生成工具契约参考 */
+  for (const entry of skillPackages) {
+    syncSkillPackage(entry, { ctx, pluginRoot: PLUGIN_ROOT, kitRoot: KIT_ROOT, root, cfg: skillCfg })
+    if (toolContractSkills.includes(entry.skill)) {
+      ctx.writeChecked(
+        join(skillPkgDir(PLUGIN_ROOT, entry), 'skills', entry.skill, 'references', 'tool-contract.md'),
+        renderToolContractMarkdown(contract, config.contractTitle),
+        `${entry.dir}/skills/${entry.skill}/references/tool-contract.md`,
+      )
+    }
+  }
+  {
+    const { lintSkills } = await import(pathToFileURL(join(root, 'scripts', 'lint-skills.mjs')).href)
+    const lint = lintSkills()
+    if (!lint.ok) ctx.fail('skill lint 未通过:\n' + lint.errors.join('\n'))
+    for (const warning of lint.warnings) console.log(`! ${warning}`)
+  }
+
+  /* 6. 组合锁 + suite patch 生成（patch 须先于 sanity：首跑时由这里产出） */
+  writeCompositionLock({ suitePkg: SUITE_PKG, ctx })
+  await generateSuitePatch({ suitePkg: SUITE_PKG, ctx })
+
+  /* 7. 所有包的完整性 sanity */
+  verifyRequiredFiles(required, { pluginRoot: PLUGIN_ROOT, ctx })
+  verifySkillPackages(skillPackages, { pluginRoot: PLUGIN_ROOT, ctx, contractFile })
+  const workbenchManifest = JSON.parse(readFileSync(join(WORKBENCH, 'package.json'), 'utf8'))
+  if (workbenchManifest.version !== PACKAGE_VERSION) {
+    ctx.fail(`contract.mjs 的 PACKAGE_VERSION=${PACKAGE_VERSION} 与 workbench package.json=${workbenchManifest.version} 不一致`)
+  }
+  const suiteManifest = JSON.parse(readFileSync(join(SUITE_PKG, 'package.json'), 'utf8'))
+  /* suite 的 dependencies 引用 npm 发布名（@capyclaw/*） */
+  for (const dep of [workbenchManifest.name, ...skillPackages.map((entry) => entry.name)]) {
+    if (!suiteManifest.dependencies?.[dep]) ctx.fail(`${suiteManifest.name} 缺少依赖: ${dep}`)
+  }
+  if (suiteManifest.dsh?.suite !== './dsh-suite.json') ctx.fail(`${suiteManifest.name} 未声明 dsh.suite`)
+  loadSuiteManifest(SUITE_PKG) // 走一遍加载路径（校验/组合/渲染已在 generateSuitePatch 完成）
+
+  console.log(checkOnly
+    ? '✓ 所有包全部最新（check 通过）'
+    : `✓ 构建完成：${TOOLS.length} 个工具 / ${skillPackages.length + 2} 个包 → ${PLUGIN_ROOT}`)
 }

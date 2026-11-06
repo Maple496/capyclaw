@@ -2,7 +2,7 @@
 
 > 参照 ppt-bridge 插件体系构建的 Canvas 文档工作台：**一个套件 + 一个运行时 + 4 个独立 skill 包**。
 > 面向长文档生成与精修——用户说什么，画布就怎么变。复用 @capyclaw/plugin-kit / @capyclaw/document-workbench /
-> @capyclaw/suite-kit 公共基建，零重复造轮子。
+> @capyclaw/suite-kit 公共基建，零重复造轮子。构建流程调用仓库级 `scripts/lib/bridge-build.mjs`，本 bridge 只声明差异配置。
 
 ## 架构（编辑器权威桥）
 

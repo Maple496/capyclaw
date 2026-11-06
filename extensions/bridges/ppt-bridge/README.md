@@ -2,7 +2,8 @@
 
 PPT 工作台的构建工场：桥契约、studio 核心逻辑、MCP 工具服务的**单一真源**在
 `src/`，经 `scripts/build-plugin.mjs` 组装出 10 个可发布 npm 包（`plugin/`）。
-本包是 private 的 workspace 成员，不发布；发布产物全部走 `plugin/` 下的子包。
+构建流程由仓库级 `scripts/lib/bridge-build.mjs` 统一实现，本文件只声明 PPT 的包表、
+源拷贝、基建拼接与产物校验配置。本包是 private workspace 成员，不发布；发布产物全部走 `plugin/` 子包。
 
 ## 快速开始
 
@@ -16,8 +17,8 @@ npm run start:workbench     # 起开发 relay :39311（编辑器 http://127.0.0.
 npm run start:standalone    # 旧 stdio MCP 入口（src/mcp/index.mjs，桌面遗留形态）
 ```
 
-根仓库一键流水线：`npm run build` / `npm run check` / `npm run release`
-（同时覆盖 ppt-bridge 与 canvas-bridge，见仓库根 README）。
+根仓库 `npm run build` / `npm run check` 会并行覆盖 PPT、Canvas、Browser 三个 bridge；
+各 bridge 共用 `scripts/lib/bridge-build.mjs` 的流水线，差异由各自 `scripts/build-plugin.mjs` 声明。
 
 ## 目录
 
